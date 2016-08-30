@@ -14,7 +14,11 @@ public class PlayerHealth : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+        if (playerCurrentHealth <= 0)
+        {
+            Death();
+        }
 	}
 
     void DecreaseHealth(int _value)
@@ -23,6 +27,7 @@ public class PlayerHealth : MonoBehaviour {
         {
             playerCurrentHealth -= _value;
         }
+
         if (playerCurrentHealth <= 0)
         {
             Death();

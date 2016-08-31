@@ -18,7 +18,9 @@ public class EnemyScript : MonoBehaviour {
     public float bleedTimer;
     public float stunTimer;
     public float time;
+    public int bleedDmg;
     public bool bleeding;
+    
     public bool stunned;
 	// Use this for initialization
 	void Start () {
@@ -28,6 +30,18 @@ public class EnemyScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+        if(bleeding)
+        {
+            health -= bleedDmg;
+        }
+        if (!stunned)
+        {
+
+
+
+
+
+        }
 	}
     public void isStunned()
     {

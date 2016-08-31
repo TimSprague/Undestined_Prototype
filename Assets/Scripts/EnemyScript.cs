@@ -20,7 +20,6 @@ public class EnemyScript : MonoBehaviour {
     public float time;
     public int bleedDmg;
     public bool bleeding;
-    
     public bool stunned;
 	// Use this for initialization
 	void Start () {
@@ -32,6 +31,7 @@ public class EnemyScript : MonoBehaviour {
 	
         if(bleeding)
         {
+            //Bleed damage is setup when the enemy is hit by the player.
             health -= bleedDmg;
         }
         if (!stunned)
@@ -40,9 +40,10 @@ public class EnemyScript : MonoBehaviour {
 
 
 
-
         }
-	}
+        isBleeding();
+        isStunned();
+    }
     public void isStunned()
     {
         stunTimer -= Time.deltaTime;

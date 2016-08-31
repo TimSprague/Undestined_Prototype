@@ -75,8 +75,13 @@ public class ComboStates : MonoBehaviour {
                 break;
             case (int)COMBOSTATE.lightLightHeavy:
                 {
-                    //double slash with knock back
-                    //Call function
+                    /**double slash with knock back
+                    Call function
+                    Player swings his sword
+                    the sword is just a trigger volume
+                    For each enemy that the sword triggers set bleed timer and damage amount.
+                    start calling bleed damage function base on a time interval
+    **/
                     currentState = 0;
                 }
                 break;

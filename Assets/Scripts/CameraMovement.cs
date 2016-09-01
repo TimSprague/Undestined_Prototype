@@ -10,6 +10,14 @@ public class CameraMovement : MonoBehaviour {
 
     public bool smooth = true;
 
+    Camera m_camera;
+    GameObject currentEnemy;
+
+    void Start()
+    {
+        m_camera = Camera.main;
+    }
+
     void Update()
     {
 
@@ -67,6 +75,21 @@ public class CameraMovement : MonoBehaviour {
         if(Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(Vector3.up * speed * Time.deltaTime);
+        }
+
+        Ray ray = m_camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Found a target");
+            hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+            currentEnemy = hit.transform.gameObject;
+        }
+        else
+        {
+            if(currentEnemy != null)
+                currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
+            currentEnemy = null;
         }
         
     }

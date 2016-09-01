@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyScript : MonoBehaviour {
+public abstract class EnemyScript : MonoBehaviour {
 
     
    //Base Attributes
@@ -11,8 +11,11 @@ public class EnemyScript : MonoBehaviour {
     public int defense;
     public float speed;
 
-
-
+    //Nav Mesh for movement
+    public NavMeshAgent agent;
+    [SerializeField]
+    public Transform[] points;
+    public int destPoint = 0;
 
     //Status effects
     public float bleedTimer;
@@ -20,29 +23,38 @@ public class EnemyScript : MonoBehaviour {
     public float time;
     public int bleedDmg;
     public bool bleeding;
-    
     public bool stunned;
 	// Use this for initialization
-	void Start () {
-        
+	public virtual void Start () {
+        agent = GetComponent<NavMeshAgent>();
+        agent.autoBraking = false;
+        stunned = false;
+        bleeding = false;
+        alive = true;
+        GoToNextPoint();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
 	
         if(bleeding)
         {
+            //Bleed damage is setup when the enemy is hit by the player.
             health -= bleedDmg;
         }
         if (!stunned)
         {
-
-
+            if(agent.remainingDistance<0.75f)
+            {
+                GoToNextPoint();
+            }
 
 
 
         }
-	}
+        isBleeding();
+        isStunned();
+    }
     public void isStunned()
     {
         stunTimer -= Time.deltaTime;
@@ -58,5 +70,13 @@ public class EnemyScript : MonoBehaviour {
         {
             bleeding = false;
         }
+    }
+    public void GoToNextPoint()
+    {
+        if (points.Length == 0)
+            return;
+        agent.destination = points[destPoint].position;
+        
+        destPoint = (destPoint + 1)%points.Length;
     }
 }

@@ -29,18 +29,21 @@ public class PlayerHealth : MonoBehaviour {
         {
             Death();
         }
-        //Flash Screen Wnen damaged
-        if (damaged)
-            HealthImage.color = DamageColor;
-        else
-            HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, DamageFlashSpeed * Time.deltaTime);
-        damaged = false;
-        //Flash Screen when healed
-        if (healed)
-            HealthImage.color = HealColor;
-        else
-            HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
-        healed = false;
+        if (HealthImage)
+        {
+            //Flash Screen Wnen damaged
+            if (damaged)
+                HealthImage.color = DamageColor;
+            else
+                HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, DamageFlashSpeed * Time.deltaTime);
+            damaged = false;
+            //Flash Screen when healed
+            if (healed)
+                HealthImage.color = HealColor;
+            else
+                HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
+            healed = false;
+        }
     }
 
     void DecreaseHealth(int _value)

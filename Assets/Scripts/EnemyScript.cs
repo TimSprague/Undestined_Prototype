@@ -13,7 +13,9 @@ public abstract class EnemyScript : MonoBehaviour {
 
     //Nav Mesh for movement
     public NavMeshAgent agent;
-    public Transform player;
+    public Transform playerTransform;
+    public PlayerHealth player;
+    public Animation enemyAnim;
     [SerializeField]
     public Transform[] points;
     public int destPoint = 0;
@@ -30,9 +32,11 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool stunned;
 	// Use this for initialization
 	public virtual void Start () {
-        player = GameObject.Find("Player").GetComponent<Transform>().transform;
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
+        player = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
         agent = GetComponent<NavMeshAgent>();
-       
+        enemyAnim["Attack"].layer = 1;
         stunned = false;
         bleeding = false;
         alive = true;
@@ -43,9 +47,9 @@ public abstract class EnemyScript : MonoBehaviour {
 	// Update is called once per frame
 	public virtual void Update () {
 
-        if (Vector3.Distance(player.position, agent.transform.position) < Distance)
+        if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
         {
-            agent.destination = player.position;
+            agent.destination = playerTransform.position;
             playerTarget = true;
 
         }
@@ -78,15 +82,19 @@ public abstract class EnemyScript : MonoBehaviour {
             if (pauseTimer < 0.0f)
             {
                 agent.Resume();
+                enemyAnim.CrossFade("Walk");
                 pause = false;
             }
         }
         isBleeding();
         isStunned();
     }
+
     public void OnCollisionEnter(Collision other)
     {
-        player.GetComponent<PlayerHealth>().DecreaseHealth(10);
+        player.DecreaseHealth(10);
+        enemyAnim.CrossFade("Attack");
+
     }
     public void isStunned()
     {
@@ -121,12 +129,14 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             pause = true;
             pauseTimer = 5;
+            enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();
         }else
         {
             pause = true;
             pauseTimer = 0.75f;
+            enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();
         }

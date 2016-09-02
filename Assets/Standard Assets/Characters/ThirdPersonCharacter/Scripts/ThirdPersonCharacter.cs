@@ -18,7 +18,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		Rigidbody m_Rigidbody;
 		Animator m_Animator;
-		bool m_IsGrounded;
+		public bool m_IsGrounded;
 		float m_OrigGroundCheckDistance;
 		const float k_Half = 0.5f;
 		float m_TurnAmount;
@@ -29,9 +29,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
 
-
-		void Start()
+        [SerializeField] AudioClip[] soundMoves;
+        [SerializeField] AudioSource sfxSource;
+        void Start()
 		{
+            //sfxSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
 			m_Animator = GetComponent<Animator>();
 			m_Rigidbody = GetComponent<Rigidbody>();
 			m_Capsule = GetComponent<CapsuleCollider>();
@@ -73,6 +75,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			// send input and other state parameters to the animator
 			UpdateAnimator(move);
+            
 		}
 
 
@@ -114,14 +117,52 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 
+        void LeftStep()
+        {
+            AudioClip clip = null;
+            float maxVol = 1.0f;
+            //RaycastHit hit;
 
-		void UpdateAnimator(Vector3 move)
+            
+            clip = soundMoves[0];
+            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
+
+            if (clip != null)
+            {
+                //if(!sfxSource.isPlaying)
+                    sfxSource.PlayOneShot(clip, maxVol);
+
+            }
+        }
+
+        void RightStep()
+        {
+            AudioClip clip = null;
+            float maxVol = 1.0f;
+            //RaycastHit hit;
+
+
+            clip = soundMoves[0];
+            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
+            
+
+            if (clip != null)
+            {
+                //if(!sfxSource.isPlaying)
+                    sfxSource.PlayOneShot(clip, maxVol);
+
+            }
+        }
+
+
+        void UpdateAnimator(Vector3 move)
 		{
 			// update the animator parameters
 			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetBool("Crouch", m_Crouching);
 			m_Animator.SetBool("OnGround", m_IsGrounded);
+            
 			if (!m_IsGrounded)
 			{
 				m_Animator.SetFloat("Jump", m_Rigidbody.velocity.y);
@@ -170,7 +211,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				// jump!
 				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
-				m_IsGrounded = false;
+                m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
 			}

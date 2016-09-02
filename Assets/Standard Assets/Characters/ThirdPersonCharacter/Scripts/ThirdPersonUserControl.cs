@@ -12,7 +12,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
-        
+        MeshCollider Skill1;
+        SphereCollider Skill2;
+
         private void Start()
         {
             // get the transform of the main camera
@@ -29,6 +31,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             // get the third person character ( this should never be null due to require component )
             m_Character = GetComponent<ThirdPersonCharacter>();
+            Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
+            Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
+
         }
 
 
@@ -47,6 +52,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 // heavy melee
             }
+            if (Input.GetButtonDown("Skill1"))
+            {
+                // use the number 1 skill BLEED in forward cone range 5 yards
+                Skill1.enabled = true;
+            }
+            if (Input.GetButtonDown("Skill2"))
+            {
+                // use number 2 skill
+                Skill2.enabled = true;
+            }
+            if (Input.GetButtonDown("Skill3"))
+            {
+                // use number 3 skill
+            }
+
         }
 
 
@@ -79,6 +99,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Character.Move(m_Move, crouch, m_Jump);
             if (m_Jump && m_Character.m_IsGrounded)
                 m_Jump = false;
+
+            Skill1.enabled = false;
+            Skill2.enabled = false;
         }
     }
 }

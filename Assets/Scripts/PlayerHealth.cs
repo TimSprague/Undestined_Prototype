@@ -47,7 +47,7 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
-    void DecreaseHealth(int _value)
+   public void DecreaseHealth(int _value)
     {
         if (isAlive)
         {
@@ -62,7 +62,7 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
-    void IncreaseHealth(int _value)
+   public void IncreaseHealth(int _value)
     {
         if (isAlive)
         {

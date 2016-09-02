@@ -23,6 +23,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float pauseTimer;
     public float Distance;
     public bool playerTarget;
+    public bool canChange;
+    public float changeTimer;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -36,12 +38,14 @@ public abstract class EnemyScript : MonoBehaviour {
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
         agent = GetComponent<NavMeshAgent>();
-        enemyAnim["Attack"].layer = 1;
+        canChange = false;
         stunned = false;
         bleeding = false;
+        canChange = true;
         alive = true;
         pauseTimer = 0;
-        GoToNextPoint();
+        destPoint = 0;
+        agent.destination = points[0].position;
 	}
 	
 	// Update is called once per frame
@@ -68,8 +72,9 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         if (!stunned)
         {
-            if(agent.remainingDistance<0.75f)
+            if(agent.remainingDistance<0.05f&&canChange)
             {
+                canChange = false;
                 GoToNextPoint();
             }
 
@@ -84,16 +89,33 @@ public abstract class EnemyScript : MonoBehaviour {
                 agent.Resume();
                 enemyAnim.CrossFade("Walk");
                 pause = false;
+                
+            }
+        }
+        if(!canChange)
+        {
+            changeTimer -= Time.deltaTime;
+            if(changeTimer<0)
+            {
+                canChange = true;
             }
         }
         isBleeding();
         isStunned();
-    }
+        enemyAnim["Attack"].layer = 0;
 
+    }
+    public void FixedUpdate()
+    {
+
+    }
     public void OnCollisionEnter(Collision other)
     {
+        enemyAnim["Attack"].layer = 1;
+
         player.DecreaseHealth(10);
         enemyAnim.CrossFade("Attack");
+
 
     }
     public void isStunned()
@@ -122,13 +144,17 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (points.Length == 0)
             return;
+        destPoint = (destPoint + 1) % points.Length;
+
         agent.destination = points[destPoint].position;
       
-        destPoint = (destPoint + 1)%points.Length;
+        float x = agent.remainingDistance;
         if (!playerTarget)
         {
             pause = true;
             pauseTimer = 5;
+            changeTimer = 5.0f;
+
             enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();

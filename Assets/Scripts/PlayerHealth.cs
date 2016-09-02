@@ -46,7 +46,7 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
-    void DecreaseHealth(int _value)
+   public void DecreaseHealth(int _value)
     {
         damaged = true;
         if (isAlive)
@@ -60,7 +60,7 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
-    void IncreaseHealth(int _value)
+   public void IncreaseHealth(int _value)
     {
         healed = true;
         if (isAlive)

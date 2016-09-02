@@ -12,8 +12,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
-
         
+
         private void Start()
         {
             // get the transform of the main camera
@@ -39,6 +39,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
+
+            if (Input.GetMouseButton(0))
+            {
+                // melee light 
+            }
+            if (Input.GetMouseButton(1))
+            {
+                // heavy melee
+            }
         }
 
 
@@ -49,6 +58,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
             float v = CrossPlatformInputManager.GetAxis("Vertical");
             bool crouch = Input.GetKey(KeyCode.C);
+
+            //if(Input.GetKeyDown(KeyCode.W) || moving)
+            //{
+            //    moving = true;
+            //    if (soundMove != null && !sfxSource.isPlaying)
+            //        sfxSource.PlayOneShot(soundMove);
+            //}
 
             // calculate move direction to pass to character
             if (m_Cam != null)
@@ -69,7 +85,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             // pass all parameters to the character control script
             m_Character.Move(m_Move, crouch, m_Jump);
-            m_Jump = false;
+            if (m_Jump && m_Character.m_IsGrounded)
+                m_Jump = false;
         }
     }
 }

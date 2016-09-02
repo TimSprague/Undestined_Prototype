@@ -14,8 +14,6 @@ public class MouseOrbitImproved : MonoBehaviour {
     public float distanceMin = .5f;
     public float distanceMax = 15f;
 
-    //private Rigidbody rigidbody;
-
     float x = 0.0f;
     float y = 0.0f;
     GameObject charBlock;
@@ -28,24 +26,6 @@ public class MouseOrbitImproved : MonoBehaviour {
         y = angles.x;
 
         charBlock = GameObject.Find("CameraRotate");
-        //rigidbody = GetComponent<Rigidbody>();
-
-        //// Make the rigid body not change rotation
-        //if (rigidbody != null)
-        //{
-        //    rigidbody.freezeRotation = true;
-        //}
-    }
-
-    void Update()
-    {
-        distance = charBlock.GetComponent<Raycast3>().distance3;
-        if (Input.GetKeyDown("Horizontal"))
-        {
-            x += Input.GetAxis("Horizontal");
-        }
-
-        
     }
 
     void LateUpdate()

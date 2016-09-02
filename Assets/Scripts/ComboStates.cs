@@ -35,42 +35,41 @@ public class ComboStates : MonoBehaviour {
      **/
     public void UpdateState(int newState)
     {
-        switch(currentState)
+        currentState *= 10;
+        currentState += newState;
+        switch (currentState)
         {
             case (int)COMBOSTATE.light :
                 {
                     //basic attack
-                    currentState *= 10;
-                    currentState += newState;
+                   
 
                 }
                 break;
             case (int)COMBOSTATE.lightHeavy:
                 {
                     //perform smash up
-                    currentState *= 10;
-                    currentState += newState;
+                   
                 }
                 break;
             case (int)COMBOSTATE.lightLight:
                 {
                     //2nd basic attack
-                    currentState *= 10;
-                    currentState += newState;
+                    
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJumpHeavy:
                 {
                     //Perfrom down smash
                     //Call function
-                    currentState = 0;
+                   
                 }
                 break;
             case (int)COMBOSTATE.lightLightLight:
                 {
                     //flurry attack
                     //CallFunction
-                    currentState = 0;
+                    
                 }
                 break;
             case (int)COMBOSTATE.lightLightHeavy:
@@ -82,14 +81,13 @@ public class ComboStates : MonoBehaviour {
                     For each enemy that the sword triggers set bleed timer and damage amount.
                     start calling bleed damage function base on a time interval
     **/
-                    currentState = 0;
+                    
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJump:
                 {
                     //Intermediate step
-                    currentState *= 10;
-                    currentState += newState;
+                   
                 }
                 break;
 

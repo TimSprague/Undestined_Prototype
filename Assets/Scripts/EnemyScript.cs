@@ -13,7 +13,9 @@ public abstract class EnemyScript : MonoBehaviour {
 
     //Nav Mesh for movement
     public NavMeshAgent agent;
-    public Transform player;
+    public Transform playerTransform;
+    public PlayerHealth player;
+    public Animation enemyAnim;
     [SerializeField]
     public Transform[] points;
     public int destPoint = 0;
@@ -21,6 +23,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float pauseTimer;
     public float Distance;
     public bool playerTarget;
+    public bool canChange;
+    public float changeTimer;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -30,22 +34,26 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool stunned;
 	// Use this for initialization
 	public virtual void Start () {
-        player = GameObject.Find("Player").GetComponent<Transform>().transform;
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
+        player = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
         agent = GetComponent<NavMeshAgent>();
-       
+        canChange = false;
         stunned = false;
         bleeding = false;
+        canChange = true;
         alive = true;
         pauseTimer = 0;
-        GoToNextPoint();
+        destPoint = 0;
+        agent.destination = points[0].position;
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
 
-        if (Vector3.Distance(player.position, agent.transform.position) < Distance)
+        if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
         {
-            agent.destination = player.position;
+            agent.destination = playerTransform.position;
             playerTarget = true;
 
         }
@@ -64,8 +72,9 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         if (!stunned)
         {
-            if(agent.remainingDistance<0.75f)
+            if(agent.remainingDistance<0.05f&&canChange)
             {
+                canChange = false;
                 GoToNextPoint();
             }
 
@@ -78,15 +87,36 @@ public abstract class EnemyScript : MonoBehaviour {
             if (pauseTimer < 0.0f)
             {
                 agent.Resume();
+                enemyAnim.CrossFade("Walk");
                 pause = false;
+                
+            }
+        }
+        if(!canChange)
+        {
+            changeTimer -= Time.deltaTime;
+            if(changeTimer<0)
+            {
+                canChange = true;
             }
         }
         isBleeding();
         isStunned();
+        enemyAnim["Attack"].layer = 0;
+
+    }
+    public void FixedUpdate()
+    {
+
     }
     public void OnCollisionEnter(Collision other)
     {
-        player.GetComponent<PlayerHealth>().DecreaseHealth(10);
+        enemyAnim["Attack"].layer = 1;
+
+        player.DecreaseHealth(10);
+        enemyAnim.CrossFade("Attack");
+
+
     }
     public void isStunned()
     {
@@ -114,19 +144,25 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (points.Length == 0)
             return;
+        destPoint = (destPoint + 1) % points.Length;
+
         agent.destination = points[destPoint].position;
       
-        destPoint = (destPoint + 1)%points.Length;
+        float x = agent.remainingDistance;
         if (!playerTarget)
         {
             pause = true;
             pauseTimer = 5;
+            changeTimer = 5.0f;
+
+            enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();
         }else
         {
             pause = true;
             pauseTimer = 0.75f;
+            enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();
         }

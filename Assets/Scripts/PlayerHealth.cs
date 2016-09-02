@@ -8,6 +8,7 @@ public class PlayerHealth : MonoBehaviour {
     public int playerMaxHealth;
     public bool isAlive = true;
     public Image HealthImage;
+    public Image HealthBar;
     public AudioClip DamageClip;
     public float DamageFlashSpeed = 5f;
     public Color DamageColor = new Color(1f,0f,0f,1f);
@@ -48,10 +49,11 @@ public class PlayerHealth : MonoBehaviour {
 
    public void DecreaseHealth(int _value)
     {
-        damaged = true;
         if (isAlive)
         {
+            damaged = true;
             playerCurrentHealth -= _value;
+            HealthBarUpdate();
         }
 
         if (playerCurrentHealth <= 0)
@@ -62,10 +64,11 @@ public class PlayerHealth : MonoBehaviour {
 
    public void IncreaseHealth(int _value)
     {
-        healed = true;
         if (isAlive)
         {
+            healed = true;
             playerCurrentHealth += _value;
+            HealthBarUpdate();
         }
     }
 
@@ -73,5 +76,11 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isAlive = false;
+    }
+
+    void HealthBarUpdate()
+    {
+        if (HealthBar)
+            HealthBar.fillAmount = (playerCurrentHealth / playerMaxHealth);
     }
 }

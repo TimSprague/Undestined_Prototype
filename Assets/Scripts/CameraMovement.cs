@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CameraMovement : MonoBehaviour {
 
     private float speed = 15.0f;
     private float zoomSpeed = 2.0f;
+    float timer = 0;
 
     private Vector3 lastposition = new Vector3(255, 255, 255);
 
     public bool smooth = true;
+    public float UI_fadeInOutSpeed = 1;
 
     Camera m_camera;
     GameObject currentEnemy;
@@ -84,12 +87,22 @@ public class CameraMovement : MonoBehaviour {
             Debug.Log("Found a target");
             hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
             currentEnemy = hit.transform.gameObject;
+
+            Color imageC = currentEnemy.GetComponentInChildren<Image>().color;
+            Color textC = currentEnemy.GetComponentInChildren<Text>().color;
+            timer += Time.deltaTime;
+            imageC.a = Mathf.Lerp(0, 1, timer * UI_fadeInOutSpeed);
+            textC.a = Mathf.Lerp(0, 1, timer * UI_fadeInOutSpeed);
+
+            currentEnemy.GetComponentInChildren<Image>().color = imageC;
+            currentEnemy.GetComponentInChildren<Text>().color = textC;
         }
         else
         {
             if(currentEnemy != null)
                 currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
             currentEnemy = null;
+            timer = 0;
         }
         
     }

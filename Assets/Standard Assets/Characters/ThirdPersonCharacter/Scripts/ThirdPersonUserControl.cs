@@ -100,8 +100,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (m_Jump && m_Character.m_IsGrounded)
                 m_Jump = false;
 
-            Skill1.enabled = false;
-            Skill2.enabled = false;
+            if (Skill1.enabled == true)
+                Skill1.enabled = false;
+
+            if (Skill2.enabled == true)
+                Skill2.enabled = false;
         }
     }
 }

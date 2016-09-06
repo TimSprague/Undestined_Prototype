@@ -10,7 +10,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public int attack;
     public int defense;
     public float speed;
-
+    Rigidbody rigidBody;
     //Nav Mesh for movement
     public NavMeshAgent agent;
     public Transform playerTransform;
@@ -32,8 +32,13 @@ public abstract class EnemyScript : MonoBehaviour {
     public int bleedDmg;
     public bool bleeding;
     public bool stunned;
+    public bool knockedUp;
+    public float knockupTimer;
+    public bool smashedDown;
+    public float smashTimer;
 	// Use this for initialization
 	public virtual void Start () {
+        rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
@@ -43,14 +48,19 @@ public abstract class EnemyScript : MonoBehaviour {
         bleeding = false;
         canChange = true;
         alive = true;
+        knockedUp = false;
         pauseTimer = 0;
         destPoint = 0;
         agent.destination = points[0].position;
+        health = 100;
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
-
+        if(health <0)
+        {
+            GameObject.Destroy(this);
+        }
         if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
         {
             agent.destination = playerTransform.position;
@@ -80,6 +90,32 @@ public abstract class EnemyScript : MonoBehaviour {
 
 
 
+        }
+        if(knockedUp)
+        {
+            knockupTimer -= Time.deltaTime;
+
+            if (knockupTimer>0.0f) {
+                transform.position = new Vector3(transform.position.x, transform.position.y + speed * 0.01f, transform.position.z);
+            }else
+            {
+                smashDown();
+                knockedUp = false;
+            }
+        }
+        if (smashedDown)
+        {
+            smashTimer -= Time.deltaTime;
+
+            if (smashTimer > 0.0f)
+            {
+                int x = 0;
+            }
+            else
+            {
+                agent.Resume();
+                smashedDown = false;
+            }
         }
         if (pause)
         {
@@ -115,8 +151,24 @@ public abstract class EnemyScript : MonoBehaviour {
 
         player.DecreaseHealth(10);
         enemyAnim.CrossFade("Attack");
+        agent.velocity = new Vector3(0, 0, 0);
+        agent.Stop();
+       
 
 
+
+    }
+    public void knockUp()
+    {
+        enemyAnim.Stop();
+        knockedUp = true;
+        enemyAnim.CrossFade("idle");
+        knockupTimer = 5.0f;
+    }
+    public void smashDown()
+    {
+        smashedDown = true;
+        smashTimer = 5.0f;
     }
     public void isStunned()
     {
@@ -161,7 +213,7 @@ public abstract class EnemyScript : MonoBehaviour {
         }else
         {
             pause = true;
-            pauseTimer = 0.75f;
+            pauseTimer = 1.5f;
             enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();

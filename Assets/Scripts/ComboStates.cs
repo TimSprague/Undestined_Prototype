@@ -9,6 +9,7 @@ public class ComboStates : MonoBehaviour {
 
     };
     private int currentState;
+    public float comboTimer;
 	// Use this for initialization
 	void Start () {
         currentState = 0;
@@ -16,7 +17,12 @@ public class ComboStates : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+        comboTimer -= Time.deltaTime;
+        if(comboTimer<0.0f)
+        {
+            ResetCurrentState();
+            
+        }
         
 	}
     public int GetCurrentState()
@@ -33,10 +39,11 @@ public class ComboStates : MonoBehaviour {
      * With each state, the current state is multipled by 10 in order to preserve the combo.
      * Each time a attack is entered, it is stored until a state in which a final move is executed.
      **/
-    public void UpdateState(int newState)
+    public void UpdateState(int newState, EnemyScript other)
     {
         currentState *= 10;
         currentState += newState;
+        comboTimer = 5.0f;
         switch (currentState)
         {
             case (int)COMBOSTATE.light :
@@ -49,7 +56,7 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.lightHeavy:
                 {
                     //perform smash up
-                   
+                    other.knockUp();
                 }
                 break;
             case (int)COMBOSTATE.lightLight:
@@ -62,7 +69,7 @@ public class ComboStates : MonoBehaviour {
                 {
                     //Perfrom down smash
                     //Call function
-                   
+                    other.smashDown();
                 }
                 break;
             case (int)COMBOSTATE.lightLightLight:

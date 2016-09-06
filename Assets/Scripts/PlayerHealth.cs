@@ -26,6 +26,8 @@ public class PlayerHealth : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        //playerCurrentHealth -= 10;
+        //HealthBarUpdate();
         if (playerCurrentHealth <= 0)
         {
             Death();
@@ -81,6 +83,6 @@ public class PlayerHealth : MonoBehaviour {
     void HealthBarUpdate()
     {
         if (HealthBar)
-            HealthBar.fillAmount = (playerCurrentHealth / playerMaxHealth);
+            HealthBar.fillAmount = ((float)playerCurrentHealth / (float)playerMaxHealth);
     }
 }

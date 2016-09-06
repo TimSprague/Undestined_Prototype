@@ -115,6 +115,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
         player.DecreaseHealth(10);
         enemyAnim.CrossFade("Attack");
+        agent.velocity = new Vector3(0, 0, 0);
 
 
     }
@@ -161,7 +162,7 @@ public abstract class EnemyScript : MonoBehaviour {
         }else
         {
             pause = true;
-            pauseTimer = 0.75f;
+            pauseTimer = 1.5f;
             enemyAnim.CrossFade("idle");
             agent.velocity = new Vector3(0, 0, 0);
             agent.Stop();

@@ -17,7 +17,7 @@ public class MouseOrbitImproved : MonoBehaviour {
     float x = 0.0f;
     float y = 0.0f;
     GameObject charBlock;
-
+    
     // Use this for initialization
     void Start()
     {

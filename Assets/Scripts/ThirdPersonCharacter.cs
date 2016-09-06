@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -30,7 +29,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
         
-       
 
         [SerializeField] AudioClip[] soundMoves;
         [SerializeField] AudioSource sfxSource;

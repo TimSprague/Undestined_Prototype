@@ -74,7 +74,12 @@ public class PlayerHealth : MonoBehaviour {
             if(HealClip && audioSource)
                 audioSource.PlayOneShot(HealClip);
             healed = true;
-            playerCurrentHealth += _value;
+            if (playerCurrentHealth < playerMaxHealth)
+                playerCurrentHealth += _value;
+
+            if (playerCurrentHealth > playerMaxHealth)
+                playerCurrentHealth = playerMaxHealth;
+
             HealthBarUpdate();
         }
     }

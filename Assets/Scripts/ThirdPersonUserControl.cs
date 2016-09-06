@@ -16,8 +16,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
         MeshCollider Skill1;
         SphereCollider Skill2;
-
-        public GameObject playerHealth;
+        PlayerHealth playerHealth;
 
         GameObject currentEnemy;
         float UI_timer = 0;
@@ -41,6 +40,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Character = GetComponent<ThirdPersonCharacter>();
             Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
             Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
+            playerHealth = GetComponent<PlayerHealth>();
 
         }
 
@@ -73,6 +73,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (Input.GetButtonDown("Skill3"))
             {
                 // use number 3 skill
+                double tempHealth;
+                tempHealth = playerHealth.playerMaxHealth * 0.25;
+                playerHealth.IncreaseHealth((int)tempHealth);
             }
 
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));

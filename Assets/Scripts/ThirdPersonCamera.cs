@@ -6,7 +6,7 @@ public class ThirdPersonCamera : MonoBehaviour {
     private const float Y_ANGLE_MIN = 0.0f;
     private const float Y_ANGLE_MAX = 50.0f;
 
-    private Camera cam;
+    //private Camera cam;
 
     public Transform lookAt;
     public Transform camTransform;
@@ -14,13 +14,13 @@ public class ThirdPersonCamera : MonoBehaviour {
     private float distance = 10.0f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
-    private float sensivityX = 4.0f;
-    private float sensivityY = 1.0f;
+   // private float sensivityX = 4.0f;
+    //private float sensivityY = 1.0f;
 
     private void Start()
     {
         camTransform = transform;
-        cam = Camera.main;
+       // cam = Camera.main;
     }
 
     private void Update()

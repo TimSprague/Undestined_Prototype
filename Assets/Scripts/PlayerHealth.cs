@@ -17,6 +17,7 @@ public class PlayerHealth : MonoBehaviour {
     public float HealFlashSpeed = 5f;
     public Color HealColor = new Color(0f, 1f, 0f, 1f);
     bool healed;
+    public AudioSource audioSource;
 
     // Use this for initialization
     void Start () {
@@ -54,6 +55,8 @@ public class PlayerHealth : MonoBehaviour {
         if (isAlive)
         {
             damaged = true;
+            if(DamageClip && audioSource)
+                audioSource.PlayOneShot(DamageClip);    
             playerCurrentHealth -= _value;
             HealthBarUpdate();
         }
@@ -68,6 +71,8 @@ public class PlayerHealth : MonoBehaviour {
     {
         if (isAlive)
         {
+            if(HealClip && audioSource)
+                audioSource.PlayOneShot(HealClip);
             healed = true;
             playerCurrentHealth += _value;
             HealthBarUpdate();

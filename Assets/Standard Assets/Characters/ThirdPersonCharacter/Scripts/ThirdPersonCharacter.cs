@@ -31,6 +31,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         [SerializeField] AudioClip[] soundMoves;
         [SerializeField] AudioSource sfxSource;
+
         void Start()
 		{
             //sfxSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class MeleeAttack : MonoBehaviour {
 
-    public float vSpeed = 2.0f;
-    public float swordTurn = 2.0f;
     public float speed = 10.0f;
 
     public Animator swordAnimation;
@@ -19,7 +17,6 @@ public class MeleeAttack : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
         if (Input.GetMouseButton(0))

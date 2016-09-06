@@ -12,8 +12,12 @@ public class MeleeAttack : MonoBehaviour {
     public float speed = 10.0f;
 
     public ComboStates combScipt;
+    public EnemyScript enemScript;
     public Animator swordAnimation;
 
+    public bool attacking = false;
+    public bool lightAtk = false;
+    public bool heavyAtk = false;
 	// Use this for initialization
 	void Start () {
         combScipt = GetComponent<ComboStates>();
@@ -22,7 +26,7 @@ public class MeleeAttack : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 
         
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
@@ -30,20 +34,41 @@ public class MeleeAttack : MonoBehaviour {
         if (Input.GetMouseButton(0))
         {
             swordAnimation.Play("LightAttack");
-            combScipt.UpdateState((int)COMBOSTATE.lightAttack);
+            lightAtk = true;
+            attacking = true;
         }
 
         if(Input.GetMouseButton(1))
         {
             swordAnimation.Play("HeavyAttack");
-            combScipt.UpdateState((int)COMBOSTATE.heavyAttack);
-
+            attacking = true;
+            heavyAtk = true;
         }
 
     }
 
-    public IEnumerator OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
-        yield return new WaitForFixedUpdate();
+        other.gameObject.tag = "Enemy";
+        enemScript = other.GetComponent<EnemyScript>();
+        if (attacking)
+        {
+            if (lightAtk)
+            {
+                combScipt.UpdateState((int)COMBOSTATE.lightAttack,enemScript);
+                enemScript.health -= 10;
+                lightAtk = false;
+                attacking = false;
+            }
+            if (heavyAtk)
+            {
+                combScipt.UpdateState((int)COMBOSTATE.heavyAttack,enemScript);
+                enemScript.health -= 20;
+                attacking = false;
+                heavyAtk = false;
+            }
+
+        }
     }
+    
 }

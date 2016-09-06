@@ -52,11 +52,15 @@ public abstract class EnemyScript : MonoBehaviour {
         pauseTimer = 0;
         destPoint = 0;
         agent.destination = points[0].position;
+        health = 100;
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
-
+        if(health <0)
+        {
+            GameObject.Destroy(this);
+        }
         if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
         {
             agent.destination = playerTransform.position;
@@ -92,7 +96,7 @@ public abstract class EnemyScript : MonoBehaviour {
             knockupTimer -= Time.deltaTime;
 
             if (knockupTimer>0.0f) {
-                transform.position = new Vector3(transform.position.x, transform.position.y + speed * Time.deltaTime, transform.position.z);
+                transform.position = new Vector3(transform.position.x, transform.position.y + speed * 0.01f, transform.position.z);
             }else
             {
                 smashDown();
@@ -105,7 +109,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
             if (smashTimer > 0.0f)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y - speed * Time.deltaTime, transform.position.z);
+                int x = 0;
             }
             else
             {
@@ -148,7 +152,7 @@ public abstract class EnemyScript : MonoBehaviour {
         player.DecreaseHealth(10);
         enemyAnim.CrossFade("Attack");
         agent.velocity = new Vector3(0, 0, 0);
-        
+        agent.Stop();
        
 
 
@@ -157,12 +161,14 @@ public abstract class EnemyScript : MonoBehaviour {
     public void knockUp()
     {
         enemyAnim.Stop();
+        knockedUp = true;
         enemyAnim.CrossFade("idle");
         knockupTimer = 5.0f;
     }
     public void smashDown()
     {
         smashedDown = true;
+        smashTimer = 5.0f;
     }
     public void isStunned()
     {

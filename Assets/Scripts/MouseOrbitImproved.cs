@@ -28,6 +28,16 @@ public class MouseOrbitImproved : MonoBehaviour {
         charBlock = GameObject.Find("CameraRotate");
     }
 
+    void Update()
+    {
+        distance = charBlock.GetComponent<Raycast3>().distance3;
+        if (distance > 5)
+        {
+            distance = 5;
+        }
+    }
+
+
     void LateUpdate()
     {
         if (target)

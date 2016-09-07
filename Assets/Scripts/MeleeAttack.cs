@@ -16,10 +16,7 @@ public class MeleeAttack : MonoBehaviour {
     public Animator swordAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
-    
-    // Use this for initialization
-    void Start () {
-
+     
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;

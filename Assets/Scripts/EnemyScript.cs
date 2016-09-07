@@ -6,6 +6,7 @@ public abstract class EnemyScript : MonoBehaviour {
     
    //Base Attributes
     public int health;
+    public int maxHealth;
     public bool alive;
     public int attack;
     public int defense;
@@ -36,6 +37,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
+
+    [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -45,14 +48,16 @@ public abstract class EnemyScript : MonoBehaviour {
       
         canChange = false;
         stunned = false;
-        bleeding = false;
+        bleeding = true; // changed for testing - LC
         canChange = true;
         alive = true;
         knockedUp = false;
         pauseTimer = 0;
+        bleedTimer = 5; // Added for testing - LC
+        bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
       
-        health = 100;
+        health = maxHealth = 100;
 	}
 	
 	// Update is called once per frame
@@ -133,6 +138,9 @@ public abstract class EnemyScript : MonoBehaviour {
         isBleeding();
         isStunned();
         enemyAnim["Attack"].layer = 0;
+
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
 
     }
     public void FixedUpdate()

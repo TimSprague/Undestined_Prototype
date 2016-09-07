@@ -17,7 +17,7 @@ public class MouseOrbitImproved : MonoBehaviour {
     float x = 0.0f;
     float y = 0.0f;
     GameObject charBlock;
-
+    
     // Use this for initialization
     void Start()
     {
@@ -27,6 +27,16 @@ public class MouseOrbitImproved : MonoBehaviour {
 
         charBlock = GameObject.Find("CameraRotate");
     }
+
+    void Update()
+    {
+        distance = charBlock.GetComponent<Raycast3>().distance3;
+        if (distance > 5)
+        {
+            distance = 5;
+        }
+    }
+
 
     void LateUpdate()
     {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -30,7 +29,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
         
-       
 
         [SerializeField] AudioClip[] soundMoves;
         [SerializeField] AudioSource sfxSource;
@@ -125,12 +123,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void LeftStep()
         {
             AudioClip clip = null;
-            float maxVol = sfxSource.volume;
+            float maxVol = 1.0f;
             //RaycastHit hit;
 
             
             clip = soundMoves[0];
-            maxVol = UnityEngine.Random.Range(0.2f, 0.3f);
+            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
 
             if (clip != null)
             {
@@ -143,12 +141,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void RightStep()
         {
             AudioClip clip = null;
-            float maxVol = sfxSource.volume;
+            float maxVol = 1.0f;
             //RaycastHit hit;
 
 
-            clip = soundMoves[2];
-            maxVol = UnityEngine.Random.Range(0.2f, 0.3f);
+            clip = soundMoves[0];
+            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
             
 
             if (clip != null)
@@ -158,6 +156,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             }
         }
+
+
         void UpdateAnimator(Vector3 move)
 		{
 			// update the animator parameters

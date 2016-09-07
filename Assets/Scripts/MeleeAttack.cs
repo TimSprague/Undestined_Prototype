@@ -8,9 +8,11 @@ public class MeleeAttack : MonoBehaviour {
     public float speed = 10.0f;
 
     public Animator swordAnimation;
-
-	// Use this for initialization
-	void Start () {
+    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioClip[] soundLightSwordSwings;
+    
+    // Use this for initialization
+    void Start () {
 
         swordAnimation = GetComponent<Animator>();
         
@@ -33,4 +35,19 @@ public class MeleeAttack : MonoBehaviour {
         }
 
 	}
+
+    void swordSwing()
+    {
+        AudioClip clip = null;
+        float maxVol = sfxSource.volume;
+
+        if (soundLightSwordSwings.GetLength(0) > 0)
+            clip = soundLightSwordSwings[0];
+        maxVol = UnityEngine.Random.Range(0.2f, 0.5f);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
 }

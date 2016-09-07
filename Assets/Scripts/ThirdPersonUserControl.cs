@@ -17,7 +17,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         MeshCollider Skill1;
         SphereCollider Skill2;
         PlayerHealth playerHealth;
-
+        ComboStates comboState;
         GameObject currentEnemy;
         float UI_timer = 0;
         public float UI_fadeInOutSpeed = 2;
@@ -59,7 +59,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
             Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
             playerHealth = GetComponent<PlayerHealth>();
-
+            comboState = GameObject.Find("Morfus").GetComponent<ComboStates>();
         }
 
 
@@ -68,6 +68,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (!m_Jump)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                if (m_Jump)
+                {
+                    comboState.UpdateState(3, null, null);
+                }
             }
 
             if (Input.GetMouseButton(0))
@@ -78,13 +82,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 // heavy melee
             }
-            if (Input.GetButtonDown("Skill1"))
+            if (Input.GetButtonDown("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0)
             {
                 // use the number 1 skill BLEED in forward cone range 5 yards
                 Skill1.enabled = true;
                 skill1Active = true;
             }
-            if (Input.GetButtonDown("Skill2"))
+            if (Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0)
             {
                 // use number 2 skill
                 Skill2.enabled = true;

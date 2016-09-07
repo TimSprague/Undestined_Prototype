@@ -71,16 +71,15 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
-            //TakeDmg(bleedDmg);  Use to calculate damage to health
-            health -= bleedDmg; // Obsolete
+            
         }
         if (!stunned&&! knockedUp)
         {
            
             if (bleeding)
             {
-
-                health -= bleedDmg;
+                //TakeDmg(bleedDmg);  Use to calculate damage to health
+                health -= bleedDmg; // Obsolete
             }
             if (!stunned && !knockedUp)
             {

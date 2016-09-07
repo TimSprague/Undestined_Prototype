@@ -16,8 +16,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
         MeshCollider Skill1;
         SphereCollider Skill2;
-
-        public GameObject playerHealth;
+        PlayerHealth playerHealth;
 
         GameObject currentEnemy;
         float UI_timer = 0;
@@ -41,6 +40,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Character = GetComponent<ThirdPersonCharacter>();
             Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
             Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
+            playerHealth = GetComponent<PlayerHealth>();
 
         }
 
@@ -73,32 +73,35 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (Input.GetButtonDown("Skill3"))
             {
                 // use number 3 skill
+                double tempHealth;
+                tempHealth = playerHealth.playerMaxHealth * 0.25;
+                playerHealth.IncreaseHealth((int)tempHealth);
             }
 
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hit;
-            //if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Enemy")
-            //{
-            //    Debug.Log("Found a target");
-            //    hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
-            //    currentEnemy = hit.transform.gameObject;
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Enemy")
+            {
+                Debug.Log("Found a target");
+                hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+                currentEnemy = hit.transform.gameObject;
 
-            //    Color imageC = currentEnemy.GetComponentInChildren<Image>().color;
-            //    Color textC = currentEnemy.GetComponentInChildren<Text>().color;
-            //    UI_timer += Time.deltaTime;
-            //    imageC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
-            //    textC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
+                Color imageC = currentEnemy.GetComponentInChildren<Image>().color;
+                Color textC = currentEnemy.GetComponentInChildren<Text>().color;
+                UI_timer += Time.deltaTime;
+                imageC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
+                textC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
 
-            //    currentEnemy.GetComponentInChildren<Image>().color = imageC;
-            //    currentEnemy.GetComponentInChildren<Text>().color = textC;
-            //}
-            //else
-            //{
-            //    if (currentEnemy != null)
-            //        currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
-            //    currentEnemy = null;
-            //    UI_timer = 0;
-            //}
+                currentEnemy.GetComponentInChildren<Image>().color = imageC;
+                currentEnemy.GetComponentInChildren<Text>().color = textC;
+            }
+            else
+            {
+                if (currentEnemy != null)
+                    currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
+                currentEnemy = null;
+                UI_timer = 0;
+            }
 
         }
 

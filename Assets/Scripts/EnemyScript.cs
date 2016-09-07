@@ -204,7 +204,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
         agent.destination = points[destPoint].position;
       
-        float x = agent.remainingDistance;
+        //float x = agent.remainingDistance;
         if (!playerTarget)
         {
             pause = true;

@@ -14,7 +14,9 @@ public class MeleeAttack : MonoBehaviour {
     public ComboStates combScipt;
     public EnemyScript enemScript;
     public Animator swordAnimation;
-
+    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioClip[] soundLightSwordSwings;
+     
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;
@@ -30,14 +32,14 @@ public class MeleeAttack : MonoBehaviour {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
             lightAtk = true;
             attacking = true;
         }
 
-        if(Input.GetMouseButton(1))
+        if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
             attacking = true;
@@ -63,7 +65,7 @@ public class MeleeAttack : MonoBehaviour {
 
                     Vector3 temp = transform.TransformDirection(transform.forward);
                     enemScript.rigidBody.AddForce(new Vector3(temp.x,2.5f,temp.z)*100);
-                   
+                    enemScript.knockUp();
                     lightAtk = false;
                     attacking = false;
                 }
@@ -79,4 +81,19 @@ public class MeleeAttack : MonoBehaviour {
         }
     }
     
+
+    void swordSwing()
+    {
+        AudioClip clip = null;
+        float maxVol = sfxSource.volume;
+
+        if (soundLightSwordSwings.GetLength(0) > 0)
+            clip = soundLightSwordSwings[0];
+        maxVol = UnityEngine.Random.Range(0.2f, 0.5f);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
 }

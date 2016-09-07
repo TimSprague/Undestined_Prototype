@@ -33,7 +33,7 @@ public class MeleeAttack : MonoBehaviour {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
 
@@ -42,7 +42,7 @@ public class MeleeAttack : MonoBehaviour {
             heavyAtk = false;
         }
 
-        if(Input.GetMouseButton(1))
+        if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
 
@@ -57,8 +57,9 @@ public class MeleeAttack : MonoBehaviour {
     {
         if (other.gameObject.tag == "Enemy")
         {
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             enemScript = other.GetComponent<MeleeEnemy>();
-           
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             if (attacking)
             {
                 if (lightAtk)

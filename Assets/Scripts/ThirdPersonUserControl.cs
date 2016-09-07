@@ -82,13 +82,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 // heavy melee
             }
-            if (Input.GetButtonDown("Skill1"))
+            if (Input.GetButtonDown("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0)
             {
                 // use the number 1 skill BLEED in forward cone range 5 yards
                 Skill1.enabled = true;
                 skill1Active = true;
             }
-            if (Input.GetButtonDown("Skill2"))
+            if (Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0)
             {
                 // use number 2 skill
                 Skill2.enabled = true;

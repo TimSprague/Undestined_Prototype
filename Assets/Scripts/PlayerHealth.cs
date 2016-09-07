@@ -18,10 +18,10 @@ public class PlayerHealth : MonoBehaviour {
     public Color HealColor = new Color(0f, 1f, 0f, 1f);
     bool healed;
     public AudioSource audioSource;
-
+    public ParticleSystem PlayerBleed;
     // Use this for initialization
     void Start () {
-	
+       
 	}
 	
 	// Update is called once per frame
@@ -48,10 +48,16 @@ public class PlayerHealth : MonoBehaviour {
                 HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
             healed = false;
         }
+
     }
 
    public void DecreaseHealth(int _value)
     {
+        if (PlayerBleed && !PlayerBleed.isPlaying)
+        {
+            PlayerBleed.Play();
+        }
+
         if (isAlive)
         {
             damaged = true;

@@ -10,9 +10,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public int attack;
     public int defense;
     public float speed;
-    Rigidbody rigidBody;
+    public Rigidbody rigidBody;
     //Nav Mesh for movement
-    public NavMeshAgent agent;
+   
     public Transform playerTransform;
     public PlayerHealth player;
     public Animation enemyAnim;
@@ -42,7 +42,7 @@ public abstract class EnemyScript : MonoBehaviour {
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
-        agent = GetComponent<NavMeshAgent>();
+      
         canChange = false;
         stunned = false;
         bleeding = false;
@@ -51,7 +51,7 @@ public abstract class EnemyScript : MonoBehaviour {
         knockedUp = false;
         pauseTimer = 0;
         destPoint = 0;
-        agent.destination = points[0].position;
+      
         health = 100;
 	}
 	
@@ -59,11 +59,13 @@ public abstract class EnemyScript : MonoBehaviour {
 	public virtual void Update () {
         if(health <0)
         {
-            GameObject.Destroy(this);
+            DestroyImmediate(this.gameObject);
+            
         }
-        if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
+        
+        if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
         {
-            agent.destination = playerTransform.position;
+        //Move to player
             playerTarget = true;
 
         }
@@ -71,7 +73,7 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             if (playerTarget == true)
             {
-                agent.destination = points[destPoint % points.Length].position;
+                
             }
             playerTarget = false;
         }
@@ -82,26 +84,18 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         if (!stunned)
         {
-            if(agent.remainingDistance<0.05f&&canChange)
-            {
-                canChange = false;
-                GoToNextPoint();
-            }
+            //if(agent.remainingDistance<0.05f&&canChange)
+            //{
+            //    canChange = false;
+            //    GoToNextPoint();
+            //}
 
 
 
         }
         if(knockedUp)
         {
-            knockupTimer -= Time.deltaTime;
 
-            if (knockupTimer>0.0f) {
-                transform.position = new Vector3(transform.position.x, transform.position.y + speed * 0.01f, transform.position.z);
-            }else
-            {
-                smashDown();
-                knockedUp = false;
-            }
         }
         if (smashedDown)
         {
@@ -113,7 +107,7 @@ public abstract class EnemyScript : MonoBehaviour {
             }
             else
             {
-                agent.Resume();
+               
                 smashedDown = false;
             }
         }
@@ -122,7 +116,7 @@ public abstract class EnemyScript : MonoBehaviour {
             pauseTimer -= Time.deltaTime;
             if (pauseTimer < 0.0f)
             {
-                agent.Resume();
+               
                 enemyAnim.CrossFade("Walk");
                 pause = false;
                 
@@ -147,23 +141,29 @@ public abstract class EnemyScript : MonoBehaviour {
     }
     public void OnCollisionEnter(Collision other)
     {
-        enemyAnim["Attack"].layer = 1;
+        if (other.gameObject.tag == "Player")
+        {
+            enemyAnim["Attack"].layer = 1;
 
-        player.DecreaseHealth(10);
-        enemyAnim.CrossFade("Attack");
-        agent.velocity = new Vector3(0, 0, 0);
-        agent.Stop();
-       
 
+            enemyAnim.CrossFade("Attack");
+           
+            pause = true;
+            pauseTimer = 2.5f;
+        
+
+        }
 
 
     }
     public void knockUp()
     {
         enemyAnim.Stop();
+
+
         knockedUp = true;
         enemyAnim.CrossFade("idle");
-        knockupTimer = 5.0f;
+       // knockupTimer = 5.0f;
     }
     public void smashDown()
     {
@@ -198,9 +198,8 @@ public abstract class EnemyScript : MonoBehaviour {
             return;
         destPoint = (destPoint + 1) % points.Length;
 
-        agent.destination = points[destPoint].position;
       
-        float x = agent.remainingDistance;
+       
         if (!playerTarget)
         {
             pause = true;
@@ -208,15 +207,13 @@ public abstract class EnemyScript : MonoBehaviour {
             changeTimer = 5.0f;
 
             enemyAnim.CrossFade("idle");
-            agent.velocity = new Vector3(0, 0, 0);
-            agent.Stop();
+           
         }else
         {
             pause = true;
             pauseTimer = 1.5f;
             enemyAnim.CrossFade("idle");
-            agent.velocity = new Vector3(0, 0, 0);
-            agent.Stop();
+           
         }
       
     }

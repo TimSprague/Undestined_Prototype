@@ -22,7 +22,6 @@ public class MeleeAttack : MonoBehaviour {
 	void Start () {
         combScipt = GetComponent<ComboStates>();
         swordAnimation = GetComponent<Animator>();
-        
 	}
 	
 	// Update is called once per frame
@@ -48,25 +47,32 @@ public class MeleeAttack : MonoBehaviour {
 
     public void OnTriggerEnter(Collider other)
     {
-        other.gameObject.tag = "Enemy";
-        enemScript = other.GetComponent<EnemyScript>();
-        if (attacking)
+        if (other.gameObject.tag == "Enemy")
         {
-            if (lightAtk)
+            enemScript = other.GetComponent<MeleeEnemy>();
+            if (attacking)
             {
-                combScipt.UpdateState((int)COMBOSTATE.lightAttack,enemScript);
-                enemScript.health -= 10;
-                lightAtk = false;
-                attacking = false;
-            }
-            if (heavyAtk)
-            {
-                combScipt.UpdateState((int)COMBOSTATE.heavyAttack,enemScript);
-                enemScript.health -= 20;
-                attacking = false;
-                heavyAtk = false;
-            }
+                if (lightAtk)
+                {
 
+                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript);
+                    enemScript.health -= 10;
+
+                    Vector3 temp = transform.TransformDirection(transform.forward);
+                    enemScript.rigidBody.AddForce(new Vector3(temp.x,2.5f,temp.z)*100);
+                   
+                    lightAtk = false;
+                    attacking = false;
+                }
+                if (heavyAtk)
+                {
+                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript);
+                    enemScript.health -= 20;
+                    attacking = false;
+                    heavyAtk = false;
+                }
+
+            }
         }
     }
     

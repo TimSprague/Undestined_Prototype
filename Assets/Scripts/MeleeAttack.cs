@@ -30,14 +30,14 @@ public class MeleeAttack : MonoBehaviour {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
             lightAtk = true;
             attacking = true;
         }
 
-        if(Input.GetMouseButton(1))
+        if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
             attacking = true;

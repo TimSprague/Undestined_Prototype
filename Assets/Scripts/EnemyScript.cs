@@ -12,7 +12,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float speed;
     public Rigidbody rigidBody;
     //Nav Mesh for movement
-   
+    public float rotationSpeed;
     public Transform playerTransform;
     public PlayerHealth player;
     public Animation enemyAnim;
@@ -51,7 +51,7 @@ public abstract class EnemyScript : MonoBehaviour {
         knockedUp = false;
         pauseTimer = 0;
         destPoint = 0;
-      
+        rotationSpeed = 5f;
         health = 100;
 	}
 	
@@ -63,40 +63,20 @@ public abstract class EnemyScript : MonoBehaviour {
             
         }
         
-        if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
-        {
-        //Move to player
-            playerTarget = true;
-
-        }
-        else
-        {
-            if (playerTarget == true)
-            {
-                
-            }
-            playerTarget = false;
-        }
+        
         if(bleeding)
         {
-            //Bleed damage is setup when the enemy is hit by the player.
+           
             health -= bleedDmg;
         }
-        if (!stunned)
+        if (!stunned&&! knockedUp)
         {
-            //if(agent.remainingDistance<0.05f&&canChange)
-            //{
-            //    canChange = false;
-            //    GoToNextPoint();
-            //}
+           
 
 
 
         }
-        if(knockedUp)
-        {
-
-        }
+        
         if (smashedDown)
         {
             smashTimer -= Time.deltaTime;
@@ -137,7 +117,31 @@ public abstract class EnemyScript : MonoBehaviour {
     }
     public void FixedUpdate()
     {
-
+        if (!knockedUp&&!stunned)
+        {
+            if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
+            {
+           
+            
+                Vector3 direction = playerTransform.transform.position - transform.position;
+                direction.Normalize();
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+                moveToTarget(playerTransform.position);
+                playerTarget = true;
+            }
+            else
+            {
+                playerTarget = false;
+                Vector3 direction = points[destPoint].position - transform.position;
+                direction.Normalize();
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+               
+                moveToTarget(points[destPoint].position);
+            }
+        }
+        
     }
     public void OnCollisionEnter(Collision other)
     {
@@ -145,13 +149,18 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             enemyAnim["Attack"].layer = 1;
 
-
-            enemyAnim.CrossFade("Attack");
+            enemyAnim.Play("Attack");
+            
            
             pause = true;
             pauseTimer = 2.5f;
         
 
+        }
+        if(other.gameObject.tag =="Terrain")
+        {
+            knockedUp = false;
+            enemyAnim.CrossFade("Walk");
         }
 
 
@@ -192,29 +201,75 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void GoToNextPoint()
+    public void moveToTarget(Vector3 target)
     {
-        if (points.Length == 0)
-            return;
-        destPoint = (destPoint + 1) % points.Length;
+        Vector3 moveDirection = target - transform.position;
+        Vector3 velocity = rigidBody.velocity;
 
-      
-       
-        if (!playerTarget)
+        if(moveDirection.magnitude<4 &&!playerTarget)
         {
-            pause = true;
-            pauseTimer = 5;
-            changeTimer = 5.0f;
-
-            enemyAnim.CrossFade("idle");
-           
-        }else
-        {
-            pause = true;
-            pauseTimer = 1.5f;
-            enemyAnim.CrossFade("idle");
-           
+            destPoint = (destPoint + 1) % points.Length;
         }
-      
+        else
+        {
+            velocity = moveDirection.normalized * speed;
+        }
+        rigidBody.velocity = velocity;
     }
+
+    
+
+    float GetBearing(Transform startTransform, Vector3 targetPosition)
+    {
+        Vector3 vectorToTarget = targetPosition - startTransform.position;
+
+        float angleToTarget = Vector3.Angle(startTransform.forward, vectorToTarget);
+        int direction = AngleDir(startTransform.forward, vectorToTarget, startTransform.up);
+
+        return (direction == 1) ? 360f - angleToTarget : angleToTarget;
+    }
+
+
+    int AngleDir(Vector3 forwardVector, Vector3 targetDirection, Vector3 upVector)
+    {
+        float direction = Vector3.Dot(Vector3.Cross(forwardVector, targetDirection), upVector);
+
+        if (direction > 0f)
+        {
+            return 1;
+        }
+        else if (direction < 0f)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    //public void GoToNextPoint()
+    //{
+    //    if (points.Length == 0)
+    //        return;
+    //    destPoint = (destPoint + 1) % points.Length;
+
+
+
+    //    if (!playerTarget)
+    //    {
+    //        pause = true;
+    //        pauseTimer = 5;
+    //        changeTimer = 5.0f;
+
+    //        enemyAnim.CrossFade("idle");
+
+    //    }else
+    //    {
+    //        pause = true;
+    //        pauseTimer = 1.5f;
+    //        enemyAnim.CrossFade("idle");
+
+    //    }
+
+    //}
 }

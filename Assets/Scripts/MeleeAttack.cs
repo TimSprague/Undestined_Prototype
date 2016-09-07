@@ -60,7 +60,7 @@ public class MeleeAttack : MonoBehaviour {
 
                     Vector3 temp = transform.TransformDirection(transform.forward);
                     enemScript.rigidBody.AddForce(new Vector3(temp.x,2.5f,temp.z)*100);
-                   
+                    enemScript.knockUp();
                     lightAtk = false;
                     attacking = false;
                 }

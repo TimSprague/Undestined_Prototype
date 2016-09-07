@@ -14,7 +14,9 @@ public class MeleeAttack : MonoBehaviour {
     public ComboStates combScipt;
     public EnemyScript enemScript;
     public Animator swordAnimation;
-
+    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioClip[] soundLightSwordSwings;
+     
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;
@@ -94,4 +96,19 @@ public class MeleeAttack : MonoBehaviour {
         }
     }
     
+
+    void swordSwing()
+    {
+        AudioClip clip = null;
+        float maxVol = sfxSource.volume;
+
+        if (soundLightSwordSwings.GetLength(0) > 0)
+            clip = soundLightSwordSwings[0];
+        maxVol = UnityEngine.Random.Range(0.2f, 0.5f);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
 }

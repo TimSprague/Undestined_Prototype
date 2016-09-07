@@ -83,20 +83,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
             }
 
-            if (smashedDown)
-            {
-                smashTimer -= Time.deltaTime;
-
-                if (smashTimer > 0.0f)
-                {
-                    
-                }
-                else
-                {
-
-                    smashedDown = false;
-                }
-            }
+            
             if (pause)
             {
                 pauseTimer -= Time.deltaTime;

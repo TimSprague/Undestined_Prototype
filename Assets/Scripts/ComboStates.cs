@@ -43,7 +43,7 @@ public class ComboStates : MonoBehaviour {
     {
         currentState *= 10;
         currentState += newState;
-        comboTimer = 5.0f;
+        comboTimer = 2.0f;
         switch (currentState)
         {
             case (int)COMBOSTATE.light :

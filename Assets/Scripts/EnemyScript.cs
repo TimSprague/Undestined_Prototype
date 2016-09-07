@@ -48,13 +48,13 @@ public abstract class EnemyScript : MonoBehaviour {
       
         canChange = false;
         stunned = false;
-        bleeding = true; // changed for testing - LC
+        bleeding = false; 
         canChange = true;
         alive = true;
         knockedUp = false;
         pauseTimer = 0;
-        bleedTimer = 5; // Added for testing - LC
-        bleedDmg = 1; // Added for testing - LC
+        //bleedTimer = 5; // Added for testing - LC
+        //bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
         rotationSpeed = 5f;
         health = maxHealth = 100;

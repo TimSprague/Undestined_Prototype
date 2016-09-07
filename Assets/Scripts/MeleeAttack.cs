@@ -58,14 +58,17 @@ public class MeleeAttack : MonoBehaviour {
         if (other.gameObject.tag == "Enemy")
         {
             enemScript = other.GetComponent<MeleeEnemy>();
+           
             if (attacking)
             {
                 if (lightAtk)
                 {
 
                     combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript,playerTrans);
-                    Vector3 temp = playerTrans.TransformDirection(-enemScript.transform.forward);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.x , 0, temp.z ) * 1500);
+                    //Vector3 temp = playerTrans.TransformDirection(-enemScript.transform.right);
+                    ////Vector3 vel = enemScript.rigidBody.velocity;
+                    ////enemScript.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
+                    //enemScript.rigidBody.AddForce(new Vector3(temp.x * 35, 0, temp.z * 35) );
                     enemScript.health -= 10;
 
                     

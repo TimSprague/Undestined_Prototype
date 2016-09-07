@@ -57,7 +57,7 @@ public abstract class EnemyScript : MonoBehaviour {
         bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
         rotationSpeed = 5f;
-        health = maxHealth = 100;
+        //health = maxHealth = 100;
 	}
 	
 	// Update is called once per frame
@@ -119,8 +119,8 @@ public abstract class EnemyScript : MonoBehaviour {
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+//        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        //enemyUIcontrol.StatusUpdate();
 
         }
     }

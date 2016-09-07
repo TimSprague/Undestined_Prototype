@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MeleeEnemy : EnemyScript {
-
+    
     // Use this for initialization
     public override void Start () {
         base.Start();
@@ -12,4 +12,8 @@ public class MeleeEnemy : EnemyScript {
    public override void Update() {
         base.Update();
 	}
+    public void thing()
+    {
+
+    }
 }

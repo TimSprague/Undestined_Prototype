@@ -18,6 +18,7 @@ public class MeleeAttack : MonoBehaviour {
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;
+
 	// Use this for initialization
 	void Start () {
         combScipt = GetComponent<ComboStates>();
@@ -49,7 +50,9 @@ public class MeleeAttack : MonoBehaviour {
     {
         if (other.gameObject.tag == "Enemy")
         {
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             enemScript = other.GetComponent<MeleeEnemy>();
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             if (attacking)
             {
                 if (lightAtk)

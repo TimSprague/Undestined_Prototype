@@ -48,25 +48,28 @@ public class MeleeAttack : MonoBehaviour {
 
     public void OnTriggerEnter(Collider other)
     {
-        other.gameObject.tag = "Enemy";
-        enemScript = other.GetComponent<EnemyScript>();
-        if (attacking)
+        if (other.gameObject.tag == "Enemy")
         {
-            if (lightAtk)
+           
+            enemScript = other.GetComponent<EnemyScript>();
+            if (attacking)
             {
-                combScipt.UpdateState((int)COMBOSTATE.lightAttack,enemScript);
-                enemScript.health -= 10;
-                lightAtk = false;
-                attacking = false;
-            }
-            if (heavyAtk)
-            {
-                combScipt.UpdateState((int)COMBOSTATE.heavyAttack,enemScript);
-                enemScript.health -= 20;
-                attacking = false;
-                heavyAtk = false;
-            }
+                if (lightAtk)
+                {
+                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript);
+                    enemScript.health -= 10;
+                    lightAtk = false;
+                    attacking = false;
+                }
+                if (heavyAtk)
+                {
+                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript);
+                    enemScript.health -= 20;
+                    attacking = false;
+                    heavyAtk = false;
+                }
 
+            }
         }
     }
     

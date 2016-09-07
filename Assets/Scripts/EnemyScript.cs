@@ -59,7 +59,9 @@ public abstract class EnemyScript : MonoBehaviour {
 	public virtual void Update () {
         if(health <0)
         {
-            GameObject.Destroy(this);
+            
+           // GameObject.DestroyObject(this);
+            Destroy(this.gameObject);
         }
         if (Vector3.Distance(playerTransform.position, agent.transform.position) < Distance)
         {
@@ -152,6 +154,8 @@ public abstract class EnemyScript : MonoBehaviour {
         player.DecreaseHealth(10);
         enemyAnim.CrossFade("Attack");
         agent.velocity = new Vector3(0, 0, 0);
+        pause = true;
+        pauseTimer = 2.0f;
         agent.Stop();
        
 
@@ -163,7 +167,7 @@ public abstract class EnemyScript : MonoBehaviour {
         enemyAnim.Stop();
         knockedUp = true;
         enemyAnim.CrossFade("idle");
-        knockupTimer = 5.0f;
+        knockupTimer = 2.0f;
     }
     public void smashDown()
     {

@@ -58,6 +58,7 @@ public abstract class EnemyScript : MonoBehaviour {
         destPoint = 0;
         rotationSpeed = 5f;
         //health = maxHealth = 100;
+        DamagePopupController.Initialize();
 	}
 	
 	// Update is called once per frame
@@ -70,10 +71,15 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
+            
+        }
+        if (!stunned&&! knockedUp)
+        {
+           
             if (bleeding)
             {
-
-                health -= bleedDmg;
+                //TakeDmg(bleedDmg);  Use to calculate damage to health
+                health -= bleedDmg; // Obsolete
             }
             if (!stunned && !knockedUp)
             {
@@ -83,20 +89,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
             }
 
-            if (smashedDown)
-            {
-                smashTimer -= Time.deltaTime;
-
-                if (smashTimer > 0.0f)
-                {
-                    
-                }
-                else
-                {
-
-                    smashedDown = false;
-                }
-            }
+            
             if (pause)
             {
                 pauseTimer -= Time.deltaTime;
@@ -176,6 +169,11 @@ public abstract class EnemyScript : MonoBehaviour {
         }
 
     }
+    // Function reserved to test damage to enemy
+    //void OnMouseDown()
+    //{
+    //    TakeDmg(10);
+    //}
     public void knockUp()
     {
         enemyAnim.Stop();
@@ -224,8 +222,14 @@ public abstract class EnemyScript : MonoBehaviour {
         rigidBody.velocity = velocity;
     }
 
-    
+    // Use this function to update health
+    public void TakeDmg(int dmg)
+    {
+        health -= dmg;
+        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+    }
 
+    
     
     //public void GoToNextPoint()
     //{

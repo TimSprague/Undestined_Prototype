@@ -39,11 +39,11 @@ public class ComboStates : MonoBehaviour {
      * With each state, the current state is multipled by 10 in order to preserve the combo.
      * Each time a attack is entered, it is stored until a state in which a final move is executed.
      **/
-    public void UpdateState(int newState, EnemyScript other)
+    public void UpdateState(int newState, EnemyScript other,Transform player)
     {
         currentState *= 10;
         currentState += newState;
-        comboTimer = 2.0f;
+        comboTimer = 1.0f;
         switch (currentState)
         {
             case (int)COMBOSTATE.light :
@@ -56,20 +56,29 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.lightHeavy:
                 {
                     //perform smash up
-                    other.knockUp();
+                    if (other != null) {
+                        Vector3 temp = player.TransformDirection(-player.transform.right);
+                        other.rigidBody.AddForce(new Vector3(temp.x * 0.5f, 4.5f, temp.z * 0.5f) * 150);
+
+                        other.knockUp();
+                    }
                 }
                 break;
             case (int)COMBOSTATE.lightLight:
                 {
                     //2nd basic attack
-                    
+                   
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJumpHeavy:
                 {
                     //Perfrom down smash
                     //Call function
-                    other.smashDown();
+                    if (other != null)
+                    {
+                        Vector3 temp = player.TransformDirection(-player.transform.right);
+                        other.rigidBody.AddForce(new Vector3(temp.x * 0.5f, -4.5f, temp.z * 0.5f) * 100);
+                    }
                 }
                 break;
             case (int)COMBOSTATE.lightLightLight:
@@ -91,7 +100,7 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.lightHeavyJump:
                 {
                     //Intermediate step
-                   
+                    int x = 0;
                 }
                 break;
 

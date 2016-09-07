@@ -52,7 +52,7 @@ public abstract class EnemyScript : MonoBehaviour {
         pauseTimer = 0;
         destPoint = 0;
         rotationSpeed = 5f;
-        health = 100;
+        
 	}
 	
 	// Update is called once per frame
@@ -60,60 +60,61 @@ public abstract class EnemyScript : MonoBehaviour {
         if(health <0)
         {
             DestroyImmediate(this.gameObject);
-            
+            alive = false;
         }
-        
-        
-        if(bleeding)
+
+        if (alive)
         {
-           
-            health -= bleedDmg;
-        }
-        if (!stunned&&! knockedUp)
-        {
-           
-
-
-
-        }
-        
-        if (smashedDown)
-        {
-            smashTimer -= Time.deltaTime;
-
-            if (smashTimer > 0.0f)
+            if (bleeding)
             {
-                int x = 0;
-            }
-            else
-            {
-               
-                smashedDown = false;
-            }
-        }
-        if (pause)
-        {
-            pauseTimer -= Time.deltaTime;
-            if (pauseTimer < 0.0f)
-            {
-               
-                enemyAnim.CrossFade("Walk");
-                pause = false;
-                
-            }
-        }
-        if(!canChange)
-        {
-            changeTimer -= Time.deltaTime;
-            if(changeTimer<0)
-            {
-                canChange = true;
-            }
-        }
-        isBleeding();
-        isStunned();
-        enemyAnim["Attack"].layer = 0;
 
+                health -= bleedDmg;
+            }
+            if (!stunned && !knockedUp)
+            {
+
+
+
+
+            }
+
+            if (smashedDown)
+            {
+                smashTimer -= Time.deltaTime;
+
+                if (smashTimer > 0.0f)
+                {
+                    
+                }
+                else
+                {
+
+                    smashedDown = false;
+                }
+            }
+            if (pause)
+            {
+                pauseTimer -= Time.deltaTime;
+                if (pauseTimer < 0.0f)
+                {
+
+                    enemyAnim.CrossFade("Walk");
+                    pause = false;
+
+                }
+            }
+            if (!canChange)
+            {
+                changeTimer -= Time.deltaTime;
+                if (changeTimer < 0)
+                {
+                    canChange = true;
+                }
+            }
+            isBleeding();
+            isStunned();
+            enemyAnim["Attack"].layer = 0;
+        }
     }
     public void FixedUpdate()
     {
@@ -145,24 +146,26 @@ public abstract class EnemyScript : MonoBehaviour {
     }
     public void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Player")
+        if (alive)
         {
-            enemyAnim["Attack"].layer = 1;
+            if (other.gameObject.tag == "Player")
+            {
+                enemyAnim["Attack"].layer = 1;
 
-            enemyAnim.Play("Attack");
-            
-           
-            pause = true;
-            pauseTimer = 2.5f;
-        
+                enemyAnim.Play("Attack");
 
+
+                pause = true;
+                pauseTimer = 2.5f;
+
+
+            }
+            if (other.gameObject.tag == "Terrain")
+            {
+                knockedUp = false;
+                enemyAnim.CrossFade("Walk");
+            }
         }
-        if(other.gameObject.tag =="Terrain")
-        {
-            knockedUp = false;
-            enemyAnim.CrossFade("Walk");
-        }
-
 
     }
     public void knockUp()
@@ -172,13 +175,9 @@ public abstract class EnemyScript : MonoBehaviour {
 
         knockedUp = true;
         enemyAnim.CrossFade("idle");
-       // knockupTimer = 5.0f;
+    
     }
-    public void smashDown()
-    {
-        smashedDown = true;
-        smashTimer = 5.0f;
-    }
+   
     public void isStunned()
     {
         if (stunned)
@@ -212,41 +211,14 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            velocity = moveDirection.normalized * speed;
+            velocity = new Vector3(moveDirection.normalized.x * speed,0,moveDirection.normalized.z*speed);
         }
         rigidBody.velocity = velocity;
     }
 
     
 
-    float GetBearing(Transform startTransform, Vector3 targetPosition)
-    {
-        Vector3 vectorToTarget = targetPosition - startTransform.position;
-
-        float angleToTarget = Vector3.Angle(startTransform.forward, vectorToTarget);
-        int direction = AngleDir(startTransform.forward, vectorToTarget, startTransform.up);
-
-        return (direction == 1) ? 360f - angleToTarget : angleToTarget;
-    }
-
-
-    int AngleDir(Vector3 forwardVector, Vector3 targetDirection, Vector3 upVector)
-    {
-        float direction = Vector3.Dot(Vector3.Cross(forwardVector, targetDirection), upVector);
-
-        if (direction > 0f)
-        {
-            return 1;
-        }
-        else if (direction < 0f)
-        {
-            return -1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
+    
     //public void GoToNextPoint()
     //{
     //    if (points.Length == 0)

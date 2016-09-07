@@ -18,10 +18,12 @@ public class MeleeAttack : MonoBehaviour {
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;
+    Transform playerTrans;
 	// Use this for initialization
 	void Start () {
         combScipt = GetComponent<ComboStates>();
         swordAnimation = GetComponent<Animator>();
+        playerTrans = GameObject.Find("Player").GetComponent<Transform>();
 	}
 	
 	// Update is called once per frame
@@ -32,15 +34,19 @@ public class MeleeAttack : MonoBehaviour {
         if (Input.GetMouseButton(0))
         {
             swordAnimation.Play("LightAttack");
+
             lightAtk = true;
             attacking = true;
+            heavyAtk = false;
         }
 
         if(Input.GetMouseButton(1))
         {
             swordAnimation.Play("HeavyAttack");
+
             attacking = true;
             heavyAtk = true;
+            lightAtk = false;
         }
 
     }
@@ -55,23 +61,35 @@ public class MeleeAttack : MonoBehaviour {
                 if (lightAtk)
                 {
 
-                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript);
+                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript,playerTrans);
+                    Vector3 temp = playerTrans.TransformDirection(-enemScript.transform.forward);
+                    enemScript.rigidBody.AddForce(new Vector3(temp.x , 0, temp.z ) * 1500);
                     enemScript.health -= 10;
 
-                    Vector3 temp = transform.TransformDirection(transform.forward);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.x,2.5f,temp.z)*100);
-                    enemScript.knockUp();
+                    
                     lightAtk = false;
                     attacking = false;
                 }
                 if (heavyAtk)
                 {
-                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript);
+               
+                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
+                    
                     enemScript.health -= 20;
                     attacking = false;
                     heavyAtk = false;
                 }
 
+            }
+        }else
+        {
+            if (lightAtk)
+            {
+                combScipt.UpdateState((int)COMBOSTATE.lightAttack, null, null);
+            }
+            else
+            {
+                combScipt.UpdateState((int)COMBOSTATE.heavyAttack, null, null);
             }
         }
     }

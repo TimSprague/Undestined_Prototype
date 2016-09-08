@@ -63,7 +63,7 @@ public abstract class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	public virtual void Update () {
-        if(health <0)
+        if(health <=0)
         {
             DestroyImmediate(this.gameObject);
             alive = false;
@@ -71,51 +71,51 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
-            
-        }
-        if (!stunned&&! knockedUp)
-        {
-           
-            if (bleeding)
-            {
-                //TakeDmg(bleedDmg);  Use to calculate damage to health
-                health -= bleedDmg; // Obsolete
-            }
             if (!stunned && !knockedUp)
             {
 
-
-
-
-            }
-
-            
-            if (pause)
-            {
-                pauseTimer -= Time.deltaTime;
-                if (pauseTimer < 0.0f)
+                if (bleeding)
+                {
+                    //TakeDmg(bleedDmg);  Use to calculate damage to health
+                    health -= bleedDmg; // Obsolete
+                }
+                if (!stunned && !knockedUp)
                 {
 
-                    enemyAnim.CrossFade("Walk");
-                    pause = false;
+
+
 
                 }
-            }
-            if (!canChange)
-            {
-                changeTimer -= Time.deltaTime;
-                if (changeTimer < 0)
+
+
+                if (pause)
                 {
-                    canChange = true;
-                }
-            }
-            isBleeding();
-            isStunned();
-            enemyAnim["Attack"].layer = 0;
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+                    pauseTimer -= Time.deltaTime;
+                    if (pauseTimer < 0.0f)
+                    {
 
+                        enemyAnim.CrossFade("Walk");
+                        pause = false;
+
+                    }
+                }
+                if (!canChange)
+                {
+                    changeTimer -= Time.deltaTime;
+                    if (changeTimer < 0)
+                    {
+                        canChange = true;
+                    }
+                }
+                isBleeding();
+                isStunned();
+                enemyAnim["Attack"].layer = 0;
+                enemyUIcontrol.HealthUpdate(health, maxHealth);
+                enemyUIcontrol.StatusUpdate();
+
+            }
         }
+        
     }
     public void FixedUpdate()
     {
@@ -150,18 +150,7 @@ public abstract class EnemyScript : MonoBehaviour {
         if (alive)
         {
            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
-            if (other.gameObject.tag == "Player")
-            {
-                enemyAnim["Attack"].layer = 1;
-
-                enemyAnim.Play("Attack");
-
-
-                pause = true;
-                pauseTimer = 2.5f;
-
-
-            }
+           
             if (other.gameObject.tag == "Terrain")
             {
                 knockedUp = false;
@@ -218,7 +207,23 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            velocity = new Vector3(moveDirection.normalized.x * speed,0,moveDirection.normalized.z*speed);
+            if (Vector3.Distance(playerTransform.position, transform.position) > 4)
+            {
+                velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
+            }else
+            {
+                
+                    enemyAnim["Attack"].layer = 1;
+
+                    enemyAnim.Play("Attack");
+                player.DecreaseHealth(5);
+
+                    pause = true;
+                    pauseTimer = 2.5f;
+
+
+                
+            }
         }
         rigidBody.velocity = velocity;
     }

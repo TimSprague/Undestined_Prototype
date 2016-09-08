@@ -60,7 +60,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0,vel.y,vel.z*-.07f);
-                        other.rigidBody.AddForce(new Vector3(0, 550, 80) );
+                        other.rigidBody.AddForce(new Vector3(0, 5000, 80) );
 
                         other.knockUp();
                     }
@@ -81,8 +81,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0, -vel.y*5, vel.z*-.1f);
-                        other.rigidBody.AddForce(new Vector3(0, -800, 800
-                            ) );
+                        other.rigidBody.AddForce(new Vector3(0, -700*temp.y, 1000  *temp.z ) );
                     }
                 }
                 break;
@@ -105,7 +104,6 @@ public class ComboStates : MonoBehaviour {
                         other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
                         other.rigidBody.AddForce(new Vector3(0, 100, 8000));
                     }
-
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJump:

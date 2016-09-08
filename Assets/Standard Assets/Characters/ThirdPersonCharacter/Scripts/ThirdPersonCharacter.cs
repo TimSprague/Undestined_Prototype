@@ -125,12 +125,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void LeftStep()
         {
             AudioClip clip = null;
-            float maxVol = 1.0f;
+            float maxVol = sfxSource.volume;
             //RaycastHit hit;
 
             
             clip = soundMoves[0];
-            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
+            maxVol = UnityEngine.Random.Range(0.2f, 0.3f);
 
             if (clip != null)
             {
@@ -143,12 +143,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void RightStep()
         {
             AudioClip clip = null;
-            float maxVol = 1.0f;
+            float maxVol = sfxSource.volume;
             //RaycastHit hit;
 
 
-            clip = soundMoves[0];
-            maxVol = UnityEngine.Random.Range(0.2f, 0.9f);
+            clip = soundMoves[2];
+            maxVol = UnityEngine.Random.Range(0.2f, 0.3f);
             
 
             if (clip != null)
@@ -158,8 +158,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             }
         }
-
-
         void UpdateAnimator(Vector3 move)
 		{
 			// update the animator parameters

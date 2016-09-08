@@ -14,14 +14,18 @@ public class MeleeAttack : MonoBehaviour {
     public ComboStates combScipt;
     public EnemyScript enemScript;
     public Animator swordAnimation;
-
+    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioClip[] soundLightSwordSwings;
+     
     public bool attacking = false;
     public bool lightAtk = false;
     public bool heavyAtk = false;
+    Transform playerTrans;
 	// Use this for initialization
 	void Start () {
         combScipt = GetComponent<ComboStates>();
         swordAnimation = GetComponent<Animator>();
+        playerTrans = GameObject.Find("Player").GetComponent<Transform>();
 	}
 	
 	// Update is called once per frame
@@ -29,18 +33,22 @@ public class MeleeAttack : MonoBehaviour {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
+
             lightAtk = true;
             attacking = true;
+            heavyAtk = false;
         }
 
-        if(Input.GetMouseButton(1))
+        if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
+
             attacking = true;
             heavyAtk = true;
+            lightAtk = false;
         }
 
     }
@@ -49,31 +57,62 @@ public class MeleeAttack : MonoBehaviour {
     {
         if (other.gameObject.tag == "Enemy")
         {
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             enemScript = other.GetComponent<MeleeEnemy>();
+            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             if (attacking)
             {
                 if (lightAtk)
                 {
 
-                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript);
-                    enemScript.health -= 10;
-
-                    Vector3 temp = transform.TransformDirection(transform.forward);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.x,2.5f,temp.z)*100);
-                   
+                    combScipt.UpdateState((int)COMBOSTATE.lightAttack, enemScript,playerTrans);
+                    //Vector3 temp = playerTrans.TransformDirection(-enemScript.transform.right);
+                    ////Vector3 vel = enemScript.rigidBody.velocity;
+                    ////enemScript.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
+                    //enemScript.rigidBody.AddForce(new Vector3(temp.x * 35, 0, temp.z * 35) );
+                    // enemScript.health -= 10;
+                    enemScript.TakeDmg(10);
+                    
                     lightAtk = false;
                     attacking = false;
                 }
                 if (heavyAtk)
                 {
-                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript);
-                    enemScript.health -= 20;
+               
+                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
+
+                    enemScript.TakeDmg(20);
                     attacking = false;
                     heavyAtk = false;
                 }
 
             }
+        }else
+        {
+            if (lightAtk)
+            {
+                combScipt.UpdateState((int)COMBOSTATE.lightAttack, null, null);
+            }
+            else
+            {
+                combScipt.UpdateState((int)COMBOSTATE.heavyAttack, null, null);
+            }
         }
     }
     
+
+    void swordSwing()
+    {
+        AudioClip clip = null;
+        float maxVol = sfxSource.volume;
+
+        if (soundLightSwordSwings.GetLength(0) > 0)
+            clip = soundLightSwordSwings[0];
+        maxVol = UnityEngine.Random.Range(0.2f, 0.5f);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
 }

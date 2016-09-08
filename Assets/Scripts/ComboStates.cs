@@ -39,11 +39,11 @@ public class ComboStates : MonoBehaviour {
      * With each state, the current state is multipled by 10 in order to preserve the combo.
      * Each time a attack is entered, it is stored until a state in which a final move is executed.
      **/
-    public void UpdateState(int newState, EnemyScript other)
+    public void UpdateState(int newState, EnemyScript other,Transform player)
     {
         currentState *= 10;
         currentState += newState;
-        comboTimer = 2.0f;
+        comboTimer = 1.0f;
         switch (currentState)
         {
             case (int)COMBOSTATE.light :
@@ -56,20 +56,34 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.lightHeavy:
                 {
                     //perform smash up
-                    other.knockUp();
+                    if (other != null) {
+                        Vector3 temp = player.TransformDirection(-player.transform.right);
+                        Vector3 vel = other.rigidBody.velocity;
+                        other.rigidBody.velocity = new Vector3(0,vel.y,vel.z*-.07f);
+                        other.rigidBody.AddForce(new Vector3(0, 550, 80) );
+
+                        other.knockUp();
+                    }
                 }
                 break;
             case (int)COMBOSTATE.lightLight:
                 {
                     //2nd basic attack
-                    
+                   
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJumpHeavy:
                 {
                     //Perfrom down smash
                     //Call function
-                    other.smashDown();
+                    if (other != null)
+                    {
+                        Vector3 temp = player.TransformDirection(-player.transform.right);
+                        Vector3 vel = other.rigidBody.velocity;
+                        other.rigidBody.velocity = new Vector3(0, -vel.y*5, vel.z*-.1f);
+                        other.rigidBody.AddForce(new Vector3(0, -800, 800
+                            ) );
+                    }
                 }
                 break;
             case (int)COMBOSTATE.lightLightLight:
@@ -83,15 +97,18 @@ public class ComboStates : MonoBehaviour {
                 {
                     /**double slash with knock back
                     Call function
-                   
-    **/
-                    
+                       **/
+                    Vector3 temp = player.TransformDirection(-other.transform.forward);
+                    Vector3 vel = other.rigidBody.velocity;
+                    other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
+                    other.rigidBody.AddForce(new Vector3(0, 100, 8000));
+
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJump:
                 {
                     //Intermediate step
-                   
+                    
                 }
                 break;
 

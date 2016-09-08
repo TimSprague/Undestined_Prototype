@@ -60,9 +60,7 @@ public class MeleeAttack : MonoBehaviour {
     {
         if (other.gameObject.tag == "Enemy")
         {
-            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             enemScript = other.GetComponent<MeleeEnemy>();
-            other.GetComponent<MeleeEnemy>().PlayBleedParticle();
             if (attacking)
             {
                 if (lightAtk)
@@ -75,7 +73,8 @@ public class MeleeAttack : MonoBehaviour {
                     //enemScript.rigidBody.AddForce(new Vector3(temp.x * 35, 0, temp.z * 35) );
                     // enemScript.health -= 10;
                     enemScript.TakeDmg(10);
-                    
+                    other.GetComponent<MeleeEnemy>().PlayBleedParticle();
+
                     lightAtk = false;
                     heavyAtk = false;
                     attacking = false;
@@ -84,6 +83,7 @@ public class MeleeAttack : MonoBehaviour {
                 {
                
                     combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
+                    other.GetComponent<MeleeEnemy>().PlayBleedParticle();
 
                     enemScript.TakeDmg(20);
                     attacking = false;

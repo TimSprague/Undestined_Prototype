@@ -37,10 +37,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
+    public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
-    //Player Bleed Effect
-    public GameObject PlayerBleed;
 	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -54,6 +53,7 @@ public abstract class EnemyScript : MonoBehaviour {
         canChange = true;
         alive = true;
         knockedUp = false;
+        smashedDown = false;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -65,7 +65,7 @@ public abstract class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	public virtual void Update () {
-        if(health <0)
+        if(health <=0)
         {
             DestroyImmediate(this.gameObject);
             alive = false;
@@ -73,51 +73,54 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
-            
-        }
-        if (!stunned&&! knockedUp)
-        {
-           
-            if (bleeding)
+            if (!smashedDown)
             {
-                //TakeDmg(bleedDmg);  Use to calculate damage to health
-                health -= bleedDmg; // Obsolete
-            }
-            if (!stunned && !knockedUp)
-            {
+                smashTimer -= Time.deltaTime;
+                if(smashTimer<=0)
+                {
+                    groundpound.Stop();
+                }
 
-
-
-
-            }
-
-            
-            if (pause)
-            {
-                pauseTimer -= Time.deltaTime;
-                if (pauseTimer < 0.0f)
+                if (bleeding)
+                {
+                    //TakeDmg(bleedDmg);  Use to calculate damage to health
+                    health -= bleedDmg; // Obsolete
+                }
+                if (!stunned && !knockedUp)
                 {
 
-                    enemyAnim.CrossFade("Walk");
-                    pause = false;
 
                 }
-            }
-            if (!canChange)
-            {
-                changeTimer -= Time.deltaTime;
-                if (changeTimer < 0)
+
+
+                if (pause)
                 {
-                    canChange = true;
-                }
-            }
-            isBleeding();
-            isStunned();
-            enemyAnim["Attack"].layer = 0;
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+                    pauseTimer -= Time.deltaTime;
+                    if (pauseTimer < 0.0f)
+                    {
 
+                        enemyAnim.CrossFade("Walk");
+                        pause = false;
+
+                    }
+                }
+                if (!canChange)
+                {
+                    changeTimer -= Time.deltaTime;
+                    if (changeTimer < 0)
+                    {
+                        canChange = true;
+                    }
+                }
+                isBleeding();
+                isStunned();
+                enemyAnim["Attack"].layer = 0;
+                enemyUIcontrol.HealthUpdate(health, maxHealth);
+                enemyUIcontrol.StatusUpdate();
+
+            }
         }
+        
     }
     public void FixedUpdate()
     {
@@ -155,18 +158,25 @@ public abstract class EnemyScript : MonoBehaviour {
             if (other.gameObject.tag == "Player")
             {
                 enemyAnim["Attack"].layer = 1;
-
+                player.DecreaseHealth(5);
                 enemyAnim.Play("Attack");
-
 
                 pause = true;
                 pauseTimer = 2.5f;
-                //Instantiate Prefab on contact point
-                Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
-
             }
             if (other.gameObject.tag == "Terrain")
             {
+                if(groundpound && !groundpound.isPlaying)
+                {
+                    if (smashedDown)
+                    {
+                        groundpound.Play();
+                        smashTimer = 1.0f;
+                        smashedDown = false;
+                    }
+                    
+                }
+
                 knockedUp = false;
                 enemyAnim.CrossFade("Walk");
             }
@@ -178,6 +188,16 @@ public abstract class EnemyScript : MonoBehaviour {
     //{
     //    TakeDmg(10);
     //}
+
+    void OnMouseEnter()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+    }
+
+    void OnMouseExit()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
+    }
     public void knockUp()
     {
         enemyAnim.Stop();
@@ -221,7 +241,23 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            velocity = new Vector3(moveDirection.normalized.x * speed,0,moveDirection.normalized.z*speed);
+            if (Vector3.Distance(playerTransform.position, transform.position) > 4)
+            {
+                velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
+            }else
+            {
+                
+                    enemyAnim["Attack"].layer = 1;
+
+                    enemyAnim.Play("Attack");
+                player.DecreaseHealth(5);
+
+                    pause = true;
+                    pauseTimer = 2.5f;
+
+
+                
+            }
         }
         rigidBody.velocity = velocity;
     }

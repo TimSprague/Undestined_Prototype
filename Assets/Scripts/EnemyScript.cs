@@ -56,7 +56,7 @@ public abstract class EnemyScript : MonoBehaviour {
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
-        rotationSpeed = 5f;
+        //rotationSpeed = 5f;
         //health = maxHealth = 100;
 	}
 	

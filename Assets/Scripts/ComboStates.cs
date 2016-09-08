@@ -98,10 +98,13 @@ public class ComboStates : MonoBehaviour {
                     /**double slash with knock back
                     Call function
                        **/
-                    Vector3 temp = player.TransformDirection(-other.transform.forward);
-                    Vector3 vel = other.rigidBody.velocity;
-                    other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
-                    other.rigidBody.AddForce(new Vector3(0, 100, 8000));
+                    if (other != null)
+                    {
+                        Vector3 temp = player.TransformDirection(-other.transform.forward);
+                        Vector3 vel = other.rigidBody.velocity;
+                        other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
+                        other.rigidBody.AddForce(new Vector3(0, 100, 8000));
+                    }
 
                 }
                 break;

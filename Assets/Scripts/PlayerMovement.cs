@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour {
     Rigidbody rb;
     public float jumpHeight;
     public bool jumping;
+    public float fallingSpeed;
 
     MeshCollider Skill1;
     bool skill1Active = false;
@@ -96,7 +97,7 @@ public class PlayerMovement : MonoBehaviour {
             jumping = true;
         }
 
-        rb.velocity += (0.5f * Physics.gravity);
+        rb.velocity += (fallingSpeed * Physics.gravity);
         
     }
 

@@ -30,11 +30,23 @@ public class MouseOrbitImproved : MonoBehaviour {
 
     void Update()
     {
-        distance = charBlock.GetComponent<Raycast3>().distance3;
-        if (distance > 5)
+        if (charBlock != null)
         {
-            distance = 5;
+            distance = charBlock.GetComponent<Raycast3>().distance3;
+            if (distance < 5)
+            {
+                distance = 5;
+            }
         }
+        else
+        {
+            if (distance < 5)
+            {
+                distance = 5;
+            }
+        }
+
+       
     }
 
 

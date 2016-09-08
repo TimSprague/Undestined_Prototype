@@ -56,8 +56,9 @@ public abstract class EnemyScript : MonoBehaviour {
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
-        //rotationSpeed = 5f;
+      //  rotationSpeed = 5f;
         //health = maxHealth = 100;
+        DamagePopupController.Initialize();
 	}
 	
 	// Update is called once per frame
@@ -70,10 +71,15 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
+            
+        }
+        if (!stunned&&! knockedUp)
+        {
+           
             if (bleeding)
             {
-
-                health -= bleedDmg;
+                //TakeDmg(bleedDmg);  Use to calculate damage to health
+                health -= bleedDmg; // Obsolete
             }
             if (!stunned && !knockedUp)
             {
@@ -106,8 +112,8 @@ public abstract class EnemyScript : MonoBehaviour {
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-//        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        //enemyUIcontrol.StatusUpdate();
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
 
         }
     }
@@ -132,7 +138,7 @@ public abstract class EnemyScript : MonoBehaviour {
                 Vector3 direction = points[destPoint].position - transform.position;
                 direction.Normalize();
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
                
                 moveToTarget(points[destPoint].position);
             }
@@ -143,6 +149,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (alive)
         {
+           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             if (other.gameObject.tag == "Player")
             {
                 enemyAnim["Attack"].layer = 1;
@@ -163,6 +170,11 @@ public abstract class EnemyScript : MonoBehaviour {
         }
 
     }
+    // Function reserved to test damage to enemy
+    //void OnMouseDown()
+    //{
+    //    TakeDmg(10);
+    //}
     public void knockUp()
     {
         enemyAnim.Stop();
@@ -200,7 +212,7 @@ public abstract class EnemyScript : MonoBehaviour {
         Vector3 moveDirection = target - transform.position;
         Vector3 velocity = rigidBody.velocity;
 
-        if(moveDirection.magnitude<4 &&!playerTarget)
+        if(moveDirection.magnitude<1.5 &&!playerTarget)
         {
             destPoint = (destPoint + 1) % points.Length;
         }
@@ -211,6 +223,12 @@ public abstract class EnemyScript : MonoBehaviour {
         rigidBody.velocity = velocity;
     }
 
+    // Use this function to update health
+    public void TakeDmg(int dmg)
+    {
+        health -= dmg;
+        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+    }
     
 
     

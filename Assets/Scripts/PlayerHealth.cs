@@ -94,9 +94,10 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isAlive = false;
+        GameObject.Destroy(gameObject);
     }
 
-    void HealthBarUpdate()
+    public void HealthBarUpdate()
     {
         if (HealthBar)
             HealthBar.fillAmount = ((float)playerCurrentHealth / (float)playerMaxHealth);

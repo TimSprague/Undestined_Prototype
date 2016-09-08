@@ -21,11 +21,13 @@ public class MeleeAttack : MonoBehaviour {
     public bool lightAtk = false;
     public bool heavyAtk = false;
     Transform playerTrans;
+    BoxCollider box_collider;
 	// Use this for initialization
 	void Start () {
         combScipt = GetComponent<ComboStates>();
         swordAnimation = GetComponent<Animator>();
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
+        box_collider = GetComponent<BoxCollider>();
 	}
 	
 	// Update is called once per frame
@@ -33,10 +35,11 @@ public class MeleeAttack : MonoBehaviour {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
+        box_collider.size = new Vector3(0.1f, 1.3f, 0.05f);
+
         if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
-
             lightAtk = true;
             attacking = true;
             heavyAtk = false;
@@ -44,8 +47,8 @@ public class MeleeAttack : MonoBehaviour {
 
         if(Input.GetButton("Fire2"))
         {
+            box_collider.size = new Vector3(0.1f, 1.3f, 0.25f);
             swordAnimation.Play("HeavyAttack");
-
             attacking = true;
             heavyAtk = true;
             lightAtk = false;
@@ -88,16 +91,6 @@ public class MeleeAttack : MonoBehaviour {
                     heavyAtk = false;
                 }
 
-            }
-        }else
-        {
-            if (lightAtk)
-            {
-                combScipt.UpdateState((int)COMBOSTATE.lightAttack, null, null);
-            }
-            else
-            {
-                combScipt.UpdateState((int)COMBOSTATE.heavyAttack, null, null);
             }
         }
     }

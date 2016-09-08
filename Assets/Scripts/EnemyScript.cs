@@ -37,6 +37,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
+    public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
@@ -52,6 +53,7 @@ public abstract class EnemyScript : MonoBehaviour {
         canChange = true;
         alive = true;
         knockedUp = false;
+        smashedDown = false;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -71,8 +73,13 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if (alive)
         {
-            if (!stunned && !knockedUp)
+            if (!smashedDown)
             {
+                smashTimer -= Time.deltaTime;
+                if(smashTimer<=0)
+                {
+                    groundpound.Stop();
+                }
 
                 if (bleeding)
                 {
@@ -81,8 +88,6 @@ public abstract class EnemyScript : MonoBehaviour {
                 }
                 if (!stunned && !knockedUp)
                 {
-
-
 
 
                 }
@@ -150,9 +155,28 @@ public abstract class EnemyScript : MonoBehaviour {
         if (alive)
         {
            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
-           
+            if (other.gameObject.tag == "Player")
+            {
+                enemyAnim["Attack"].layer = 1;
+                player.DecreaseHealth(5);
+                enemyAnim.Play("Attack");
+
+                pause = true;
+                pauseTimer = 2.5f;
+            }
             if (other.gameObject.tag == "Terrain")
             {
+                if(groundpound && !groundpound.isPlaying)
+                {
+                    if (smashedDown)
+                    {
+                        groundpound.Play();
+                        smashTimer = 1.0f;
+                        smashedDown = false;
+                    }
+                    
+                }
+
                 knockedUp = false;
                 enemyAnim.CrossFade("Walk");
             }
@@ -164,6 +188,16 @@ public abstract class EnemyScript : MonoBehaviour {
     //{
     //    TakeDmg(10);
     //}
+
+    void OnMouseEnter()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+    }
+
+    void OnMouseExit()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
+    }
     public void knockUp()
     {
         enemyAnim.Stop();

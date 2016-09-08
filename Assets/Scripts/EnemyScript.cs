@@ -53,6 +53,7 @@ public abstract class EnemyScript : MonoBehaviour {
         canChange = true;
         alive = true;
         knockedUp = false;
+        smashedDown = false;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -82,10 +83,13 @@ public abstract class EnemyScript : MonoBehaviour {
                 //TakeDmg(bleedDmg);  Use to calculate damage to health
                 health -= bleedDmg; // Obsolete
             }
-            if (!stunned && !knockedUp)
+            if (!smashedDown)
             {
-
-
+                smashTimer -= Time.deltaTime;
+                if(smashTimer<=0)
+                {
+                    groundpound.Stop();
+                }
 
 
             }
@@ -113,10 +117,12 @@ public abstract class EnemyScript : MonoBehaviour {
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+        
 
         }
+
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
     }
     public void FixedUpdate()
     {
@@ -154,20 +160,23 @@ public abstract class EnemyScript : MonoBehaviour {
             if (other.gameObject.tag == "Player")
             {
                 enemyAnim["Attack"].layer = 1;
-
+                player.DecreaseHealth(5);
                 enemyAnim.Play("Attack");
-
 
                 pause = true;
                 pauseTimer = 2.5f;
-
-
             }
             if (other.gameObject.tag == "Terrain")
             {
                 if(groundpound && !groundpound.isPlaying)
                 {
-                    groundpound.Play();
+                    if (smashedDown)
+                    {
+                        groundpound.Play();
+                        smashTimer = 1.0f;
+                        smashedDown = false;
+                    }
+                    
                 }
 
                 knockedUp = false;
@@ -181,6 +190,16 @@ public abstract class EnemyScript : MonoBehaviour {
     //{
     //    TakeDmg(10);
     //}
+
+    void OnMouseEnter()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+    }
+
+    void OnMouseExit()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
+    }
     public void knockUp()
     {
         enemyAnim.Stop();

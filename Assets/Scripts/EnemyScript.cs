@@ -37,6 +37,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
+    public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
@@ -164,6 +165,11 @@ public abstract class EnemyScript : MonoBehaviour {
             }
             if (other.gameObject.tag == "Terrain")
             {
+                if(groundpound && !groundpound.isPlaying)
+                {
+                    groundpound.Play();
+                }
+
                 knockedUp = false;
                 enemyAnim.CrossFade("Walk");
             }

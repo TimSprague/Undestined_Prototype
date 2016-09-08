@@ -36,7 +36,6 @@ public class MeleeAttack : MonoBehaviour {
         if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
-
             lightAtk = true;
             attacking = true;
             heavyAtk = false;
@@ -45,7 +44,6 @@ public class MeleeAttack : MonoBehaviour {
         if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
-
             attacking = true;
             heavyAtk = true;
             lightAtk = false;
@@ -74,6 +72,7 @@ public class MeleeAttack : MonoBehaviour {
                     enemScript.TakeDmg(10);
                     
                     lightAtk = false;
+                    heavyAtk = false;
                     attacking = false;
                 }
                 if (heavyAtk)
@@ -83,6 +82,7 @@ public class MeleeAttack : MonoBehaviour {
 
                     enemScript.TakeDmg(20);
                     attacking = false;
+                    lightAtk = false;
                     heavyAtk = false;
                 }
 

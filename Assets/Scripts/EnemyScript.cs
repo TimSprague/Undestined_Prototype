@@ -40,6 +40,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
+    //Player Bleed Particle
+    public GameObject PlayerBleed;
 	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -163,6 +165,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 pause = true;
                 pauseTimer = 2.5f;
+                //Play particle on contact with player collition
+                Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             }
             if (other.gameObject.tag == "Terrain")
             {

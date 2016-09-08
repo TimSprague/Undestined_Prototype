@@ -39,6 +39,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float smashTimer;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
+    //Player Bleed Effect
+    public GameObject PlayerBleed;
 	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -159,7 +161,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 pause = true;
                 pauseTimer = 2.5f;
-
+                //Instantiate Prefab on contact point
+                Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
 
             }
             if (other.gameObject.tag == "Terrain")

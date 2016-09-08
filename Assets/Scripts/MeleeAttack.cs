@@ -32,7 +32,6 @@ public class MeleeAttack : MonoBehaviour {
 	void Update () {
 
         transform.Rotate(Vector3.up, speed * Time.deltaTime);
-
         if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
@@ -87,7 +86,8 @@ public class MeleeAttack : MonoBehaviour {
                 }
 
             }
-        }else
+        }
+        else
         {
             if (lightAtk)
             {
@@ -99,7 +99,6 @@ public class MeleeAttack : MonoBehaviour {
             }
         }
     }
-    
 
     void swordSwing()
     {

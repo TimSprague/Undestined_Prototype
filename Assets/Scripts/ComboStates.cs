@@ -8,7 +8,7 @@ public class ComboStates : MonoBehaviour {
     public enum COMBOSTATE { light=1 , lightHeavy=12, lightHeavyJumpHeavy=1232, lightHeavyJump = 123, lightLight=11, lightLightLight=111, lightLightHeavy = 112
 
     };
-    private int currentState;
+    public int currentState;
     public float comboTimer;
 	// Use this for initialization
 	void Start () {

@@ -94,9 +94,13 @@ public class MeleeAttack : MonoBehaviour {
             if (lightAtk)
             {
                 combScipt.UpdateState((int)COMBOSTATE.lightAttack, null, null);
+                lightAtk = false;
+                heavyAtk = false;
             }
             else
             {
+                lightAtk = false;
+                heavyAtk = false;
                 combScipt.UpdateState((int)COMBOSTATE.heavyAttack, null, null);
             }
         }

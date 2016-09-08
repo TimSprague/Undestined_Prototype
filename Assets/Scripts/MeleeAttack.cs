@@ -70,8 +70,8 @@ public class MeleeAttack : MonoBehaviour {
                     ////Vector3 vel = enemScript.rigidBody.velocity;
                     ////enemScript.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
                     //enemScript.rigidBody.AddForce(new Vector3(temp.x * 35, 0, temp.z * 35) );
-                    enemScript.health -= 10;
-
+                    // enemScript.health -= 10;
+                    enemScript.TakeDmg(10);
                     
                     lightAtk = false;
                     attacking = false;
@@ -80,8 +80,8 @@ public class MeleeAttack : MonoBehaviour {
                 {
                
                     combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
-                    
-                    enemScript.health -= 20;
+
+                    enemScript.TakeDmg(20);
                     attacking = false;
                     heavyAtk = false;
                 }

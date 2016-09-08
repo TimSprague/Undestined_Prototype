@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public abstract class EnemyScript : MonoBehaviour {
@@ -78,7 +79,7 @@ public abstract class EnemyScript : MonoBehaviour {
            
             if (bleeding)
             {
-                //TakeDmg(bleedDmg);  Use to calculate damage to health
+                //TakeDmg(bleedDmg);  // Use to calculate damage to health
                 health -= bleedDmg; // Obsolete
             }
             if (!stunned && !knockedUp)
@@ -112,10 +113,12 @@ public abstract class EnemyScript : MonoBehaviour {
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+        
 
         }
+
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
     }
     public void FixedUpdate()
     {
@@ -175,6 +178,17 @@ public abstract class EnemyScript : MonoBehaviour {
     //{
     //    TakeDmg(10);
     //}
+
+    void OnMouseEnter()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+    }
+
+    void OnMouseExit()
+    {
+        GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
+    }
+
     public void knockUp()
     {
         enemyAnim.Stop();

@@ -14,6 +14,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+        Transform myTransform;
         MeshCollider Skill1;
         SphereCollider Skill2;
         PlayerHealth playerHealth;
@@ -25,20 +26,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         bool skill1Active = false;
         float skill1_currCooldown;
         float skill1_maxCooldown = 5;
-        [SerializeField]
-        Image skill1_UI;
+        [SerializeField] Image skill1_UI;
 
         bool skill2Active = false;
         float skill2_currCooldown;
         float skill2_maxCooldown = 7;
-        [SerializeField]
-        Image skill2_UI;
+        [SerializeField] Image skill2_UI;
 
         bool skill3Active = false;
         float skill3_currCooldown;
         float skill3_maxCooldown = 9;
-        [SerializeField]
-        Image skill3_UI;
+        [SerializeField] Image skill3_UI;
 
         private void Start()
         {
@@ -60,6 +58,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
             playerHealth = GetComponent<PlayerHealth>();
             comboState = GameObject.Find("Morfus").GetComponent<ComboStates>();
+            myTransform = transform;
         }
 
 
@@ -103,30 +102,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 playerHealth.IncreaseHealth((int)tempHealth);
             }
 
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            RaycastHit hit;
-            //if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Enemy")
-            //{
-            //    Debug.Log("Found a target");
-            //    hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
-            //    currentEnemy = hit.transform.gameObject;
-
-            //    Color imageC = currentEnemy.GetComponentInChildren<Image>().color;
-            //    Color textC = currentEnemy.GetComponentInChildren<Text>().color;
-            //    UI_timer += Time.deltaTime;
-            //    imageC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
-            //    textC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
-
-            //    currentEnemy.GetComponentInChildren<Image>().color = imageC;
-            //    currentEnemy.GetComponentInChildren<Text>().color = textC;
-            //}
-            //else
-            //{
-            //    if (currentEnemy != null)
-            //        currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
-            //    currentEnemy = null;
-            //    UI_timer = 0;
-            //}
+            // Display Enemy Info if reticule intersects with enemy - LC
+            CheckEnemyInfo();
 
             skill1Update();
             skill2Update();
@@ -212,6 +189,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     skill3_currCooldown = 0;
                     skill3Active = false;
                 }
+            }
+        }
+
+        void CheckEnemyInfo()
+        {
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Enemy" && Vector3.Distance(hit.transform.position, myTransform.position) < 250.0f)
+            {
+                Debug.Log("Found a target");
+                hit.transform.gameObject.GetComponentInChildren<Canvas>(true).gameObject.SetActive(true);
+                currentEnemy = hit.transform.gameObject;
+
+                Color imageC = currentEnemy.GetComponentInChildren<Image>().color;
+                Color textC = currentEnemy.GetComponentInChildren<Text>().color;
+                UI_timer += Time.deltaTime;
+                imageC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
+                textC.a = Mathf.Lerp(0, 1, UI_timer * UI_fadeInOutSpeed);
+
+                currentEnemy.GetComponentInChildren<Image>().color = imageC;
+                currentEnemy.GetComponentInChildren<Text>().color = textC;
+            }
+            else
+            {
+                if (currentEnemy != null)
+                    currentEnemy.transform.gameObject.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
+                currentEnemy = null;
+                UI_timer = 0;
             }
         }
     }

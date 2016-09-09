@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public abstract class EnemyScript : MonoBehaviour {
@@ -121,7 +122,15 @@ public abstract class EnemyScript : MonoBehaviour {
                 enemyUIcontrol.StatusUpdate();
 
             }
+            isBleeding();
+            isStunned();
+            enemyAnim["Attack"].layer = 0;
+        
+
         }
+
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
         
     }
     public void FixedUpdate()
@@ -202,6 +211,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
     }
+
     public void knockUp()
     {
         enemyAnim.Stop();

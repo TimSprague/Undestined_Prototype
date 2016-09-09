@@ -4,23 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
+public class TestJump : MonoBehaviour {
 
-public class PlayerMovement : MonoBehaviour {
-
-    bool testJump = false;
-    bool test2Jump = false;
-    float tempYPos = 0;
-
+    public float jumpPower;
     public float moveSpeed;
-    public Transform cameraTransform;
-    public float forwardVel;
-    public float rotateVel;
-    Quaternion targetRotation;
     Rigidbody rb;
-    public float jumpHeight;
-    public float jumpSeed;
     public bool jumping;
-    public float fallingSpeed;
+    bool test2Jump;
+    public float tempYPos;
+    public float jumpHeight;
+    ComboStates comboState;
+    public float jumpSpeed;
+    PlayerHealth playerHealth;
+
+
 
     MeshCollider Skill1;
     bool skill1Active = false;
@@ -28,7 +25,6 @@ public class PlayerMovement : MonoBehaviour {
     float skill1_maxCooldown = 5;
     [SerializeField]
     Image skill1_UI;
-
 
     SphereCollider Skill2;
     bool skill2Active = false;
@@ -43,25 +39,22 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     Image skill3_UI;
 
-    PlayerHealth playerHealth;
-    ComboStates comboState;
-    GameObject currentEnemy;
-    float UI_timer = 0;
-    public float UI_fadeInOutSpeed = 2;
+    [SerializeField]
+    Transform camTransform;
+    [SerializeField]
+    Transform targetTranform;
+
+    Quaternion lastForward;
 
 
-    public Quaternion TargetRotation
-    {
-        get { return targetRotation; }
-    }
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
-        targetRotation = transform.rotation;
         if (GetComponent<Rigidbody>())
         {
             rb = GetComponent<Rigidbody>();
         }
+
         jumping = false;
 
         if (GameObject.Find("Skill1Cone"))
@@ -80,18 +73,16 @@ public class PlayerMovement : MonoBehaviour {
         {
             comboState = GameObject.Find("Morfus").GetComponent<ComboStates>();
         }
-
+        lastForward = transform.rotation;
     }
-
-    // Update is called once per frame
-    void Update ()
+	
+    void Update()
     {
-       // Turn();
         Attacks();
-	}
+    }
+    // Update is called once per frame
+    void FixedUpdate () {
 
-    void FixedUpdate()
-    {
         Move();
 
         if (Skill1 != null)
@@ -99,46 +90,88 @@ public class PlayerMovement : MonoBehaviour {
             if (Skill1.enabled == true)
                 Skill1.enabled = false;
         }
-
         if (Skill2 != null)
         {
             if (Skill2.enabled == true)
                 Skill2.enabled = false;
         }
-        
     }
 
-    void Turn()
+    void Attacks()
     {
-        // multiplying rotation is adding to previous rotation
-        targetRotation *= Quaternion.AngleAxis(rotateVel * Input.GetAxis("Horizontal") * Time.deltaTime, Vector3.up);
-        transform.rotation = targetRotation;
-    }
+        if ((Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0) && !skill1Active)
+        {
+            Skill1.enabled = true;
+            skill1Active = true;
+        }
 
+        if ((Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0) && !skill2Active)
+        {
+            // use number 2 skill
+            Skill2.enabled = true;
+            skill2Active = true;
+
+        }
+
+        if (Input.GetButtonDown("Skill3") && !skill3Active)
+        {
+            // use number 3 skill
+            skill3Active = true;
+            double tempHealth;
+            tempHealth = playerHealth.playerMaxHealth * 0.25;
+            playerHealth.IncreaseHealth((int)tempHealth);
+        }
+
+        skillUpdate();
+    }
+  
     void Move()
     {
+        //rb.velocity += camTransform.right * Input.GetAxis("Horizontal") * moveSpeed;
+        if (Input.GetAxis("Vertical") != 0)
+        {
+            //rb.velocity = new Vector3(targetTranform.position.normalized.x * moveSpeed, 0, targetTranform.position.normalized.z * moveSpeed);
+            transform.Translate(-targetTranform.forward * Input.GetAxis("Vertical") * moveSpeed, Space.World);
+            //rb.MovePosition(transform.position + camTransform.forward * Input.GetAxis("Vertical") * moveSpeed);
+        }
+        //rb.velocity += camTransform.forward * Input.GetAxis("Vertical") * moveSpeed;
+        //rb.velocity += transform.right * Input.GetAxis("Horizontal") * moveSpeed;
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed, Space.World);
 
-        rb.velocity = transform.forward * Input.GetAxis("Vertical") * forwardVel;
+            //rb.MovePosition(transform.position + transform.right * Input.GetAxis("Horizontal") * moveSpeed);
+        }
 
-        
+
+        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        {
+            //Quaternion tempQuat = transform.rotation;
+            //if (camTransform.rotation.y > 0)
+            //    tempQuat.y = camTransform.rotation.y - 360;
+            //else
+            //    tempQuat.y = camTransform.rotation.y;
+            //transform.rotation = tempQuat;
+            //lastForward = tempQuat;
+            Vector3 direction = targetTranform.position - transform.position;
+            direction.Normalize();
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 5);
+           
+        }
+       
+
+        //rb.velocity += transform.forward * Input.GetAxis("Vertical") * moveSpeed;
 
         if (Input.GetButton("Jump") && !jumping)
         {
-            StartCoroutine(JumpRoutine(0.5f));
-           
-
+            JumpRoutine(1.0f);
+            //rb.velocity += new Vector3(0,jumpPower,0);
+            //GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower);
         }
-
-        if (jumping)
-        {
-            //rb.velocity += (new Vector3(rb.velocity.x, rb.velocity.y - fallingSpeed, rb.velocity.z));
-        }
-
-        //rb.velocity += (new Vector3(rb.velocity.x, rb.velocity.y - fallingSpeed, rb.velocity.z));
-
     }
 
-    IEnumerator JumpRoutine(float timer)
+    void JumpRoutine(float timer)
     {
         float temp = 0;
         while (temp < timer)
@@ -164,44 +197,14 @@ public class PlayerMovement : MonoBehaviour {
 
             if (test2Jump)
             {
-                rb.position = Vector3.MoveTowards(rb.position, new Vector3(rb.position.x, tempYPos, rb.position.z), jumpSeed);
+                rb.position = Vector3.MoveTowards(rb.position, new Vector3(rb.position.x, tempYPos, rb.position.z), jumpSpeed);
             }
-           
+
         }
         if (comboState != null)
         {
             comboState.UpdateState(3, null, null);
         }
-        yield return null;
-       
-    }
-
-    void Attacks()
-    {
-        if ((Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") !=0) && !skill1Active)
-        {
-            Skill1.enabled = true;
-            skill1Active = true;
-        }
-        if ((Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0) && !skill2Active)
-        {
-            // use number 2 skill
-            Skill2.enabled = true;
-            skill2Active = true;
-
-        }
-        if (Input.GetButtonDown("Skill3") && !skill3Active)
-        {
-            // use number 3 skill
-            skill3Active = true;
-            double tempHealth;
-            tempHealth = playerHealth.playerMaxHealth * 0.25;
-            playerHealth.IncreaseHealth((int)tempHealth);
-        }
-
-        skillUpdate();
-       
-        
     }
 
     void skillUpdate()

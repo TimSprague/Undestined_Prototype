@@ -37,7 +37,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
-
+    public float fallingSpeed;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -143,7 +143,8 @@ public abstract class EnemyScript : MonoBehaviour {
                 moveToTarget(points[destPoint].position);
             }
         }
-        
+                   rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+
     }
     public void OnCollisionEnter(Collision other)
     {

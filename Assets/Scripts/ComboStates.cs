@@ -8,7 +8,7 @@ public class ComboStates : MonoBehaviour {
     public enum COMBOSTATE { light=1 , lightHeavy=12, lightHeavyJumpHeavy=1232, lightHeavyJump = 123, lightLight=11, lightLightLight=111, lightLightHeavy = 112
 
     };
-    private int currentState;
+    public int currentState;
     public float comboTimer;
 	// Use this for initialization
 	void Start () {
@@ -34,7 +34,7 @@ public class ComboStates : MonoBehaviour {
     {
         currentState = 0;
     }
-
+    
     /**
      * With each state, the current state is multipled by 10 in order to preserve the combo.
      * Each time a attack is entered, it is stored until a state in which a final move is executed.
@@ -60,7 +60,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0,vel.y,vel.z*-.07f);
-                        other.rigidBody.AddForce(new Vector3(0, 5000, 80) );
+                        other.rigidBody.AddForce(new Vector3(0, 500, 80) );
 
                         other.knockUp();
                     }
@@ -81,7 +81,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0, -vel.y*5, vel.z*-.1f);
-                        other.rigidBody.AddForce(new Vector3(0, -700*temp.y, 1000  *temp.z ) );
+                        other.rigidBody.AddForce(new Vector3(0, -250*temp.y, 1500  *temp.z ) );
                     }
                 }
                 break;
@@ -102,7 +102,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-other.transform.forward);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
-                        other.rigidBody.AddForce(new Vector3(0, 100, 8000));
+                        other.rigidBody.AddForce(new Vector3(0, 150,16000*temp.z));
                     }
                 }
                 break;

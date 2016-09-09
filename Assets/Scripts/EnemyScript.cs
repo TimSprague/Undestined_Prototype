@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public abstract class EnemyScript : MonoBehaviour {
@@ -37,6 +38,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float knockupTimer;
     public bool smashedDown;
     public float smashTimer;
+    public float attackTimer;
+    public bool canAttack;
     public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
@@ -92,7 +95,6 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 }
 
-
                 if (pause)
                 {
                     pauseTimer -= Time.deltaTime;
@@ -104,12 +106,12 @@ public abstract class EnemyScript : MonoBehaviour {
 
                     }
                 }
-                if (!canChange)
+                if (canAttack)
                 {
-                    changeTimer -= Time.deltaTime;
-                    if (changeTimer < 0)
+                    attackTimer -= Time.deltaTime;
+                    if (attackTimer <= 0)
                     {
-                        canChange = true;
+                        canAttack = false;
                     }
                 }
                 isBleeding();
@@ -119,7 +121,15 @@ public abstract class EnemyScript : MonoBehaviour {
                 enemyUIcontrol.StatusUpdate();
 
             }
+            isBleeding();
+            isStunned();
+            enemyAnim["Attack"].layer = 0;
+        
+
         }
+
+        enemyUIcontrol.HealthUpdate(health, maxHealth);
+        enemyUIcontrol.StatusUpdate();
         
     }
     public void FixedUpdate()
@@ -155,15 +165,15 @@ public abstract class EnemyScript : MonoBehaviour {
         if (alive)
         {
            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
-            if (other.gameObject.tag == "Player")
-            {
-                enemyAnim["Attack"].layer = 1;
-                player.DecreaseHealth(5);
-                enemyAnim.Play("Attack");
+            //if (other.gameObject.tag == "Player")
+            //{
+            //    enemyAnim["Attack"].layer = 1;
+            //    player.DecreaseHealth(5);
+            //    enemyAnim.Play("Attack");
 
-                pause = true;
-                pauseTimer = 2.5f;
-            }
+            //    pause = true;
+            //    pauseTimer = 2.5f;
+            //}
             if (other.gameObject.tag == "Terrain")
             {
                 if(groundpound && !groundpound.isPlaying)
@@ -198,6 +208,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         GetComponentInChildren<Canvas>(true).gameObject.SetActive(false);
     }
+
     public void knockUp()
     {
         enemyAnim.Stop();
@@ -246,12 +257,15 @@ public abstract class EnemyScript : MonoBehaviour {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                
+                if (!canAttack)
+                {
                     enemyAnim["Attack"].layer = 1;
 
                     enemyAnim.Play("Attack");
-                player.DecreaseHealth(5);
-
+                    player.DecreaseHealth(5);
+                    attackTimer = .4f;
+                    canAttack = true;
+                }
                     pause = true;
                     pauseTimer = 2.5f;
 

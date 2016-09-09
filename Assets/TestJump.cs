@@ -18,6 +18,7 @@ public class TestJump : MonoBehaviour {
     PlayerHealth playerHealth;
 
 
+
     MeshCollider Skill1;
     bool skill1Active = false;
     float skill1_currCooldown;
@@ -40,6 +41,11 @@ public class TestJump : MonoBehaviour {
 
     [SerializeField]
     Transform camTransform;
+    [SerializeField]
+    Transform targetTranform;
+
+    Quaternion lastForward;
+
 
     // Use this for initialization
     void Start () {
@@ -67,6 +73,7 @@ public class TestJump : MonoBehaviour {
         {
             comboState = GameObject.Find("Morfus").GetComponent<ComboStates>();
         }
+        lastForward = transform.rotation;
     }
 	
     void Update()
@@ -121,18 +128,39 @@ public class TestJump : MonoBehaviour {
     void Move()
     {
         //rb.velocity += camTransform.right * Input.GetAxis("Horizontal") * moveSpeed;
-        rb.MovePosition(transform.position + camTransform.forward * Input.GetAxis("Vertical") * moveSpeed);
-        //rb.velocity += camTransform.forward * Input.GetAxis("Vertical") * moveSpeed;
-        rb.velocity += transform.right * Input.GetAxis("Horizontal") * moveSpeed;
-      
-        
-        if (rb.velocity != Vector3.zero)
+        if (Input.GetAxis("Vertical") != 0)
         {
-            Quaternion tempQuat = transform.rotation;
-            tempQuat.y = camTransform.rotation.y;
-            transform.rotation = tempQuat;
+            //rb.velocity = new Vector3(targetTranform.position.normalized.x * moveSpeed, 0, targetTranform.position.normalized.z * moveSpeed);
+            transform.Translate(-targetTranform.forward * Input.GetAxis("Vertical") * moveSpeed, Space.World);
+            //rb.MovePosition(transform.position + camTransform.forward * Input.GetAxis("Vertical") * moveSpeed);
         }
-        
+        //rb.velocity += camTransform.forward * Input.GetAxis("Vertical") * moveSpeed;
+        //rb.velocity += transform.right * Input.GetAxis("Horizontal") * moveSpeed;
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed, Space.World);
+
+            //rb.MovePosition(transform.position + transform.right * Input.GetAxis("Horizontal") * moveSpeed);
+        }
+
+
+        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        {
+            //Quaternion tempQuat = transform.rotation;
+            //if (camTransform.rotation.y > 0)
+            //    tempQuat.y = camTransform.rotation.y - 360;
+            //else
+            //    tempQuat.y = camTransform.rotation.y;
+            //transform.rotation = tempQuat;
+            //lastForward = tempQuat;
+            Vector3 direction = targetTranform.position - transform.position;
+            direction.Normalize();
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 5);
+           
+        }
+       
+
         //rb.velocity += transform.forward * Input.GetAxis("Vertical") * moveSpeed;
 
         if (Input.GetButton("Jump") && !jumping)

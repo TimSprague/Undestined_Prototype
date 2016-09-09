@@ -13,31 +13,48 @@ public class MeleeAttack : MonoBehaviour {
      
    
     Transform playerTrans;
+
 	// Use this for initialization
 	void Start () {
         swordAnimation = GetComponent<Animator>();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        transform.Rotate(Vector3.up, speed * Time.deltaTime);
-
         if (Input.GetButton("Fire1"))
         {
             swordAnimation.Play("LightAttack");
-
            
         }
 
         if(Input.GetButton("Fire2"))
         {
             swordAnimation.Play("HeavyAttack");
-
            
+        
+
         }
 
     }
+                if (heavyAtk)
+                {
+               
+                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
+                    other.GetComponent<MeleeEnemy>().PlayBleedParticle();
+
+                    enemScript.TakeDmg(20);
+                    attacking = false;
+                    lightAtk = false;
+                    heavyAtk = false;
+                }
+
+            }
+        }
+    }
+    
+
     void swordSwing()
     {
         AudioClip clip = null;

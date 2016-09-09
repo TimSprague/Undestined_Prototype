@@ -80,6 +80,7 @@ public class ComboStates : MonoBehaviour {
                     {
                         Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
+                        other.smashedDown = true;
                         other.rigidBody.velocity = new Vector3(0, -vel.y*5, vel.z*-.1f);
                         other.rigidBody.AddForce(new Vector3(0, -250*temp.y, 1500  *temp.z ) );
                     }

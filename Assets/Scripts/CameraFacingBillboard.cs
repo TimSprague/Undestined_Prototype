@@ -6,7 +6,8 @@ public class CameraFacingBillboard : MonoBehaviour {
     public Camera m_camera;
 	// Use this for initialization
 	void Start () {
-	
+        if (!m_camera)
+            m_camera = Camera.main;
 	}
 	
 	// Update is called once per frame

@@ -254,7 +254,7 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) > 4)
+            if (Vector3.Distance(playerTransform.position, transform.position) > 2)
             {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else

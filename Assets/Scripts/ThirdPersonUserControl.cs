@@ -67,10 +67,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (!m_Jump)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-                if (m_Jump)
-                {
-                    comboState.UpdateState(3, null, null);
-                }
+                //if (m_Jump)
+                //{
+                //    comboState.UpdateState(3, null, null);
+                //}
             }
 
             if (Input.GetMouseButton(0))

@@ -115,22 +115,18 @@ public abstract class EnemyScript : MonoBehaviour {
                         canAttack = false;
                     }
                 }
-                isBleeding();
-                isStunned();
-                enemyAnim["Attack"].layer = 0;
-                enemyUIcontrol.HealthUpdate(health, maxHealth);
-                enemyUIcontrol.StatusUpdate();
+                
 
             }
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-        
 
+
+            enemyUIcontrol.HealthUpdate(health, maxHealth);
+            enemyUIcontrol.StatusUpdate();
         }
-        
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+       
         
     }
     public void FixedUpdate()
@@ -282,7 +278,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+       // DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     
 

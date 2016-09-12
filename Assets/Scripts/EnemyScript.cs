@@ -43,7 +43,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
-	// Use this for initialization
+    // Use this for initialization
+    public ParticleSystem PlayerBlood;
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
@@ -164,12 +165,13 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (alive)
         {
-           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             //if (other.gameObject.tag == "Player")
             //{
             //    enemyAnim["Attack"].layer = 1;
             //    player.DecreaseHealth(5);
             //    enemyAnim.Play("Attack");
+            //    Instantiate(PlayerBlood, other.contacts[0].point, Quaternion.identity);
 
             //    pause = true;
             //    pauseTimer = 2.5f;

@@ -15,7 +15,7 @@ public class MeleeZone : MonoBehaviour {
     public EnemyScript enemScript;
     public float attackTimer;
     Transform playerTrans;
-    bool hitSomething;
+    public   bool hitSomething;
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
@@ -86,15 +86,15 @@ public class MeleeZone : MonoBehaviour {
 
                     Vector3 temp = playerTrans.forward;
                     enemScript.rigidBody.AddForce(new Vector3(temp.x * 250, 0, temp.z * 1000));
-                   
+                    enemScript.TakeDmg(5);
                 }
                 if (heavyAtk)
                 {
                     Vector3 temp = playerTrans.forward;
                    // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 85, temp.normalized.z*7.5f));
+                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1400, temp.normalized.z*7.5f));
                     enemScript.knockedUp = true;
-
+                    enemScript.TakeDmg(5);
 
                 }
 
@@ -103,6 +103,6 @@ public class MeleeZone : MonoBehaviour {
         {
             lightAtk = heavyAtk = attacking = false;
         }
-        
+        heavyAtk = lightAtk = false;
     }
 }

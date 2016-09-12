@@ -4,8 +4,8 @@ using System.Collections;
 public class CameraOrbit : MonoBehaviour {
 
 
-    private const float Y_ANGLE_MAX = 45.0f;
-    private const float Y_ANGLE_MIN = -10.0f;
+    private const float Y_ANGLE_MAX = 25.0f;
+    private const float Y_ANGLE_MIN = 25.0f;
 
     public GameObject target;
     public Transform camTransform;
@@ -15,7 +15,7 @@ public class CameraOrbit : MonoBehaviour {
     private float distance = 2.5f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
-    private float camSensitivity = 4.0f;
+    private float camSensitivity = 10.0f;
     private int Inverted = 1;
 
 

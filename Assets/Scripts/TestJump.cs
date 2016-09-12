@@ -45,6 +45,7 @@ public class TestJump : MonoBehaviour {
     Transform targetTranform;
 
     Quaternion lastForward;
+    float jumpTimer;
 
 
     // Use this for initialization
@@ -131,14 +132,20 @@ public class TestJump : MonoBehaviour {
         if (Input.GetAxis("Vertical") != 0)
         {
             //rb.velocity = new Vector3(targetTranform.position.normalized.x * moveSpeed, 0, targetTranform.position.normalized.z * moveSpeed);
-            transform.Translate(-targetTranform.forward * Input.GetAxis("Vertical") * moveSpeed, Space.World);
+            if (jumping)
+                transform.Translate(-targetTranform.forward * Input.GetAxis("Vertical") * moveSpeed * 0.5f, Space.World);
+            else
+                transform.Translate(-targetTranform.forward * Input.GetAxis("Vertical") * moveSpeed, Space.World);
             //rb.MovePosition(transform.position + camTransform.forward * Input.GetAxis("Vertical") * moveSpeed);
         }
         //rb.velocity += camTransform.forward * Input.GetAxis("Vertical") * moveSpeed;
         //rb.velocity += transform.right * Input.GetAxis("Horizontal") * moveSpeed;
         if (Input.GetAxis("Horizontal") != 0)
         {
-            transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed, Space.World);
+            if(jumping)
+                transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed * 0.5f, Space.World);
+            else
+                transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed, Space.World);
 
             //rb.MovePosition(transform.position + transform.right * Input.GetAxis("Horizontal") * moveSpeed);
         }
@@ -152,25 +159,41 @@ public class TestJump : MonoBehaviour {
             //else
             //    tempQuat.y = camTransform.rotation.y;
             //transform.rotation = tempQuat;
-            //lastForward = tempQuat;
+            
             Vector3 direction = targetTranform.position - transform.position;
             direction.Normalize();
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 5);
-           
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 15);
+            lastForward = transform.rotation;
         }
+        else
+            transform.rotation = lastForward;
        
 
         //rb.velocity += transform.forward * Input.GetAxis("Vertical") * moveSpeed;
 
         if (Input.GetButton("Jump") && !jumping)
         {
-            JumpRoutine(1.0f);
-            //rb.velocity += new Vector3(0,jumpPower,0);
+            Jump();
+            //JumpRoutine(1.0f);
+            //rb.velocity += new Vector3(0, jumpPower, 0);
             //GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower);
+           
         }
+        jumpTimer += Time.deltaTime;
     }
+    void Jump()
+    {
+        jumpTimer = 0.0f;
+            rb.velocity += new Vector3(0, jumpPower, 0);
 
+            if (comboState != null)
+            {
+                comboState.UpdateState(3, null, null);
+            }
+            jumping = true;
+       
+    }
     void JumpRoutine(float timer)
     {
         float temp = 0;
@@ -182,7 +205,8 @@ public class TestJump : MonoBehaviour {
 
             if (!test2Jump)
             {
-                tempYPos = rb.position.y + jumpHeight;
+                //tempYPos = rb.position.y + jumpHeight;
+                tempYPos = 7.75f;
                 test2Jump = true;
             }
 
@@ -201,10 +225,10 @@ public class TestJump : MonoBehaviour {
             }
 
         }
-        if (comboState != null)
-        {
-            comboState.UpdateState(3, null, null);
-        }
+        //if (comboState != null)
+        //{
+        //    comboState.UpdateState(3, null, null);
+        //}
     }
 
     void skillUpdate()
@@ -245,7 +269,7 @@ public class TestJump : MonoBehaviour {
 
     void OnCollisionStay(Collision col)
     {
-        if (col.collider.tag == "Terrain")
+        if ((col.collider.tag == "Terrain") && (jumpTimer > 0.4f))
         {
             jumping = false;
         }

@@ -14,7 +14,7 @@ public class CharacterPointer : MonoBehaviour {
     private float distance = 2.5f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
-    private float camSensitivity = 4.0f;
+    private float camSensitivity = 10.0f;
     private int Inverted = 1;
 
     // Use this for initialization

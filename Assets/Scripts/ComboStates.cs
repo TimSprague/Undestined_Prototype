@@ -34,7 +34,7 @@ public class ComboStates : MonoBehaviour {
     {
         currentState = 0;
     }
-
+    
     /**
      * With each state, the current state is multipled by 10 in order to preserve the combo.
      * Each time a attack is entered, it is stored until a state in which a final move is executed.
@@ -103,7 +103,7 @@ public class ComboStates : MonoBehaviour {
                         Vector3 temp = player.TransformDirection(-other.transform.forward);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0, vel.y, vel.z * -25);
-                        other.rigidBody.AddForce(new Vector3(0, 100, 8000));
+                        other.rigidBody.AddForce(new Vector3(0, 150,16000*temp.z));
                     }
                 }
                 break;

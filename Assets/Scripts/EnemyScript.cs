@@ -27,6 +27,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool playerTarget;
     public bool canChange;
     public float changeTimer;
+    public float fallingSpeed;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -43,8 +44,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public ParticleSystem groundpound;
 
     [SerializeField] EnemyUIController enemyUIcontrol;
-    // Use this for initialization
-    public ParticleSystem PlayerBlood;
+	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
@@ -128,7 +128,7 @@ public abstract class EnemyScript : MonoBehaviour {
         
 
         }
-
+        
         enemyUIcontrol.HealthUpdate(health, maxHealth);
         enemyUIcontrol.StatusUpdate();
         
@@ -159,20 +159,20 @@ public abstract class EnemyScript : MonoBehaviour {
                 moveToTarget(points[destPoint].position);
             }
         }
-        
+                   rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+
     }
     public void OnCollisionEnter(Collision other)
     {
         if (alive)
         {
-            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             //if (other.gameObject.tag == "Player")
             //{
             //    enemyAnim["Attack"].layer = 1;
             //    player.DecreaseHealth(5);
             //    enemyAnim.Play("Attack");
-            //    Instantiate(PlayerBlood, other.contacts[0].point, Quaternion.identity);
-
+           
             //    pause = true;
             //    pauseTimer = 2.5f;
             //}
@@ -254,20 +254,20 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) > 4)
+            if (Vector3.Distance(playerTransform.position, transform.position) > 2)
             {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                if (!canAttack)
-                {
-                    enemyAnim["Attack"].layer = 1;
+                //if (!canAttack)
+                //{
+                //    enemyAnim["Attack"].layer = 1;
 
-                    enemyAnim.Play("Attack");
-                    player.DecreaseHealth(5);
-                    attackTimer = .4f;
-                    canAttack = true;
-                }
+                //    enemyAnim.Play("Attack");
+                //player.DecreaseHealth(5);
+                //    attackTimer = .4f;
+                //    canAttack = true;
+                //}
                     pause = true;
                     pauseTimer = 2.5f;
 

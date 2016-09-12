@@ -10,8 +10,9 @@ public class DamagePopup : MonoBehaviour
 
     void OnEnable()
     {
-        AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-        Destroy(gameObject, clipInfo[0].clip.length);
+        int popupNum = Random.Range(1, 3);
+        animator.SetInteger("Popup", popupNum);
+        Destroy(gameObject, 1.0f);
         damageText = animator.GetComponent<Text>();
     }
 

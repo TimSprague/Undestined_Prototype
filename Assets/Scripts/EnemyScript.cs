@@ -43,6 +43,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool canAttack;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
+    public ParticleSystem EnemyBlood;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -284,7 +285,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-        //DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+        if (EnemyBlood)
+            EnemyBlood.Play();
+        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     
 

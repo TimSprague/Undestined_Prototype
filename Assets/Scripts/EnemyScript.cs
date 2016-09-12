@@ -278,7 +278,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-       // DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     
 

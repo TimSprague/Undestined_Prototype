@@ -9,19 +9,17 @@ public class CharacterPointer : MonoBehaviour {
     public GameObject target;
     public Transform camTransform;
     public Transform characterTransform;
-    private Camera cam;
 
     private float distance = 2.5f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
     private float camSensitivity = 10.0f;
-    private int Inverted = 1;
+    //private int Inverted = 1;
 
     // Use this for initialization
     void Start () {
 
         camTransform = transform;
-        cam = Camera.main;
         currentX = characterTransform.rotation.eulerAngles.y;
         currentY = 15;
     }

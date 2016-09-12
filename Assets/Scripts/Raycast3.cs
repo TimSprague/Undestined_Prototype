@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Raycast3 : MonoBehaviour {
-    public float distance3 = 5f;
+    static public float distance3 = 5f;
 	// Use this for initialization
 	void Start () {
 	

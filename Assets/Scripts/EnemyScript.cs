@@ -259,15 +259,15 @@ public abstract class EnemyScript : MonoBehaviour {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                if (!canAttack)
-                {
-                    enemyAnim["Attack"].layer = 1;
+                //if (!canAttack)
+                //{
+                //    enemyAnim["Attack"].layer = 1;
 
-                    enemyAnim.Play("Attack");
-                player.DecreaseHealth(5);
-                    attackTimer = .4f;
-                    canAttack = true;
-                }
+                //    enemyAnim.Play("Attack");
+                //player.DecreaseHealth(5);
+                //    attackTimer = .4f;
+                //    canAttack = true;
+                //}
                     pause = true;
                     pauseTimer = 2.5f;
 

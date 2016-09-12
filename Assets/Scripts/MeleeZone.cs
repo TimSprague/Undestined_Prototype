@@ -91,8 +91,8 @@ public class MeleeZone : MonoBehaviour {
                 if (heavyAtk)
                 {
                     Vector3 temp = playerTrans.forward;
-                    enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
-                    enemScript.rigidBody.AddForce(new Vector3(5, 750, 5));
+                   // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
+                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 85, temp.normalized.z*7.5f));
                     enemScript.knockedUp = true;
 
 

@@ -115,11 +115,7 @@ public abstract class EnemyScript : MonoBehaviour {
                         canAttack = false;
                     }
                 }
-                isBleeding();
-                isStunned();
-                enemyAnim["Attack"].layer = 0;
-                enemyUIcontrol.HealthUpdate(health, maxHealth);
-                enemyUIcontrol.StatusUpdate();
+                
 
             }
             isBleeding();
@@ -128,7 +124,11 @@ public abstract class EnemyScript : MonoBehaviour {
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
 
+
+            enemyUIcontrol.HealthUpdate(health, maxHealth);
+            enemyUIcontrol.StatusUpdate();
         }
+       
         
         
         

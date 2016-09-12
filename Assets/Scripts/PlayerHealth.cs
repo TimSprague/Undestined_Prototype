@@ -4,8 +4,8 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour {
 
-    public int playerCurrentHealth;
-    public int playerMaxHealth;
+    public float playerCurrentHealth;
+    public float playerMaxHealth;
     public bool isAlive = true;
     public Image HealthImage;
     public Image HealthBar;
@@ -51,7 +51,7 @@ public class PlayerHealth : MonoBehaviour {
 
     }
 
-   public void DecreaseHealth(int _value)
+   public void DecreaseHealth(float _value)
     {
         if (PlayerBleed && !PlayerBleed.isPlaying)
         {

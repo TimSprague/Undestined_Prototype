@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
+
 public class PlayerMovement : MonoBehaviour {
+
+    bool testJump = false;
+    bool test2Jump = false;
+    float tempYPos = 0;
 
     public float moveSpeed;
     public Transform cameraTransform;
@@ -12,7 +18,9 @@ public class PlayerMovement : MonoBehaviour {
     Quaternion targetRotation;
     Rigidbody rb;
     public float jumpHeight;
+    public float jumpSeed;
     public bool jumping;
+    public float fallingSpeed;
 
     MeshCollider Skill1;
     bool skill1Active = false;
@@ -55,15 +63,30 @@ public class PlayerMovement : MonoBehaviour {
             rb = GetComponent<Rigidbody>();
         }
         jumping = false;
-        Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
-        Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
-        playerHealth = GameObject.Find("Player").GetComponent<PlayerHealth>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+
+        if (GameObject.Find("Skill1Cone"))
+        {
+            Skill1 = GameObject.Find("Skill1Cone").GetComponent<MeshCollider>();
+        }
+        if (GameObject.Find("Skill2Cone"))
+        {
+            Skill2 = GameObject.Find("Skill2Cone").GetComponent<SphereCollider>();
+        }
+        if (GameObject.Find("Player").GetComponent<PlayerHealth>())
+        {
+            playerHealth = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        }
+        if (GameObject.Find("Morfus"))
+        {
+            comboState = GameObject.Find("Morfus").GetComponent<ComboStates>();
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
-        Turn();
+       // Turn();
         Attacks();
 	}
 
@@ -71,11 +94,18 @@ public class PlayerMovement : MonoBehaviour {
     {
         Move();
 
-        if (Skill1.enabled == true)
-            Skill1.enabled = false;
+        if (Skill1 != null)
+        {
+            if (Skill1.enabled == true)
+                Skill1.enabled = false;
+        }
 
-        if (Skill2.enabled == true)
-            Skill2.enabled = false;
+        if (Skill2 != null)
+        {
+            if (Skill2.enabled == true)
+                Skill2.enabled = false;
+        }
+        
     }
 
     void Turn()
@@ -90,14 +120,60 @@ public class PlayerMovement : MonoBehaviour {
 
         rb.velocity = transform.forward * Input.GetAxis("Vertical") * forwardVel;
 
+        
+
         if (Input.GetButton("Jump") && !jumping)
         {
-            rb.velocity = new Vector3(0, jumpHeight, 0);
-            jumping = true;
+            StartCoroutine(JumpRoutine(0.5f));
+           
+
         }
 
-        rb.velocity += (0.5f * Physics.gravity);
-        
+        if (jumping)
+        {
+            //rb.velocity += (new Vector3(rb.velocity.x, rb.velocity.y - fallingSpeed, rb.velocity.z));
+        }
+
+        //rb.velocity += (new Vector3(rb.velocity.x, rb.velocity.y - fallingSpeed, rb.velocity.z));
+
+    }
+
+    IEnumerator JumpRoutine(float timer)
+    {
+        float temp = 0;
+        while (temp < timer)
+        {
+            temp += Time.deltaTime;
+
+            jumping = true;
+
+            if (!test2Jump)
+            {
+                tempYPos = rb.position.y + jumpHeight;
+                test2Jump = true;
+            }
+
+            if (jumping)
+            {
+                if (rb.position.y >= (tempYPos - .25f))
+                {
+                    test2Jump = false;
+                    tempYPos -= jumpHeight;
+                }
+            }
+
+            if (test2Jump)
+            {
+                rb.position = Vector3.MoveTowards(rb.position, new Vector3(rb.position.x, tempYPos, rb.position.z), jumpSeed);
+            }
+           
+        }
+        if (comboState != null)
+        {
+            comboState.UpdateState(3, null, null);
+        }
+        yield return null;
+       
     }
 
     void Attacks()

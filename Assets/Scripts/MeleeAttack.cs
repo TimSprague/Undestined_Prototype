@@ -38,21 +38,7 @@ public class MeleeAttack : MonoBehaviour {
         }
 
     }
-                if (heavyAtk)
-                {
-               
-                    combScipt.UpdateState((int)COMBOSTATE.heavyAttack, enemScript, playerTrans);
-                    other.GetComponent<MeleeEnemy>().PlayBleedParticle();
-
-                    enemScript.TakeDmg(20);
-                    attacking = false;
-                    lightAtk = false;
-                    heavyAtk = false;
-                }
-
-            }
-        }
-    }
+                
     
 
     void swordSwing()

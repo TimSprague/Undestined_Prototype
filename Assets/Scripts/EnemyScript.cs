@@ -27,6 +27,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool playerTarget;
     public bool canChange;
     public float changeTimer;
+    public float fallingSpeed;
     //Status effects
     public float bleedTimer;
     public float stunTimer;

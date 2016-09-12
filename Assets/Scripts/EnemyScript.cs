@@ -42,7 +42,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public ParticleSystem groundpound;
-
+    public ParticleSystem PlayerBleed;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -162,15 +162,17 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (alive)
         {
-           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             //if (other.gameObject.tag == "Player")
             //{
             //    enemyAnim["Attack"].layer = 1;
             //    player.DecreaseHealth(5);
             //    enemyAnim.Play("Attack");
-           
+
             //    pause = true;
             //    pauseTimer = 2.5f;
+           //     if (PlayerBleed)
+                //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             //}
             if (other.gameObject.tag == "Terrain")
             {

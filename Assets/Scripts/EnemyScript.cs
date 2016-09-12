@@ -71,8 +71,8 @@ public abstract class EnemyScript : MonoBehaviour {
 	public virtual void Update () {
         if(health <=0)
         {
-            DestroyImmediate(this.gameObject);
             alive = false;
+            DestroyImmediate(this.gameObject);
         }
 
         if (alive)
@@ -121,12 +121,16 @@ public abstract class EnemyScript : MonoBehaviour {
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
+            enemyUIcontrol.HealthUpdate(health, maxHealth);
+            enemyUIcontrol.StatusUpdate();
 
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
        
+        
+        
         
     }
     public void FixedUpdate()
@@ -280,7 +284,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+        //DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     
 

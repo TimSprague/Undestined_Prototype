@@ -8,22 +8,24 @@ public class MeleeAttack : MonoBehaviour {
     public float speed = 10.0f;
     [SerializeField] float comboTime = 0.0f;
     [SerializeField] int currentCombo = 0;
-
+    public Transform player;
     public Animator swordAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
-     
-   
+
+    [SerializeField] ParticleSystem particle_groundPound;
+    [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
 
 	// Use this for initialization
 	void Start () {
         swordAnimation = GetComponent<Animator>();
-
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
         //if(comboTime > 0)
         //{
         //    comboTime -= Time.deltaTime;
@@ -37,41 +39,64 @@ public class MeleeAttack : MonoBehaviour {
         {
             //if (currentCombo == 0 || comboTime == 0)
             //{
-            //    if(!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        swordAnimation.Play("LightAttack");
             //        currentCombo++;
-            //    }
+                
             //}
-            //else if(currentCombo == 1 && comboTime > 0)
+            //else if (currentCombo == 1 && comboTime > 0)
             //{
-            //    if (!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        swordAnimation.Play("LightAttack2");
             //        currentCombo++;
-            //    }
+                
             //}
-            //else if(currentCombo == 2 && comboTime > 0)
+            //else if (currentCombo == 2 && comboTime > 0)
             //{
-            //    if (!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        currentCombo = 0;
             //        swordAnimation.Play("LightAttack3");
-            //    }
+                
             //}
             //comboTime = 1.0f;
 
             swordAnimation.Play("LightAttack");
         }
 
-        if(Input.GetButton("Fire2"))
+        if(Input.GetButtonDown("Fire2"))
         {
+            //if (currentCombo == 0 || comboTime == 0)
+            //{
+
+            //    swordAnimation.Play("HeavyAttack");
+            //    currentCombo++;
+
+            //}
+            //else if (currentCombo == 1 && comboTime > 0)
+            //{
+
+            //    swordAnimation.Play("HeavyAttack2");
+            //    currentCombo++;
+
+            //}
+            //else if (currentCombo == 2 && comboTime > 0)
+            //{
+
+            //    currentCombo = 0;
+            //    swordAnimation.Play("HeavyAttack3");
+
+            //}
+            //comboTime = 1.0f;
             swordAnimation.Play("HeavyAttack");
         }
 
     }
-                
-    
+    public void FixedUpdate()
+    {
+        
+
+    }
+
 
     void swordSwing()
     {
@@ -85,6 +110,15 @@ public class MeleeAttack : MonoBehaviour {
         if (clip != null)
         {
             sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
+
+    void swordPound_Particle()
+    {
+        if(particle_groundPound)
+        {
+            Instantiate(particle_groundPound, transform_groundPound.position, particle_groundPound.gameObject.transform.rotation);
+
         }
     }
 }

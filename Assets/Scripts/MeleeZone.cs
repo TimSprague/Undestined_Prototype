@@ -85,24 +85,28 @@ public class MeleeZone : MonoBehaviour {
                 {
 
                     Vector3 temp = playerTrans.forward;
-                    //if (enemScript.knockedUp)
-                    //{
-                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
-                    //}
-                    //else
-                    //{
-                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 5, temp.normalized.z * 10000));
+                    if (enemScript.knockedUp)
+                    {
+                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+                    }
+                    else
+                    {
+                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 500, 5, temp.normalized.z * 500));
 
-                    //}
+                    }
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                     enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+                  //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+                    enemScript.pause = true;
+                    enemScript.pauseTimer = 5;
                     enemScript.TakeDmg(5);
                 }
                 if (heavyAtk)
                 {
                     Vector3 temp = playerTrans.forward;
-                   // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*7.5f));
+                    // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
+                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
+
+                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
                     enemScript.knockedUp = true;
                     enemScript.TakeDmg(10);
 

@@ -103,19 +103,9 @@ public abstract class EnemyScript : MonoBehaviour {
                         pause = false;
 
                     }
-                    else
-                    {
-                        //enemyAnim.Stop();
-                    }
+                   
                 }
-                if (canAttack)
-                {
-                    attackTimer -= Time.deltaTime;
-                    if (attackTimer <= 0)
-                    {
-                        canAttack = false;
-                    }
-                }
+               
                 
 
             }
@@ -213,10 +203,9 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         enemyAnim.Stop();
 
-
         knockedUp = true;
        enemyAnim.CrossFade("idle");
-    
+        
     }
    
     public void isStunned()
@@ -252,20 +241,23 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) > 2)
+            if (!pause)
+
+                if (Vector3.Distance(playerTransform.position, transform.position) > 2)
             {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                if (!pause)
-                {
+                
 
                     enemyAnim.Stop();
                     enemyAnim.Play("Attack", PlayMode.StopAll);
                     player.DecreaseHealth(5);
+                    canAttack = true;
+                    attackTimer = 1.25f;
                     pause = true;
                     pauseTimer = 1.25f;
-                }
+                
                    
 
 

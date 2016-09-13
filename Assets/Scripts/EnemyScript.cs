@@ -41,6 +41,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float smashTimer;
     public float attackTimer;
     public bool canAttack;
+    public bool hit;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
@@ -53,7 +54,7 @@ public abstract class EnemyScript : MonoBehaviour {
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GetComponentInChildren<Animation>();
-      
+        hit = false;
         canChange = false;
         stunned = false;
         bleeding = false; 
@@ -107,7 +108,11 @@ public abstract class EnemyScript : MonoBehaviour {
                     }
                    
                 }
-               
+               if(hit &&pause)
+                {
+                    enemyAnim.Play("idle", PlayMode.StopAll);
+                    hit = false;
+                }
                 
 
             }
@@ -251,7 +256,7 @@ public abstract class EnemyScript : MonoBehaviour {
         {
             if (!pause)
 
-                if (Vector3.Distance(playerTransform.position, transform.position) > 2)
+                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
             {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
@@ -265,7 +270,7 @@ public abstract class EnemyScript : MonoBehaviour {
                     attackTimer = 1.25f;
                     pause = true;
                     pauseTimer = 1.25f;
-                
+                   
                    
 
 

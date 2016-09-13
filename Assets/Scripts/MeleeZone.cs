@@ -90,16 +90,18 @@ public class MeleeZone : MonoBehaviour {
                     if (enemScript.knockedUp)
                     {
                         enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+
                     }
                     else
                     {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 500, 5, temp.normalized.z * 500));
+                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
 
                     }
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
                   //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
                     enemScript.pause = true;
-                    enemScript.pauseTimer = 5;
+                    enemScript.hit = true;
+                    enemScript.pauseTimer = 1.25f;
                     enemScript.TakeDmg(5);
                 }
                 if (heavyAtk)
@@ -110,6 +112,8 @@ public class MeleeZone : MonoBehaviour {
 
                     enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
                     enemScript.knockedUp = true;
+                    enemScript.hit = true;
+                    enemScript.pause = true;
                     enemScript.TakeDmg(10);
                     if (EnemyBlood)
                         Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);

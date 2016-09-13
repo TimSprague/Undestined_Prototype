@@ -42,14 +42,17 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public ParticleSystem groundpound;
-
+    public ParticleSystem PlayerBleed;
+    //public ParticleSystem EnemyBlood;
+    public Transform EnemyBloodLoc;
+    public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
+        enemyAnim = GetComponentInChildren<Animation>();
       
         canChange = false;
         stunned = false;
@@ -90,11 +93,7 @@ public abstract class EnemyScript : MonoBehaviour {
                     //TakeDmg(bleedDmg);  Use to calculate damage to health
                     health -= bleedDmg; // Obsolete
                 }
-                if (!stunned && !knockedUp)
-                {
-
-
-                }
+              
 
                 if (pause)
                 {
@@ -102,28 +101,18 @@ public abstract class EnemyScript : MonoBehaviour {
                     if (pauseTimer < 0.0f)
                     {
 
-                        enemyAnim.CrossFade("Walk");
+                       enemyAnim.Play("Walk",PlayMode.StopAll);
                         pause = false;
 
                     }
+                   
                 }
-                if (canAttack)
-                {
-                    attackTimer -= Time.deltaTime;
-                    if (attackTimer <= 0)
-                    {
-                        canAttack = false;
-                    }
-                }
+               
                 
 
             }
             isBleeding();
             isStunned();
-            enemyAnim["Attack"].layer = 0;
-            enemyUIcontrol.HealthUpdate(health, maxHealth);
-            enemyUIcontrol.StatusUpdate();
-
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
@@ -166,31 +155,38 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (alive)
         {
-           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             //if (other.gameObject.tag == "Player")
             //{
             //    enemyAnim["Attack"].layer = 1;
             //    player.DecreaseHealth(5);
             //    enemyAnim.Play("Attack");
-           
+
             //    pause = true;
             //    pauseTimer = 2.5f;
+            //     if (PlayerBleed)
+            //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             //}
+            if (other.gameObject.tag == "Player")
+            {
+               if (PlayerBleed)
+                   Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+            }
             if (other.gameObject.tag == "Terrain")
             {
-                if(groundpound && !groundpound.isPlaying)
+                if(groundpound)
                 {
                     if (smashedDown)
                     {
                         groundpound.Play();
                         smashTimer = 1.0f;
                         smashedDown = false;
+                        //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
                     }
                     
                 }
 
                 knockedUp = false;
-                enemyAnim.CrossFade("Walk");
             }
         }
 
@@ -215,10 +211,9 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         enemyAnim.Stop();
 
-
         knockedUp = true;
-        enemyAnim.CrossFade("idle");
-    
+       enemyAnim.CrossFade("idle");
+        
     }
    
     public void isStunned()
@@ -254,22 +249,24 @@ public abstract class EnemyScript : MonoBehaviour {
         }
         else
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) > 2)
+            if (!pause)
+
+                if (Vector3.Distance(playerTransform.position, transform.position) > 2)
             {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                //if (!canAttack)
-                //{
-                //    enemyAnim["Attack"].layer = 1;
+                
 
-                //    enemyAnim.Play("Attack");
-                //player.DecreaseHealth(5);
-                //    attackTimer = .4f;
-                //    canAttack = true;
-                //}
+                    enemyAnim.Stop();
+                    enemyAnim.Play("Attack", PlayMode.StopAll);
+                    player.DecreaseHealth(5);
+                    canAttack = true;
+                    attackTimer = 1.25f;
                     pause = true;
-                    pauseTimer = 2.5f;
+                    pauseTimer = 1.25f;
+                
+                   
 
 
                 
@@ -282,7 +279,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-        //DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+        //if (EnemyBlood)
+        //    EnemyBlood.Play();
+        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     
 

@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class TestJump : MonoBehaviour {
+public class TestJump : MonoBehaviour
+{
 
     public float jumpPower;
     public float moveSpeed;
     Rigidbody rb;
     public bool jumping;
-    bool test2Jump;
-    public float tempYPos;
     public float jumpHeight;
     ComboStates comboState;
     public float jumpSpeed;
@@ -49,7 +48,8 @@ public class TestJump : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         if (GetComponent<Rigidbody>())
         {
@@ -76,13 +76,14 @@ public class TestJump : MonoBehaviour {
         }
         lastForward = transform.rotation;
     }
-	
+
     void Update()
     {
         Attacks();
     }
     // Update is called once per frame
-    void FixedUpdate () {
+    void FixedUpdate()
+    {
 
         Move();
 
@@ -125,7 +126,7 @@ public class TestJump : MonoBehaviour {
 
         skillUpdate();
     }
-  
+
     void Move()
     {
         //rb.velocity += camTransform.right * Input.GetAxis("Horizontal") * moveSpeed;
@@ -142,7 +143,7 @@ public class TestJump : MonoBehaviour {
         //rb.velocity += transform.right * Input.GetAxis("Horizontal") * moveSpeed;
         if (Input.GetAxis("Horizontal") != 0)
         {
-            if(jumping)
+            if (jumping)
                 transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed * 0.5f, Space.World);
             else
                 transform.Translate(camTransform.right * Input.GetAxis("Horizontal") * moveSpeed, Space.World);
@@ -159,76 +160,45 @@ public class TestJump : MonoBehaviour {
             //else
             //    tempQuat.y = camTransform.rotation.y;
             //transform.rotation = tempQuat;
-            
+
             Vector3 direction = targetTranform.position - transform.position;
             direction.Normalize();
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 15);
             lastForward = transform.rotation;
         }
+        else if (Input.GetButton("Fire1") || Input.GetButton("Fire2"))
+        {
+            Vector3 direction = targetTranform.position - transform.position;
+            direction.Normalize();
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 15);
+            lastForward = transform.rotation;
+
+        }
         else
             transform.rotation = lastForward;
-       
+
 
         //rb.velocity += transform.forward * Input.GetAxis("Vertical") * moveSpeed;
 
         if (Input.GetButton("Jump") && !jumping)
         {
             Jump();
-            //JumpRoutine(1.0f);
-            //rb.velocity += new Vector3(0, jumpPower, 0);
-            //GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower);
-           
         }
         jumpTimer += Time.deltaTime;
+
     }
     void Jump()
     {
         jumpTimer = 0.0f;
-            rb.velocity += new Vector3(0, jumpPower, 0);
+        rb.velocity += new Vector3(0, jumpPower, 0);
 
-            if (comboState != null)
-            {
-                comboState.UpdateState(3, null, null);
-            }
-            jumping = true;
-       
-    }
-    void JumpRoutine(float timer)
-    {
-        float temp = 0;
-        while (temp < timer)
+        if (comboState != null)
         {
-            temp += Time.deltaTime;
-
-            jumping = true;
-
-            if (!test2Jump)
-            {
-                //tempYPos = rb.position.y + jumpHeight;
-                tempYPos = 7.75f;
-                test2Jump = true;
-            }
-
-            if (jumping)
-            {
-                if (rb.position.y >= (tempYPos - .25f))
-                {
-                    test2Jump = false;
-                    tempYPos -= jumpHeight;
-                }
-            }
-
-            if (test2Jump)
-            {
-                rb.position = Vector3.MoveTowards(rb.position, new Vector3(rb.position.x, tempYPos, rb.position.z), jumpSpeed);
-            }
-
+            comboState.UpdateState(3, null, null);
         }
-        //if (comboState != null)
-        //{
-        //    comboState.UpdateState(3, null, null);
-        //}
+        jumping = true;
     }
 
     void skillUpdate()

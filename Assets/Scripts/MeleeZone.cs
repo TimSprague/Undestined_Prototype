@@ -36,7 +36,9 @@ public class MeleeZone : MonoBehaviour {
                     attacking = true;
                     heavyAtk = false;
                     attackTimer = 1f;
+                    
                 }
+               
             }
 
             if (Input.GetButton("Fire2"))
@@ -85,7 +87,8 @@ public class MeleeZone : MonoBehaviour {
                 {
 
                     Vector3 temp = playerTrans.forward;
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 50, temp.normalized.z * 10000));
+                    //enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 50, temp.normalized.z * 10000));
+                    enemScript.rigidBody.velocity = new Vector3(temp.x, 15, temp.z+55);
                     enemScript.TakeDmg(5);
                 }
                 if (heavyAtk)

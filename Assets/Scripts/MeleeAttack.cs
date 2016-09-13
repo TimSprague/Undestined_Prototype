@@ -8,7 +8,7 @@ public class MeleeAttack : MonoBehaviour {
     public float speed = 10.0f;
     [SerializeField] float comboTime = 0.0f;
     [SerializeField] int currentCombo = 0;
-
+    public Transform player;
     public Animator swordAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
@@ -19,11 +19,12 @@ public class MeleeAttack : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         swordAnimation = GetComponent<Animator>();
-
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
         //if(comboTime > 0)
         //{
         //    comboTime -= Time.deltaTime;
@@ -70,8 +71,12 @@ public class MeleeAttack : MonoBehaviour {
         }
 
     }
-                
-    
+    public void FixedUpdate()
+    {
+        
+
+    }
+
 
     void swordSwing()
     {

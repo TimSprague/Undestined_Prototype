@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 public class MeleeZone : MonoBehaviour {
     public enum COMBOSTATE
     {
@@ -16,15 +15,16 @@ public class MeleeZone : MonoBehaviour {
     public float attackTimer;
     Transform playerTrans;
     public bool hitSomething;
+    
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
-      
+        
     }
 
     // Update is called once per frame
     void FixedUpdate () {
-
+        
         if (!attacking)
         {
 
@@ -85,7 +85,17 @@ public class MeleeZone : MonoBehaviour {
                 {
 
                     Vector3 temp = playerTrans.forward;
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 50, temp.normalized.z * 10000));
+                    //if (enemScript.knockedUp)
+                    //{
+                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+                    //}
+                    //else
+                    //{
+                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 5, temp.normalized.z * 10000));
+
+                    //}
+                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
+                     enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
                     enemScript.TakeDmg(5);
                 }
                 if (heavyAtk)

@@ -49,7 +49,7 @@ public abstract class EnemyScript : MonoBehaviour {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        enemyAnim = GameObject.Find("samuzai").GetComponent<Animation>();
+        enemyAnim = GetComponentInChildren<Animation>();
       
         canChange = false;
         stunned = false;
@@ -90,11 +90,7 @@ public abstract class EnemyScript : MonoBehaviour {
                     //TakeDmg(bleedDmg);  Use to calculate damage to health
                     health -= bleedDmg; // Obsolete
                 }
-                if (!stunned && !knockedUp)
-                {
-
-
-                }
+              
 
                 if (pause)
                 {
@@ -102,9 +98,13 @@ public abstract class EnemyScript : MonoBehaviour {
                     if (pauseTimer < 0.0f)
                     {
 
-                        enemyAnim.CrossFade("Walk");
+                       enemyAnim.Play("Walk",PlayMode.StopAll);
                         pause = false;
 
+                    }
+                    else
+                    {
+                        //enemyAnim.Stop();
                     }
                 }
                 if (canAttack)
@@ -120,10 +120,6 @@ public abstract class EnemyScript : MonoBehaviour {
             }
             isBleeding();
             isStunned();
-            enemyAnim["Attack"].layer = 0;
-            enemyUIcontrol.HealthUpdate(health, maxHealth);
-            enemyUIcontrol.StatusUpdate();
-
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
@@ -190,7 +186,6 @@ public abstract class EnemyScript : MonoBehaviour {
                 }
 
                 knockedUp = false;
-                enemyAnim.CrossFade("Walk");
             }
         }
 
@@ -217,7 +212,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
 
         knockedUp = true;
-        enemyAnim.CrossFade("idle");
+       enemyAnim.CrossFade("idle");
     
     }
    
@@ -259,17 +254,16 @@ public abstract class EnemyScript : MonoBehaviour {
                 velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
             }else
             {
-                //if (!canAttack)
-                //{
-                //    enemyAnim["Attack"].layer = 1;
+                if (!pause)
+                {
 
-                //    enemyAnim.Play("Attack");
-                //player.DecreaseHealth(5);
-                //    attackTimer = .4f;
-                //    canAttack = true;
-                //}
+                    enemyAnim.Stop();
+                    enemyAnim.Play("Attack", PlayMode.StopAll);
+                    player.DecreaseHealth(5);
                     pause = true;
-                    pauseTimer = 2.5f;
+                    pauseTimer = 1.25f;
+                }
+                   
 
 
                 

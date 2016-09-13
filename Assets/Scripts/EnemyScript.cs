@@ -48,8 +48,11 @@ public abstract class EnemyScript : MonoBehaviour {
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
-	// Use this for initialization
-	public virtual void Start () {
+    // Enemy Counter
+    private int count=0;
+    public CounterText countText;
+    // Use this for initialization
+    public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
@@ -66,15 +69,19 @@ public abstract class EnemyScript : MonoBehaviour {
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
         destPoint = 0;
-      //  rotationSpeed = 5f;
+        //  rotationSpeed = 5f;
         //health = maxHealth = 100;
         DamagePopupController.Initialize();
-	}
+        //count = 0;
+        SetCountText();
+    }
 	
 	// Update is called once per frame
 	public virtual void Update () {
+
         if(health <=0)
         {
+            countText.AddOne();
             alive = false;
             DestroyImmediate(this.gameObject);
         }
@@ -288,9 +295,11 @@ public abstract class EnemyScript : MonoBehaviour {
         //    EnemyBlood.Play();
         DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
-    
 
-    
+    void SetCountText()
+    {
+        //countText.text = count.ToString() + " / 10";
+    }
     //public void GoToNextPoint()
     //{
     //    if (points.Length == 0)

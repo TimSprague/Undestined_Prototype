@@ -19,7 +19,7 @@ public class CharacterPointer : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        camTransform = transform;
+      //  camTransform = transform;
         currentX = characterTransform.rotation.eulerAngles.y;
         currentY = 15;
     }

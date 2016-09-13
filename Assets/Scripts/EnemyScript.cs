@@ -176,9 +176,14 @@ public abstract class EnemyScript : MonoBehaviour {
 
             //    pause = true;
             //    pauseTimer = 2.5f;
-           //     if (PlayerBleed)
-                //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+            //     if (PlayerBleed)
+            //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             //}
+            if (other.gameObject.tag == "Player")
+            {
+               if (PlayerBleed)
+                   Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+            }
             if (other.gameObject.tag == "Terrain")
             {
                 if(groundpound && !groundpound.isPlaying)

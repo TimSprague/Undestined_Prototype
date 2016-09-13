@@ -42,7 +42,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public ParticleSystem groundpound;
-
+    public ParticleSystem PlayerBleed;
+    public ParticleSystem EnemyBlood;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -71,8 +72,8 @@ public abstract class EnemyScript : MonoBehaviour {
 	public virtual void Update () {
         if(health <=0)
         {
-            DestroyImmediate(this.gameObject);
             alive = false;
+            DestroyImmediate(this.gameObject);
         }
 
         if (alive)
@@ -115,22 +116,22 @@ public abstract class EnemyScript : MonoBehaviour {
                         canAttack = false;
                     }
                 }
-                isBleeding();
-                isStunned();
-                enemyAnim["Attack"].layer = 0;
-                enemyUIcontrol.HealthUpdate(health, maxHealth);
-                enemyUIcontrol.StatusUpdate();
+                
 
             }
             isBleeding();
             isStunned();
             enemyAnim["Attack"].layer = 0;
-        
+            enemyUIcontrol.HealthUpdate(health, maxHealth);
+            enemyUIcontrol.StatusUpdate();
 
+
+            enemyUIcontrol.HealthUpdate(health, maxHealth);
+            enemyUIcontrol.StatusUpdate();
         }
+       
         
-        enemyUIcontrol.HealthUpdate(health, maxHealth);
-        enemyUIcontrol.StatusUpdate();
+        
         
     }
     public void FixedUpdate()
@@ -166,15 +167,17 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (alive)
         {
-           // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+            // rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             //if (other.gameObject.tag == "Player")
             //{
             //    enemyAnim["Attack"].layer = 1;
             //    player.DecreaseHealth(5);
             //    enemyAnim.Play("Attack");
-           
+
             //    pause = true;
             //    pauseTimer = 2.5f;
+           //     if (PlayerBleed)
+                //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             //}
             if (other.gameObject.tag == "Terrain")
             {
@@ -282,6 +285,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
+        if (EnemyBlood)
+            EnemyBlood.Play();
         DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     

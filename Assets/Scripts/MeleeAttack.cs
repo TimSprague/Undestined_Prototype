@@ -12,8 +12,9 @@ public class MeleeAttack : MonoBehaviour {
     public Animator swordAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
-     
-   
+
+    [SerializeField] ParticleSystem particle_groundPound;
+    [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
 
 	// Use this for initialization
@@ -114,9 +115,9 @@ public class MeleeAttack : MonoBehaviour {
 
     void swordPound_Particle()
     {
-        if(groundPound)
+        if(particle_groundPound)
         {
-            Instantiate(groundPound, groundPound_loc.position, groundPound.gameObject.transform.rotation);
+            Instantiate(particle_groundPound, transform_groundPound.position, particle_groundPound.gameObject.transform.rotation);
 
         }
     }

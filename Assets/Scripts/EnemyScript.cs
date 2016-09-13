@@ -43,7 +43,9 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool canAttack;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
-    public ParticleSystem EnemyBlood;
+    //public ParticleSystem EnemyBlood;
+    public Transform EnemyBloodLoc;
+    public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -162,18 +164,24 @@ public abstract class EnemyScript : MonoBehaviour {
 
             //    pause = true;
             //    pauseTimer = 2.5f;
-           //     if (PlayerBleed)
-                //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+            //     if (PlayerBleed)
+            //    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             //}
+            if (other.gameObject.tag == "Player")
+            {
+               if (PlayerBleed)
+                   Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+            }
             if (other.gameObject.tag == "Terrain")
             {
-                if(groundpound && !groundpound.isPlaying)
+                if(groundpound)
                 {
                     if (smashedDown)
                     {
                         groundpound.Play();
                         smashTimer = 1.0f;
                         smashedDown = false;
+                        //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
                     }
                     
                 }
@@ -271,8 +279,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public void TakeDmg(int dmg)
     {
         health -= dmg;
-        if (EnemyBlood)
-            EnemyBlood.Play();
+        //if (EnemyBlood)
+        //    EnemyBlood.Play();
         DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
     

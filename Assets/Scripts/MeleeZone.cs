@@ -15,7 +15,7 @@ public class MeleeZone : MonoBehaviour {
     public float attackTimer;
     Transform playerTrans;
     public bool hitSomething;
-    
+    public ParticleSystem EnemyBlood;
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
@@ -81,9 +81,11 @@ public class MeleeZone : MonoBehaviour {
             enemScript = other.GetComponent<MeleeEnemy>();
             if (attacking)
             {
+
                 if (lightAtk)
                 {
-
+                    if (EnemyBlood)
+                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
                     Vector3 temp = playerTrans.forward;
                     if (enemScript.knockedUp)
                     {
@@ -109,6 +111,8 @@ public class MeleeZone : MonoBehaviour {
                     enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
                     enemScript.knockedUp = true;
                     enemScript.TakeDmg(10);
+                    if (EnemyBlood)
+                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
 
                 }
 

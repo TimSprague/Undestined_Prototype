@@ -12,8 +12,9 @@ public class MeleeAttack : MonoBehaviour {
     public Animator swordAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
-     
-   
+
+    [SerializeField] ParticleSystem particle_groundPound;
+    [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
 
 	// Use this for initialization
@@ -38,35 +39,54 @@ public class MeleeAttack : MonoBehaviour {
         {
             //if (currentCombo == 0 || comboTime == 0)
             //{
-            //    if(!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        swordAnimation.Play("LightAttack");
             //        currentCombo++;
-            //    }
+                
             //}
-            //else if(currentCombo == 1 && comboTime > 0)
+            //else if (currentCombo == 1 && comboTime > 0)
             //{
-            //    if (!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        swordAnimation.Play("LightAttack2");
             //        currentCombo++;
-            //    }
+                
             //}
-            //else if(currentCombo == 2 && comboTime > 0)
+            //else if (currentCombo == 2 && comboTime > 0)
             //{
-            //    if (!swordAnimation.IsInTransition(0))
-            //    {
+                
             //        currentCombo = 0;
             //        swordAnimation.Play("LightAttack3");
-            //    }
+                
             //}
             //comboTime = 1.0f;
 
             swordAnimation.Play("LightAttack");
         }
 
-        if(Input.GetButton("Fire2"))
+        if(Input.GetButtonDown("Fire2"))
         {
+            //if (currentCombo == 0 || comboTime == 0)
+            //{
+
+            //    swordAnimation.Play("HeavyAttack");
+            //    currentCombo++;
+
+            //}
+            //else if (currentCombo == 1 && comboTime > 0)
+            //{
+
+            //    swordAnimation.Play("HeavyAttack2");
+            //    currentCombo++;
+
+            //}
+            //else if (currentCombo == 2 && comboTime > 0)
+            //{
+
+            //    currentCombo = 0;
+            //    swordAnimation.Play("HeavyAttack3");
+
+            //}
+            //comboTime = 1.0f;
             swordAnimation.Play("HeavyAttack");
         }
 
@@ -90,6 +110,15 @@ public class MeleeAttack : MonoBehaviour {
         if (clip != null)
         {
             sfxSource.PlayOneShot(clip, maxVol);
+        }
+    }
+
+    void swordPound_Particle()
+    {
+        if(particle_groundPound)
+        {
+            Instantiate(particle_groundPound, transform_groundPound.position, particle_groundPound.gameObject.transform.rotation);
+
         }
     }
 }

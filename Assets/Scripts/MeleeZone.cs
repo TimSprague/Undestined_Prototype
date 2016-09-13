@@ -80,16 +80,13 @@ public class MeleeZone : MonoBehaviour {
         if (other.gameObject.tag == "Enemy")
         {
             enemScript = other.GetComponent<MeleeEnemy>();
-            if (EnemyBlood)
-            {
-                ParticleSystem temp = Instantiate(EnemyBlood, enemScript.EnemyBloodLoc) as ParticleSystem;
-                temp.Play();
-            }
+
             if (attacking)
             {
+               if (EnemyBlood)
+                    Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
                 if (lightAtk)
                 {
-
                     Vector3 temp = playerTrans.forward;
                     enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10000, 50, temp.normalized.z * 10000));
                     enemScript.TakeDmg(5);

@@ -25,7 +25,6 @@ public class MeleeAttack : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
         //if(comboTime > 0)
         //{
         //    comboTime -= Time.deltaTime;

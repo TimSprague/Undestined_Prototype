@@ -47,13 +47,10 @@ public class TestCamera : MonoBehaviour {
         //player movement
         if (character.isGrounded)
         {
-            if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-            {
-                moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                moveDirection = transform.TransformDirection(moveDirection);
-                moveDirection *= moveSpeed;
-                
-            }
+           
+            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= moveSpeed;
 
             if (Input.GetButton("Jump"))
             {

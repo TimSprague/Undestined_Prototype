@@ -45,7 +45,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
-    public Transform GoundPoundLoc;
+    public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
 	// Use this for initialization
 	public virtual void Start () {
@@ -85,7 +85,7 @@ public abstract class EnemyScript : MonoBehaviour {
                 smashTimer -= Time.deltaTime;
                 if(smashTimer<=0)
                 {
-                    //groundpound.Stop();
+                    groundpound.Stop();
                 }
 
                 if (bleeding)
@@ -192,10 +192,10 @@ public abstract class EnemyScript : MonoBehaviour {
                 {
                     if (smashedDown)
                     {
-                        //groundpound.Play();
-                        //smashTimer = 1.0f;
-                        //smashedDown = false;
-
+                        groundpound.Play();
+                        smashTimer = 1.0f;
+                        smashedDown = false;
+                        //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
                     }
                     
                 }

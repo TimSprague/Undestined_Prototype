@@ -16,6 +16,7 @@ public class MeleeZone : MonoBehaviour {
     public float attackTimer;
     Transform playerTrans;
     public bool hitSomething;
+    public ParticleSystem EnemyBlood;
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
@@ -79,6 +80,11 @@ public class MeleeZone : MonoBehaviour {
         if (other.gameObject.tag == "Enemy")
         {
             enemScript = other.GetComponent<MeleeEnemy>();
+            if (EnemyBlood)
+            {
+                ParticleSystem temp = Instantiate(EnemyBlood, enemScript.EnemyBloodLoc) as ParticleSystem;
+                temp.Play();
+            }
             if (attacking)
             {
                 if (lightAtk)

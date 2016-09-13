@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MeleeEnemy : EnemyScript {
-    public ParticleSystem EnemyBleed;
+    //public ParticleSystem EnemyBleed;
     public ParticleSystem EnemyGround;
     // Use this for initialization
     public override void Start () {
@@ -15,8 +15,8 @@ public class MeleeEnemy : EnemyScript {
 	}
     public void PlayBleedParticle()
     {
-        if(EnemyBleed&&!EnemyBleed.isPlaying)
-           EnemyBleed.Play(true);
+        //if(EnemyBleed&&!EnemyBleed.isPlaying)
+        //   EnemyBleed.Play(true);
     }
     public void PlayGroundParticle()
     {

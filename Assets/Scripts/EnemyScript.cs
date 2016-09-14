@@ -54,10 +54,8 @@ public abstract class EnemyScript : MonoBehaviour {
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
-       // playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
-        playerTransform = GetComponent<Transform>().transform;
-        //player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        player = GetComponent<PlayerHealth>();
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
+        player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GetComponentInChildren<Animation>();
         hit = false;
         canChange = false;

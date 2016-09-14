@@ -10,6 +10,7 @@ public class MeleeAttack : MonoBehaviour {
     [SerializeField] int currentCombo = 0;
     public Transform player;
     public Animator swordAnimation;
+    public Animator playerAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioClip[] soundLightSwordSwings;
 
@@ -61,6 +62,7 @@ public class MeleeAttack : MonoBehaviour {
             //comboTime = 1.0f;
 
             swordAnimation.Play("LightAttack");
+            playerAnimation.Play("Unarmed-Attack-R3");
         }
 
         if(Input.GetButtonDown("Fire2"))
@@ -88,6 +90,7 @@ public class MeleeAttack : MonoBehaviour {
             //}
             //comboTime = 1.0f;
             swordAnimation.Play("HeavyAttack");
+            playerAnimation.Play("Unarmed-Attack-Kick-L1");
         }
 
     }

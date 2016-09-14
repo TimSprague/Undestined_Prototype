@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-
+using System.Collections.Generic;
 public abstract class EnemyScript : MonoBehaviour {
 
     
@@ -28,6 +28,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool canChange;
     public float changeTimer;
     public float fallingSpeed;
+    public int pathDest;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -42,12 +43,14 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public bool hit;
+    List<Node> path;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
+    Pathfinding planRoute;
     // Enemy Counter
     private int count=0;
     public CounterText countText;
@@ -74,8 +77,18 @@ public abstract class EnemyScript : MonoBehaviour {
         DamagePopupController.Initialize();
         //count = 0;
         SetCountText();
+        planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+        planRoute.FindPath(transform.position, points[destPoint].position);
+        path = planRoute.grid.path;
+        pathDest = 0;
     }
-	
+    public void Awake()
+    {
+    //    planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+    //    planRoute.FindPath(transform.position, points[destPoint].position);
+    //    path = planRoute.grid.path;
+    //    pathDest = 0;
+    }
 	// Update is called once per frame
 	public virtual void Update () {
 
@@ -152,7 +165,7 @@ public abstract class EnemyScript : MonoBehaviour {
             else
             {
                 playerTarget = false;
-                Vector3 direction = points[destPoint].position - transform.position;
+                Vector3 direction = path[pathDest].worldPosition - transform.position;
                 direction.Normalize();
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
                 transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
@@ -255,21 +268,32 @@ public abstract class EnemyScript : MonoBehaviour {
         Vector3 moveDirection = target - transform.position;
         Vector3 velocity = rigidBody.velocity;
 
-        if(moveDirection.magnitude<1.5 &&!playerTarget)
+        if (moveDirection.magnitude < 5 && !playerTarget)
         {
             destPoint = (destPoint + 1) % points.Length;
+            planRoute.FindPath(transform.position, points[destPoint].position);
+            path = planRoute.grid.path;
+            pathDest = 0;
         }
         else
         {
             if (!pause)
-
+            {
                 if (Vector3.Distance(playerTransform.position, transform.position) > 3)
-            {
-                velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
-            }else
-            {
-                
-
+                {
+                    if (!playerTarget)
+                    {
+                        moveDirection = path[pathDest].worldPosition - transform.position;
+                        if (moveDirection.magnitude < 3)
+                        {
+                        //    if ((pathDest + 1 <= planRoute.grid.path.Count))
+                            pathDest++;
+                        }
+                    }
+                    velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
+                }
+                else
+                {
                     enemyAnim.Stop();
                     enemyAnim.Play("Attack", PlayMode.StopAll);
                     player.DecreaseHealth(5);
@@ -277,11 +301,7 @@ public abstract class EnemyScript : MonoBehaviour {
                     attackTimer = 1.25f;
                     pause = true;
                     pauseTimer = 1.25f;
-                   
-                   
-
-
-                
+                                    }
             }
         }
         rigidBody.velocity = velocity;

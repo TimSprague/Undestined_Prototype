@@ -132,9 +132,6 @@ public abstract class EnemyScript : MonoBehaviour {
             enemyUIcontrol.StatusUpdate();
         }
        
-        
-        
-        
     }
     public void FixedUpdate()
     {

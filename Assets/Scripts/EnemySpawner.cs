@@ -3,43 +3,42 @@ using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
 
-    public PlayerHealth playerHealth;
-    public GameObject enemy;
+    public GameObject[] enemies;
     public GameObject terrain;
 
-    public float spawntime;
-    public float spawningtime;
-    public Transform[] spawnPoints;
+    public int amount;
 
+    public Vector3 spawnPoint;
 	// Use this for initialization
 	void Start ()
     {
-        //enemy = GameObject.Find("Enemy");
         terrain = GameObject.Find("Terrain");
-        InvokeRepeating("Spawn", spawntime, spawntime);
         
     }
 
     void Update()
     {
-        spawningtime += Time.deltaTime;
 
-        if(spawningtime >= 20.0f)
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        amount = enemies.Length;
+
+        if (amount != 35)
         {
-            CancelInvoke("Spawn");
+            InvokeRepeating("Spawn", 5, 10f);
         }
+
     }
 
     void Spawn ()
     {
-	    if(playerHealth.playerCurrentHealth <= 0f)
-        {
-            return;
-        }
+        spawnPoint.x = Random.Range(28, 168);
+        spawnPoint.y = 1.15f;
+        spawnPoint.z = Random.Range(70, 383);
+        //int spawnPointIndex = Random.Range(0, spawnPoints.Length);
 
-        int spawnPointIndex = Random.Range(0, spawnPoints.Length);
+        //GameObject temp = (GameObject)Instantiate(enemies[enemies.Length], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
 
-        GameObject temp = (GameObject)Instantiate(enemy, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+        GameObject temp = (GameObject)Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Length - 1)], spawnPoint, Quaternion.identity);
 
         Transform[] terr_transform = new Transform[18];
 
@@ -78,5 +77,6 @@ public class EnemySpawner : MonoBehaviour {
             }
         }
 
+        CancelInvoke();
     }
 }

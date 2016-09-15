@@ -100,7 +100,7 @@ public class MeleeAttack : MonoBehaviour {
                     swordAnimation.Play("HeavyAttack3");
                 }
             }
-            comboTime = 1.0f;
+            comboTime = 1.5f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("HeavyAttack");
         }

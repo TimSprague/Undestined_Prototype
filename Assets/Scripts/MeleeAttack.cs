@@ -36,9 +36,11 @@ public class MeleeAttack : MonoBehaviour {
         if(comboTime > 0)
         {
             comboTime -= Time.deltaTime;
-            if (comboTime < 0)
+            if (comboTime <= 0)
+            {
                 comboTime = 0;
-            currentCombo = 0;
+                currentCombo = 0;
+            }
         }
         if (Input.GetButtonDown("Fire1"))
         {
@@ -72,10 +74,10 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.0f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("LightAttack");
-            playerAnimation.Play("Unarmed-Attack-R3");
+            //playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
         }
 
-        if(Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2"))
         {
             if (currentCombo == 0 || comboTime == 0)
             {
@@ -104,7 +106,7 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.5f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("HeavyAttack");
-            playerAnimation.Play("Unarmed-Attack-Kick-L1");
+            //playerAnimation.Play("Unarmed-Attack-Kick-L1"); // UNCOMMENT BACK
         }
 
     }

@@ -16,12 +16,15 @@ public class ComboStates : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        comboTimer -= Time.deltaTime;
-        if(comboTimer<0.0f)
+	void Update ()
+    {
+        if(comboTimer > 0)
         {
-            ResetCurrentState();
-            
+            comboTimer -= Time.deltaTime;
+            if(comboTimer < 0)
+            {
+                ResetCurrentState();
+            }
         }
         
 	}
@@ -33,6 +36,7 @@ public class ComboStates : MonoBehaviour {
     public void ResetCurrentState()
     {
         currentState = 0;
+        comboTimer = 0;
     }
     
     /**
@@ -49,8 +53,8 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.light :
                 {
                     //basic attack
+                    Debug.Log("light");
 
-                    
                 }
                 break;
             case (int)COMBOSTATE.lightHeavy:
@@ -69,7 +73,7 @@ public class ComboStates : MonoBehaviour {
             case (int)COMBOSTATE.lightLight:
                 {
                     //2nd basic attack
-                   
+                    Debug.Log("lightlight");
                 }
                 break;
             case (int)COMBOSTATE.lightHeavyJumpHeavy:
@@ -90,7 +94,24 @@ public class ComboStates : MonoBehaviour {
                 {
                     //flurry attack
                     //CallFunction
-                    
+                    Debug.Log("lightlightlight");
+                    Vector3 temp = player.forward;
+                    if (other.knockedUp)
+                    {
+                        other.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+
+                    }
+                    else
+                    {
+                        other.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
+
+                    }
+                    other.rigidBody.velocity = new Vector3(0, 0, 0);
+                    //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+                    other.pause = true;
+                    other.hit = true;
+                    other.pauseTimer = 1.25f;
+                    other.TakeDmg(5);
                 }
                 break;
             case (int)COMBOSTATE.lightLightHeavy:

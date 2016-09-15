@@ -29,6 +29,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float changeTimer;
     public float fallingSpeed;
     public int pathDest;
+    public int pathCount;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -54,13 +55,13 @@ public abstract class EnemyScript : MonoBehaviour {
     // Enemy Counter
     private int count=0;
     public CounterText countText;
+    public float Dtime;
+    public float dCheck;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
-       // playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
-        playerTransform = GetComponent<Transform>().transform;
-        //player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        player = GetComponent<PlayerHealth>();
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
+        player = GameObject.Find("Player").GetComponent<PlayerHealth>();
         enemyAnim = GetComponentInChildren<Animation>();
         hit = false;
         canChange = false;
@@ -82,7 +83,9 @@ public abstract class EnemyScript : MonoBehaviour {
         planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
         planRoute.FindPath(transform.position, points[destPoint].position);
         path = planRoute.grid.path;
+        pathCount = path.Count;
         pathDest = 0;
+        Dtime = 0;
     }
     public void Awake()
     {
@@ -144,7 +147,7 @@ public abstract class EnemyScript : MonoBehaviour {
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
-       
+        Dtime += Time.deltaTime;
     }
     public void FixedUpdate()
     {
@@ -266,13 +269,14 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         Vector3 moveDirection = target - transform.position;
         Vector3 velocity = rigidBody.velocity;
-
-        if (moveDirection.magnitude < 5 && !playerTarget)
+        if (moveDirection.magnitude < 5.5f && !playerTarget)
         {
             destPoint = (destPoint + 1) % points.Length;
             planRoute.FindPath(transform.position, points[destPoint].position);
             path = planRoute.grid.path;
             pathDest = 0;
+            pathCount = path.Count;
+
         }
         else
         {
@@ -283,10 +287,19 @@ public abstract class EnemyScript : MonoBehaviour {
                     if (!playerTarget)
                     {
                         moveDirection = path[pathDest].worldPosition - transform.position;
-                        if (moveDirection.magnitude < 3)
+                        dCheck = moveDirection.magnitude;
+
+                        if (moveDirection.magnitude < 3.5f)
                         {
-                        //    if ((pathDest + 1 <= planRoute.grid.path.Count))
-                            pathDest++;
+
+                            if ((pathDest+1 < path.Count))
+                            {
+                                pathDest = (pathDest + 1) % pathCount;
+                                if(pathDest == path.Count)
+                                {
+                                    Debug.Log("SHITS FUCK YO");
+                                }
+                            }
                         }
                     }
                     velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);

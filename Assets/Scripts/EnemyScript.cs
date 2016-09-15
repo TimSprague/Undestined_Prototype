@@ -56,8 +56,8 @@ public abstract class EnemyScript : MonoBehaviour {
         rigidBody = GetComponent<Rigidbody>();
        // playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         playerTransform = GetComponent<Transform>().transform;
-        //player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        player = GetComponent<PlayerHealth>();
+        player = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        //player = GetComponent<PlayerHealth>();
         enemyAnim = GetComponentInChildren<Animation>();
         hit = false;
         canChange = false;
@@ -100,8 +100,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 if (bleeding)
                 {
-                    //TakeDmg(bleedDmg);  Use to calculate damage to health
-                    health -= bleedDmg; // Obsolete
+                    TakeDmg(bleedDmg);  //Use to calculate damage to health
+                    //health -= bleedDmg; // Obsolete
                 }
               
 

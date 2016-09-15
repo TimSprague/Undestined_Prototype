@@ -5,7 +5,7 @@ public class ComboStates : MonoBehaviour {
     /**
      * This enum keeps track of the current state by adding the value of the new input onto the back of the current state.
      * */
-    public enum COMBOSTATE { light=1 , lightHeavy=12, lightHeavyJumpHeavy=1232, lightHeavyJump = 123, lightLight=11, lightLightLight=111, lightLightHeavy = 112
+    public enum COMBOSTATE { light=1, heavy=2, jump=3, lightHeavy=12, lightHeavyJumpHeavy=1232, lightHeavyJump = 123, lightLight=11, lightLightLight=111, lightLightHeavy = 112
 
     };
     public int currentState;

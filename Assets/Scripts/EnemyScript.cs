@@ -81,6 +81,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if(health <=0)
         {
+            player.IncreaseHealth(10);
             countText.AddOne();
             alive = false;
             DestroyImmediate(this.gameObject);

@@ -93,7 +93,7 @@ public class TestCamera : MonoBehaviour {
 
         float distance = 5;
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(Vector3.forward), out hit))
+        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(-Vector3.forward), out hit))
         {
             distance = hit.distance;
         }

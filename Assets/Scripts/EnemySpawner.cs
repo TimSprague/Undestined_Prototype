@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         amount = enemies.Length;
 
-        if (amount != 35)
+        if (amount != 40)
         {
             InvokeRepeating("Spawn", 5, 10f);
         }

@@ -99,6 +99,7 @@ public abstract class EnemyScript : MonoBehaviour {
 
         if(health <=0)
         {
+            player.IncreaseHealth(10);
             countText.AddOne();
             alive = false;
             DestroyImmediate(this.gameObject);
@@ -116,8 +117,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 if (bleeding)
                 {
-                    //TakeDmg(bleedDmg);  Use to calculate damage to health
-                    health -= bleedDmg; // Obsolete
+                    TakeDmg(bleedDmg);  //Use to calculate damage to health
+                    //health -= bleedDmg; // Obsolete
                 }
               
 

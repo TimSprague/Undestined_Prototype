@@ -93,7 +93,7 @@ public class TestCamera : MonoBehaviour {
 
         float distance = 5;
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(Vector3.forward), out hit))
+        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(-Vector3.forward), out hit))
         {
             distance = hit.distance;
         }
@@ -111,49 +111,37 @@ public class TestCamera : MonoBehaviour {
 
     }
 
-    //void LateUpdate()
-    //{
-    //    if (PlayerAnimator)
-    //    {
-    //        PlayerAnimator.SetBool("Moving", false);
-    //        PlayerAnimator.SetBool("Strafing", false);
-    //        if (Input.GetAxis("Vertical") > 0)
-    //        {
-    //            runSpeed++;
-    //            PlayerAnimator.SetFloat("Velocity Z", runSpeed);
-    //            PlayerAnimator.SetBool("Strafing", false);
-    //            PlayerAnimator.SetBool("Moving", true);
-    //        }
-    //        else if (Input.GetAxis("Vertical") < 0)
-    //        {
-    //            runSpeed--;
-    //            PlayerAnimator.SetFloat("Velocity Z", runSpeed);
-    //            PlayerAnimator.SetBool("Strafing", true);
-    //            PlayerAnimator.SetBool("Moving", true);
-    //        }
-    //        else if (Input.GetAxis("Horizontal") > 0)
-    //        {
-    //            straifeSpeed = 0;
-    //            straifeSpeed++;
-    //            PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
-    //            PlayerAnimator.SetBool("Moving", true);
-    //            PlayerAnimator.SetBool("Strafing", true);
-    //        }
-    //        else if (Input.GetAxis("Horizontal") < 0)
-    //        {
-    //            straifeSpeed = 0;
-    //            straifeSpeed--;
-    //            PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
-    //            PlayerAnimator.SetBool("Moving", true);
-    //            PlayerAnimator.SetBool("Strafing", true);
-    //        }
-    //        else
-    //        {
-    //            straifeSpeed = 0;
-    //            runSpeed = 0;
-    //            PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
-    //            PlayerAnimator.SetFloat("Velocity Z", runSpeed);
-    //        }
-    //    }
-    //}
+    void LateUpdate()
+    {
+        if (PlayerAnimator)
+        {
+            PlayerAnimator.SetBool("Moving", false);
+            PlayerAnimator.SetBool("Strafing", false);
+
+            if (Input.GetAxis("Vertical") != 0)
+            {
+                runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
+                PlayerAnimator.SetBool("Moving", true);
+}
+            else
+                runSpeed = 0;
+            if (Input.GetAxis("Horizontal") != 0)
+            {
+                straifeSpeed += Input.GetAxis("Horizontal") > 0 ? 0.04f : -0.04f;
+                PlayerAnimator.SetBool("Moving", true);
+                PlayerAnimator.SetBool("Strafing", true);
+            }
+            else
+                straifeSpeed = 0;
+            PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+            PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                PlayerAnimator.SetInteger("Jumping", 1);
+                PlayerAnimator.SetTrigger("JumpTrigger");
+            }
+
+        }
+    }
 }

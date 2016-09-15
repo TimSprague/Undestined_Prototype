@@ -22,7 +22,6 @@ public class TestCamera : MonoBehaviour {
     private float yRot; // rotation value of camera
     private float xRot; // rotation value of camera
 
-    Quaternion lastForward;
     Transform target;
 
 	// Use this for initialization
@@ -91,13 +90,12 @@ public class TestCamera : MonoBehaviour {
 
         float distance = 5;
         RaycastHit hit = new RaycastHit();
-
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(Vector3.forward), out hit))
         {
             distance = hit.distance;
         }
 
-        if (distance < 8)
+        if (distance > 8)
         {
             distance = 8;
         }

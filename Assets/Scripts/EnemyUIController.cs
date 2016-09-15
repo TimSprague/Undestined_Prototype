@@ -20,7 +20,11 @@ public class EnemyUIController : MonoBehaviour {
 
     public void HealthUpdate(float currHealth, float maxHealth)
     {
-        health.fillAmount = (currHealth / maxHealth);
+        Vector3 scale = health.gameObject.transform.localScale;
+        scale.x = (currHealth / maxHealth);
+        if (scale.x < 0)
+            scale.x = 0;
+        health.gameObject.transform.localScale = scale;
     }
 
     public void StatusUpdate()

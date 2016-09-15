@@ -12,6 +12,7 @@ public class MeleeZone : MonoBehaviour {
     public bool lightAtk = false;
     public bool heavyAtk = false;
     public EnemyScript enemScript;
+    public ComboStates comboStates;
     public float attackTimer;
     Transform playerTrans;
     public bool hitSomething;
@@ -37,6 +38,12 @@ public class MeleeZone : MonoBehaviour {
                     heavyAtk = false;
                     attackTimer = 1f;
                 }
+
+                // New code - LC
+                //lightAtk = true;
+                //attacking = true;
+                //heavyAtk = false;
+                //attackTimer = 1f;
             }
 
             if (Input.GetButton("Fire2"))
@@ -52,7 +59,8 @@ public class MeleeZone : MonoBehaviour {
             }
        
             
-        }else
+        }
+        else
         {
             if (hitSomething)
             {
@@ -64,14 +72,15 @@ public class MeleeZone : MonoBehaviour {
                     heavyAtk = false;
                     hitSomething = false;
                 }
-            }else
+            }
+            else
             {
                 attacking = false;
                 lightAtk = false;
                 heavyAtk = false;
             }
         }
-        
+
     }
     public void OnTriggerStay(Collider other)
     {
@@ -98,11 +107,13 @@ public class MeleeZone : MonoBehaviour {
 
                     }
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                  //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+                    //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
                     enemScript.pause = true;
                     enemScript.hit = true;
                     enemScript.pauseTimer = 1.25f;
                     enemScript.TakeDmg(5);
+                    //comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
+
                 }
                 if (heavyAtk)
                 {

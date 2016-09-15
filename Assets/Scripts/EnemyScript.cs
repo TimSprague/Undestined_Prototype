@@ -98,8 +98,8 @@ public abstract class EnemyScript : MonoBehaviour {
 
                 if (bleeding)
                 {
-                    //TakeDmg(bleedDmg);  Use to calculate damage to health
-                    health -= bleedDmg; // Obsolete
+                    TakeDmg(bleedDmg);  //Use to calculate damage to health
+                    //health -= bleedDmg; // Obsolete
                 }
               
 

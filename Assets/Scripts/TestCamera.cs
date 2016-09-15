@@ -117,43 +117,31 @@ public class TestCamera : MonoBehaviour {
         {
             PlayerAnimator.SetBool("Moving", false);
             PlayerAnimator.SetBool("Strafing", false);
-            if (Input.GetAxis("Vertical") > 0)
+
+            if (Input.GetAxis("Vertical") != 0)
             {
-                runSpeed++;
-                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
-                PlayerAnimator.SetBool("Strafing", false);
+                runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
                 PlayerAnimator.SetBool("Moving", true);
             }
-            else if (Input.GetAxis("Vertical") < 0)
+            else
+                runSpeed = 0;
+            if (Input.GetAxis("Horizontal") != 0)
             {
-                runSpeed--;
-                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
-                PlayerAnimator.SetBool("Strafing", true);
-                PlayerAnimator.SetBool("Moving", true);
-            }
-            else if (Input.GetAxis("Horizontal") > 0)
-            {
-                straifeSpeed = 0;
-                straifeSpeed++;
-                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
-                PlayerAnimator.SetBool("Moving", true);
-                PlayerAnimator.SetBool("Strafing", true);
-            }
-            else if (Input.GetAxis("Horizontal") < 0)
-            {
-                straifeSpeed = 0;
-                straifeSpeed--;
-                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+                straifeSpeed += Input.GetAxis("Horizontal") > 0 ? 0.04f : -0.04f;
                 PlayerAnimator.SetBool("Moving", true);
                 PlayerAnimator.SetBool("Strafing", true);
             }
             else
-            {
                 straifeSpeed = 0;
-                runSpeed = 0;
-                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
-                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+            PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+            PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                PlayerAnimator.SetInteger("Jumping", 1);
+                PlayerAnimator.SetTrigger("JumpTrigger");
             }
+
         }
     }
 }

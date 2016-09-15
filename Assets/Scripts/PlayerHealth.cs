@@ -19,9 +19,10 @@ public class PlayerHealth : MonoBehaviour {
     bool healed;
     public AudioSource audioSource;
     public ParticleSystem PlayerBleed;
+    private Animator playerAnimator;
     // Use this for initialization
     void Start () {
-       
+        playerAnimator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -66,7 +67,8 @@ public class PlayerHealth : MonoBehaviour {
             playerCurrentHealth -= _value;
             HealthBarUpdate();
         }
-
+        if (playerAnimator)
+            playerAnimator.Play("Unarmed-GetHit-F1");
         if (playerCurrentHealth <= 0)
         {
             Death();

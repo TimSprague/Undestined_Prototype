@@ -44,16 +44,16 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public bool hit;
-    List<Node> path;
+    public List<Node> path;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
-    Pathfinding planRoute;
+    public Pathfinding planRoute;
     // Enemy Counter
-    private int count=0;
+    public  int count=0;
     public CounterText countText;
     public float Dtime;
     public float dCheck;
@@ -265,58 +265,9 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void moveToTarget(Vector3 target)
+    public virtual  void moveToTarget(Vector3 target)
     {
-        Vector3 moveDirection = target - transform.position;
-        Vector3 velocity = rigidBody.velocity;
-        if (moveDirection.magnitude < 5.5f && !playerTarget)
-        {
-            destPoint = (destPoint + 1) % points.Length;
-            planRoute.FindPath(transform.position, points[destPoint].position);
-            path = planRoute.grid.path;
-            pathDest = 0;
-            pathCount = path.Count;
-
-        }
-        else
-        {
-            if (!pause)
-            {
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
-                {
-                    if (!playerTarget)
-                    {
-                        moveDirection = path[pathDest].worldPosition - transform.position;
-                        dCheck = moveDirection.magnitude;
-
-                        if (moveDirection.magnitude < 3.5f)
-                        {
-
-                            if ((pathDest+1 < path.Count))
-                            {
-                                pathDest = (pathDest + 1) % pathCount;
-                                if(pathDest == path.Count)
-                                {
-                                    Debug.Log("SHITS FUCK YO");
-                                }
-                            }
-                        }
-                    }
-                    velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
-                }
-                else
-                {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
-                                    }
-            }
-        }
-        rigidBody.velocity = velocity;
+        
     }
 
     // Use this function to update health

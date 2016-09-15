@@ -61,7 +61,7 @@ public class MeleeAttack : MonoBehaviour {
             //comboTime = 1.0f;
 
             swordAnimation.Play("LightAttack");
-            playerAnimation.Play("Unarmed-Attack-R3");
+         //   playerAnimation.Play("Unarmed-Attack-R3");
         }
 
         if(Input.GetButtonDown("Fire2"))
@@ -89,7 +89,7 @@ public class MeleeAttack : MonoBehaviour {
             //}
             //comboTime = 1.0f;
             swordAnimation.Play("HeavyAttack");
-            playerAnimation.Play("Unarmed-Attack-Kick-L1");
+           // playerAnimation.Play("Unarmed-Attack-Kick-L1");
         }
 
     }

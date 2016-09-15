@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class MeleeZone : MonoBehaviour {
     public enum COMBOSTATE
     {
@@ -76,6 +76,8 @@ public class MeleeZone : MonoBehaviour {
     public void OnTriggerStay(Collider other)
     {
         hitSomething = true;
+      
+        
         if (other.gameObject.tag == "Enemy")
         {
             enemScript = other.GetComponent<MeleeEnemy>();

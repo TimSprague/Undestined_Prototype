@@ -1,29 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MeleeEnemy : EnemyScript {
-    //public ParticleSystem EnemyBleed;
-    public ParticleSystem EnemyGround;
+public class RangedEnemy : EnemyScript {
+    public GameObject bullet;
     // Use this for initialization
     public override void Start () {
         base.Start();
 	}
 
     // Update is called once per frame
-   public override void Update() {
+    public override void Update () {
         base.Update();
 	}
-    public void PlayBleedParticle()
-    {
-        //if(EnemyBleed&&!EnemyBleed.isPlaying)
-        //   EnemyBleed.Play(true);
-    }
-    public void PlayGroundParticle()
-    {
-        if (EnemyGround && !EnemyGround.isPlaying)
-            EnemyGround.Play(true);
-    }
-
     public override void moveToTarget(Vector3 target)
     {
         Vector3 moveDirection = target - transform.position;
@@ -41,7 +29,7 @@ public class MeleeEnemy : EnemyScript {
         {
             if (!pause)
             {
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
+                if (Vector3.Distance(playerTransform.position, transform.position) > 12)
                 {
                     if (!playerTarget)
                     {
@@ -54,6 +42,7 @@ public class MeleeEnemy : EnemyScript {
                             path = planRoute.grid.path;
                             pathDest = 0;
                             pathCount = path.Count;
+                           
 
                         }
                     }

@@ -23,7 +23,9 @@ public class TestCamera : MonoBehaviour {
     private float xRot; // rotation value of camera
 
     Transform target;
-
+    public Animator PlayerAnimator;
+    private float runSpeed = 0;
+    private float straifeSpeed = 0;
 	// Use this for initialization
 	void Start () {
 
@@ -50,10 +52,11 @@ public class TestCamera : MonoBehaviour {
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= moveSpeed;
-
             if (Input.GetButton("Jump"))
             {
                 moveDirection.y = jumpSpeed;
+                //PlayerAnimator.SetTrigger("JumpTrigger");
+
             }
         }
 
@@ -106,5 +109,51 @@ public class TestCamera : MonoBehaviour {
         Camera.main.transform.LookAt(target.position);
 
 
+    }
+
+    void LateUpdate()
+    {
+        if (PlayerAnimator)
+        {
+            PlayerAnimator.SetBool("Moving", false);
+            PlayerAnimator.SetBool("Strafing", false);
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                runSpeed++;
+                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+                PlayerAnimator.SetBool("Strafing", false);
+                PlayerAnimator.SetBool("Moving", true);
+            }
+            else if (Input.GetAxis("Vertical") < 0)
+            {
+                runSpeed--;
+                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+                PlayerAnimator.SetBool("Strafing", true);
+                PlayerAnimator.SetBool("Moving", true);
+            }
+            else if (Input.GetAxis("Horizontal") > 0)
+            {
+                straifeSpeed = 0;
+                straifeSpeed++;
+                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+                PlayerAnimator.SetBool("Moving", true);
+                PlayerAnimator.SetBool("Strafing", true);
+            }
+            else if (Input.GetAxis("Horizontal") < 0)
+            {
+                straifeSpeed = 0;
+                straifeSpeed--;
+                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+                PlayerAnimator.SetBool("Moving", true);
+                PlayerAnimator.SetBool("Strafing", true);
+            }
+            else
+            {
+                straifeSpeed = 0;
+                runSpeed = 0;
+                PlayerAnimator.SetFloat("Velocity X", straifeSpeed);
+                PlayerAnimator.SetFloat("Velocity Z", runSpeed);
+            }
+        }
     }
 }

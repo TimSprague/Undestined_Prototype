@@ -11,6 +11,7 @@ public class MeleeAttack : MonoBehaviour {
     [SerializeField] int currentCombo = 0;
     public Transform player;
     public Animator swordAnimation;
+    public Animator playerAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] List<AudioClip> soundLightSwordSwings;
 
@@ -31,14 +32,13 @@ public class MeleeAttack : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
-        if (comboTime > 0)
+
+        if(comboTime > 0)
         {
             comboTime -= Time.deltaTime;
-            if (comboTime <= 0)
-            {
+            if (comboTime < 0)
                 comboTime = 0;
-                currentCombo = 0;
-            }
+            currentCombo = 0;
         }
         if (Input.GetButtonDown("Fire1"))
         {
@@ -72,6 +72,7 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.0f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("LightAttack");
+            playerAnimation.Play("Unarmed-Attack-R3");
         }
 
         if(Input.GetButtonDown("Fire2"))
@@ -103,6 +104,7 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.5f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("HeavyAttack");
+            playerAnimation.Play("Unarmed-Attack-Kick-L1");
         }
 
     }

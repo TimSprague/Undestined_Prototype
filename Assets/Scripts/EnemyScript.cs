@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-
+using System.Collections.Generic;
 public abstract class EnemyScript : MonoBehaviour {
 
     
@@ -28,6 +28,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool canChange;
     public float changeTimer;
     public float fallingSpeed;
+    public int pathDest;
+    public int pathCount;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -42,15 +44,19 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public bool hit;
+    public List<Node> path;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
     [SerializeField] EnemyUIController enemyUIcontrol;
+    public Pathfinding planRoute;
     // Enemy Counter
-    private int count=0;
+    public  int count=0;
     public CounterText countText;
+    public float Dtime;
+    public float dCheck;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -74,13 +80,26 @@ public abstract class EnemyScript : MonoBehaviour {
         DamagePopupController.Initialize();
         //count = 0;
         SetCountText();
+        planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+        planRoute.FindPath(transform.position, points[destPoint].position);
+        path = planRoute.grid.path;
+        pathCount = path.Count;
+        pathDest = 0;
+        Dtime = 0;
     }
-	
+    public void Awake()
+    {
+    //    planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+    //    planRoute.FindPath(transform.position, points[destPoint].position);
+    //    path = planRoute.grid.path;
+    //    pathDest = 0;
+    }
 	// Update is called once per frame
 	public virtual void Update () {
 
         if(health <=0)
         {
+            player.IncreaseHealth(10);
             countText.AddOne();
             alive = false;
             DestroyImmediate(this.gameObject);
@@ -129,7 +148,7 @@ public abstract class EnemyScript : MonoBehaviour {
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
-       
+        Dtime += Time.deltaTime;
     }
     public void FixedUpdate()
     {
@@ -149,7 +168,7 @@ public abstract class EnemyScript : MonoBehaviour {
             else
             {
                 playerTarget = false;
-                Vector3 direction = points[destPoint].position - transform.position;
+                Vector3 direction = path[pathDest].worldPosition - transform.position;
                 direction.Normalize();
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
                 transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
@@ -247,41 +266,9 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void moveToTarget(Vector3 target)
+    public virtual  void moveToTarget(Vector3 target)
     {
-        Vector3 moveDirection = target - transform.position;
-        Vector3 velocity = rigidBody.velocity;
-
-        if(moveDirection.magnitude<1.5 &&!playerTarget)
-        {
-            destPoint = (destPoint + 1) % points.Length;
-        }
-        else
-        {
-            if (!pause)
-
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
-            {
-                velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
-            }else
-            {
-                
-
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
-                   
-                   
-
-
-                
-            }
-        }
-        rigidBody.velocity = velocity;
+        
     }
 
     // Use this function to update health

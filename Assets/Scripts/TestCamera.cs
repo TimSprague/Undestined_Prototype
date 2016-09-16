@@ -96,7 +96,7 @@ public class TestCamera : MonoBehaviour {
 
         float distance = 5;
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(Vector3.forward), out hit))
+        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(-Vector3.forward), out hit))
         {
             distance = hit.distance;
         }
@@ -125,7 +125,7 @@ public class TestCamera : MonoBehaviour {
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
                 PlayerAnimator.SetBool("Moving", true);
-            }
+}
             else
                 runSpeed = 0;
             if (Input.GetAxis("Horizontal") != 0)

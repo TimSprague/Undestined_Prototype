@@ -31,19 +31,19 @@ public class MeleeZone : MonoBehaviour {
 
             if (Input.GetButton("Fire1"))
             {
-                if (!attacking)
-                {
-                    lightAtk = true;
-                    attacking = true;
-                    heavyAtk = false;
-                    attackTimer = 1f;
-                }
+                //if (!attacking)
+                //{
+                //    lightAtk = true;
+                //    attacking = true;
+                //    heavyAtk = false;
+                //    attackTimer = 1f;
+                //}
 
                 // New code - LC
-                //lightAtk = true;
-                //attacking = true;
-                //heavyAtk = false;
-                //attackTimer = 1f;
+                lightAtk = true;
+                attacking = true;
+                heavyAtk = false;
+                attackTimer = 1f;
             }
 
             if (Input.GetButton("Fire2"))
@@ -60,26 +60,33 @@ public class MeleeZone : MonoBehaviour {
        
             
         }
-        else
-        {
-            if (hitSomething)
-            {
-                attackTimer -= Time.deltaTime;
-                if (attackTimer <= 0)
-                {
-                    attacking = false;
-                    lightAtk = false;
-                    heavyAtk = false;
-                    hitSomething = false;
-                }
-            }
-            else
-            {
-                attacking = false;
-                lightAtk = false;
-                heavyAtk = false;
-            }
-        }
+        //else
+        //{
+        //    if (hitSomething)
+        //    {
+        //        attackTimer -= Time.deltaTime;
+        //        if (attackTimer <= 0)
+        //        {
+        //            attacking = false;
+        //            lightAtk = false;
+        //            heavyAtk = false;
+        //            hitSomething = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        attacking = false;
+        //        lightAtk = false;
+        //        heavyAtk = false;
+        //    }
+        //}
+
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy")
+            Debug.Log("Enemy Detected");
 
     }
     public void OnTriggerStay(Collider other)
@@ -93,26 +100,26 @@ public class MeleeZone : MonoBehaviour {
 
                 if (lightAtk)
                 {
-                    if (EnemyBlood)
-                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
-                    Vector3 temp = playerTrans.forward;
-                    if (enemScript.knockedUp)
-                    {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+                    //if (EnemyBlood)
+                    //    Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
+                    //Vector3 temp = playerTrans.forward;
+                    //if (enemScript.knockedUp)
+                    //{
+                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
 
-                    }
-                    else
-                    {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
+                    //}
+                    //else
+                    //{
+                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
 
-                    }
-                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                    //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
-                    enemScript.pause = true;
-                    enemScript.hit = true;
-                    enemScript.pauseTimer = 1.25f;
-                    enemScript.TakeDmg(5);
-                    //comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
+                    //}
+                    //enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
+                    ////   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+                    //enemScript.pause = true;
+                    //enemScript.hit = true;
+                    //enemScript.pauseTimer = 1.25f;
+                    //enemScript.TakeDmg(5);
+                    comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
 
                 }
                 if (heavyAtk)

@@ -80,7 +80,7 @@ public abstract class EnemyScript : MonoBehaviour {
         DamagePopupController.Initialize();
         //count = 0;
         SetCountText();
-        planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+        planRoute = GameObject.Find("A $tar").GetComponent<Pathfinding>();
         planRoute.FindPath(transform.position, points[destPoint].position);
         path = planRoute.grid.path;
         pathCount = path.Count;

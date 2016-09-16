@@ -18,7 +18,7 @@ public class MeleeAttack : MonoBehaviour {
     [SerializeField] ParticleSystem particle_groundPound;
     [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
-
+    private TestCamera testCamera;
 	// Use this for initialization
 	void Start () {
         swordAnimation = GetComponent<Animator>();
@@ -27,6 +27,7 @@ public class MeleeAttack : MonoBehaviour {
             sfxSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/lightSword1"));
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/heavySword1"));
+        testCamera = GetComponentInParent<TestCamera>();
 	}
 	
 	// Update is called once per frame
@@ -45,38 +46,38 @@ public class MeleeAttack : MonoBehaviour {
         {
             if (currentCombo == 0 || comboTime == 0)
             {
-                if(swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+                if (swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
                 {
                     swordAnimation.Play("LightAttack");
                     currentCombo++;
                 }
-                
+
             }
             else if (currentCombo == 1 && comboTime > 0)
             {
-                if(!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
                 {
                     swordAnimation.Play("LightAttack2");
                     currentCombo++;
-                
-                }
-                
-            //        swordAnimation.Play("LightAttack2");
-            //        currentCombo++;
-                
-            //}
-            //else if (currentCombo == 2 && comboTime > 0)
-            //{
-                
-            //        currentCombo = 0;
-            //        swordAnimation.Play("LightAttack3");
-                
-            //}
-            //comboTime = 1.0f;
 
-            swordAnimation.Play("LightAttack");
-         //   playerAnimation.Play("Unarmed-Attack-R3");
-        }
+                }
+
+                //        swordAnimation.Play("LightAttack2");
+                //        currentCombo++;
+
+                //}
+                //else if (currentCombo == 2 && comboTime > 0)
+                //{
+
+                //        currentCombo = 0;
+                //        swordAnimation.Play("LightAttack3");
+
+                //}
+                //comboTime = 1.0f;
+
+                swordAnimation.Play("LightAttack");
+                //playerAnimation.Play("Unarmed-Attack-R3");
+            }
             else if (currentCombo == 2 && comboTime > 0)
             {
                 if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
@@ -88,9 +89,8 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.0f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("LightAttack");
-            //playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
+            playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
         }
-
         if(Input.GetButtonDown("Fire2"))
         {
             if (currentCombo == 0 || comboTime == 0)
@@ -120,9 +120,8 @@ public class MeleeAttack : MonoBehaviour {
             comboTime = 1.5f;
             /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
             //swordAnimation.Play("HeavyAttack");
-            //playerAnimation.Play("Unarmed-Attack-Kick-L1"); // UNCOMMENT BACK
+            playerAnimation.Play("Unarmed-Attack-Kick-L1"); // UNCOMMENT BACK
         }
-
     }
     public void FixedUpdate()
     {

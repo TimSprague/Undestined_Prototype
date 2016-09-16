@@ -26,6 +26,8 @@ public class TestCamera : MonoBehaviour {
     public Animator PlayerAnimator;
     private float runSpeed = 0;
     private float straifeSpeed = 0;
+
+    private float slowMove = 1.0f;
 	// Use this for initialization
 	void Start () {
 
@@ -51,7 +53,8 @@ public class TestCamera : MonoBehaviour {
            
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= moveSpeed;
+            moveDirection *= (moveSpeed * slowMove);
+            
             if (Input.GetButton("Jump"))
             {
                 
@@ -144,5 +147,11 @@ public class TestCamera : MonoBehaviour {
             }
 
         }
+    }
+    public void SlowMoveSpeed(float input)
+    {
+        slowMove = input;
+        if (input == 1)
+            Debug.Log("slowMove = 1");
     }
 }

@@ -53,7 +53,7 @@ public class TestCamera : MonoBehaviour {
            
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= moveSpeed * slowMove;
+            moveDirection *= (moveSpeed * slowMove);
             
             if (Input.GetButton("Jump"))
             {
@@ -125,7 +125,7 @@ public class TestCamera : MonoBehaviour {
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
                 PlayerAnimator.SetBool("Moving", true);
-}
+            }
             else
                 runSpeed = 0;
             if (Input.GetAxis("Horizontal") != 0)
@@ -150,5 +150,7 @@ public class TestCamera : MonoBehaviour {
     public void SlowMoveSpeed(float input)
     {
         slowMove = input;
+        if (input == 1)
+            Debug.Log("slowMove = 1");
     }
 }

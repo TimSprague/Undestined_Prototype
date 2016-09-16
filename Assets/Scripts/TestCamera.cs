@@ -57,6 +57,7 @@ public class TestCamera : MonoBehaviour {
             
             if (Input.GetButton("Jump"))
             {
+                
                 moveDirection.y = jumpSpeed;
                 //PlayerAnimator.SetTrigger("JumpTrigger");
 

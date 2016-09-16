@@ -27,11 +27,10 @@ public class MeleeAttack : MonoBehaviour {
             sfxSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/lightSword1"));
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/heavySword1"));
-    }
+	}
 	
 	// Update is called once per frame
 	void Update () {
-        transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
 
         if(comboTime > 0)
         {
@@ -51,7 +50,7 @@ public class MeleeAttack : MonoBehaviour {
                     swordAnimation.Play("LightAttack");
                     currentCombo++;
                 }
-
+                
             }
             else if (currentCombo == 1 && comboTime > 0)
             {
@@ -59,10 +58,25 @@ public class MeleeAttack : MonoBehaviour {
                 {
                     swordAnimation.Play("LightAttack2");
                     currentCombo++;
-
+                
                 }
+                
+            //        swordAnimation.Play("LightAttack2");
+            //        currentCombo++;
+                
+            //}
+            //else if (currentCombo == 2 && comboTime > 0)
+            //{
+                
+            //        currentCombo = 0;
+            //        swordAnimation.Play("LightAttack3");
+                
+            //}
+            //comboTime = 1.0f;
 
-            }
+            swordAnimation.Play("LightAttack");
+         //   playerAnimation.Play("Unarmed-Attack-R3");
+        }
             else if (currentCombo == 2 && comboTime > 0)
             {
                 if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
@@ -77,15 +91,15 @@ public class MeleeAttack : MonoBehaviour {
             //playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
         }
 
-        if (Input.GetButtonDown("Fire2"))
+        if(Input.GetButtonDown("Fire2"))
         {
             if (currentCombo == 0 || comboTime == 0)
             {
                 if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("thirdAttack"))
                 {
-                    swordAnimation.Play("HeavyAttack");
+            swordAnimation.Play("HeavyAttack");
                     currentCombo++;
-                }
+        }
             }
             else if (currentCombo == 1 && comboTime > 0)
             {

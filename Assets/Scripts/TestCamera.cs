@@ -122,7 +122,7 @@ public class TestCamera : MonoBehaviour {
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
                 PlayerAnimator.SetBool("Moving", true);
-            }
+}
             else
                 runSpeed = 0;
             if (Input.GetAxis("Horizontal") != 0)

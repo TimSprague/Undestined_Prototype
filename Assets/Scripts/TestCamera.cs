@@ -121,7 +121,25 @@ public class TestCamera : MonoBehaviour {
         {
             PlayerAnimator.SetBool("Moving", false);
             PlayerAnimator.SetBool("Strafing", false);
-
+            if(Input.GetAxis("Roll")>0)
+            {
+                if (Input.GetAxis("Vertical") != 0)
+                {
+                    if (Input.GetAxis("Vertical") > 0)
+                        PlayerAnimator.Play("Unarmed-Roll-Forward");
+                    else
+                        PlayerAnimator.Play("Unarmed-Roll-Backward");
+                    return;
+                }
+                if (Input.GetAxis("Horizontal") != 0)
+                {
+                    if (Input.GetAxis("Horizontal") > 0)
+                        PlayerAnimator.Play("Unarmed-Roll-Right");
+                    else
+                        PlayerAnimator.Play("Unarmed-Roll-Left");
+                    return;
+                }
+            }
             if (Input.GetAxis("Vertical") != 0)
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;

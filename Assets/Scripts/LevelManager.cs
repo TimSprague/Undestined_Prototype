@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour {
     {
         if (playerhealth.playerCurrentHealth <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("Prototype 2");
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

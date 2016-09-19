@@ -143,6 +143,10 @@ public class TestCamera : MonoBehaviour {
             if (Input.GetAxis("Vertical") != 0)
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
+                if (runSpeed < 0)
+                    SlowMoveSpeed(0.5f);
+                else
+                    SlowMoveSpeed(1.0f);
                 PlayerAnimator.SetBool("Moving", true);
             }
             else
@@ -160,8 +164,8 @@ public class TestCamera : MonoBehaviour {
 
             if (Input.GetButtonDown("Jump"))
             {
-                PlayerAnimator.SetInteger("Jumping", 1);
-                PlayerAnimator.SetTrigger("JumpTrigger");
+                //PlayerAnimator.SetInteger("Jumping", 1);
+                //PlayerAnimator.SetTrigger("JumpTrigger");
             }
 
         }
@@ -169,7 +173,13 @@ public class TestCamera : MonoBehaviour {
     public void SlowMoveSpeed(float input)
     {
         slowMove = input;
-        if (input == 1)
-            Debug.Log("slowMove = 1");
+    }
+    public void PlayPlayerFall()
+    {
+        if (PlayerAnimator)
+        {
+            //PlayerAnimator.SetInteger("Jumping", 0);
+            //PlayerAnimator.SetTrigger("JumpTrigger");
+        }
     }
 }

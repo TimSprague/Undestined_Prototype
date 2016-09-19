@@ -257,13 +257,16 @@ public abstract class EnemyScript : MonoBehaviour {
     public IEnumerator isBleeding(float timer)
     {
         int tempdmg = bleedDmg / (int)bleedTimer;
+        int dmgCounter = 0;
         while (timer > 0)
         {
             timer -= Time.deltaTime;
             health -= tempdmg;
             DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
+            dmgCounter += tempdmg;
         }
-    
+
+        Debug.Log(dmgCounter);
         return null;
     }
     public virtual  void moveToTarget(Vector3 target)

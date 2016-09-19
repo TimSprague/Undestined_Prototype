@@ -28,6 +28,9 @@ public class SkillScript : MonoBehaviour {
     [SerializeField]
     Image skill3_UI;
 
+    private Collider[] hitCollider;
+    public float sphereHitRadius;
+
     bool test = false;
 
     // Use this for initialization
@@ -79,6 +82,7 @@ public class SkillScript : MonoBehaviour {
         {
             Skill1.enabled = true;
             skill1Active = true;
+            SkillArea();
         }
 
         if ((Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0) && !skill2Active)
@@ -137,23 +141,40 @@ public class SkillScript : MonoBehaviour {
         }
     }
 
-   public void OnTriggerEnter(Collider col)
+    void SkillArea()
     {
-        test = true;
-        if (col.gameObject.tag == "Enemy")
+        Vector3 playerPos = GameObject.Find("MeleeZone").transform.position;
+        
+        hitCollider = Physics.OverlapSphere(playerPos, sphereHitRadius);
+
+        foreach(Collider hitCol in hitCollider)
         {
-            if (skill1Active/*Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0*/)
+            Debug.Log(hitCol.gameObject.name);
+            if (hitCol.tag == "Enemy")
             {
-               col.gameObject.GetComponent<EnemyScript>().bleedTimer = 6;
-               col.gameObject.GetComponent<EnemyScript>().bleedDmg = 20;
-               col.gameObject.GetComponent<EnemyScript>().bleeding = true;
-            }
-
-            if (Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0)
-            {
-
-                col.gameObject.GetComponent<EnemyScript>().isStunned();
+               hitCol.gameObject.GetComponent<EnemyScript>().bleedTimer = 6;
+               hitCol.gameObject.GetComponent<EnemyScript>().bleedDmg = 20;
+               hitCol.gameObject.GetComponent<EnemyScript>().bleeding = true;
             }
         }
     }
+   //public void OnCollisionEnter(Collision col)
+   // {
+   //     test = true;
+   //     if (col.gameObject.tag == "Enemy")
+   //     {
+   //         if (Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0)
+   //         {
+   //            col.gameObject.GetComponent<EnemyScript>().bleedTimer = 6;
+   //            col.gameObject.GetComponent<EnemyScript>().bleedDmg = 20;
+   //            col.gameObject.GetComponent<EnemyScript>().bleeding = true;
+   //         }
+
+   //         if (Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0)
+   //         {
+
+   //             col.gameObject.GetComponent<EnemyScript>().isStunned();
+   //         }
+   //     }
+   // }
 }

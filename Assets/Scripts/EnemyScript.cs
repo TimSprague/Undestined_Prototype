@@ -60,6 +60,12 @@ public abstract class EnemyScript : MonoBehaviour {
     public float dCheck;
     public int Identify;
     public float forceMod;
+    //Status Effects
+    public Transform statusLoc;
+    public ParticleSystem bleedEffect;
+    public ParticleSystem stunEffect;
+    float bleedtime=0;
+    float stuntime = 0;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -263,11 +269,17 @@ public abstract class EnemyScript : MonoBehaviour {
         while (timer > 0)
         {
             timer -= Time.deltaTime;
+            bleedtime += Time.deltaTime;
             health -= tempdmg;
             DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
             dmgCounter += tempdmg;
+            if(bleedtime >= 2.0f)
+            {
+                Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
+                bleedtime = 0;
         }
-
+        }
+        bleedtime = 0;
         Debug.Log(dmgCounter);
         return null;
     }

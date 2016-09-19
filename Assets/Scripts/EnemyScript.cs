@@ -58,6 +58,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public CounterText countText;
     public float Dtime;
     public float dCheck;
+    public int Identify;
+    public float forceMod;
     //Status Effects
     public Transform statusLoc;
     public ParticleSystem bleedEffect;
@@ -276,7 +278,7 @@ public abstract class EnemyScript : MonoBehaviour {
             {
                 Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
                 bleedtime = 0;
-            }
+        }
         }
         bleedtime = 0;
         Debug.Log(dmgCounter);

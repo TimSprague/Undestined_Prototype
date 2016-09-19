@@ -28,6 +28,8 @@ public class SkillScript : MonoBehaviour {
     [SerializeField]
     Image skill3_UI;
 
+    bool test = false;
+
     // Use this for initialization
     void Start()
     {
@@ -135,18 +137,22 @@ public class SkillScript : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter(Collider col)
+   public void OnTriggerEnter(Collider col)
     {
+        test = true;
         if (col.gameObject.tag == "Enemy")
         {
-            if (Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0)
+            if (skill1Active/*Input.GetButton("Skill1") || Input.GetAxis("XBOX360_Skill1") != 0*/)
             {
-                col.GetComponent<EnemyScript>().isBleeding();
+               col.gameObject.GetComponent<EnemyScript>().bleedTimer = 6;
+               col.gameObject.GetComponent<EnemyScript>().bleedDmg = 20;
+               col.gameObject.GetComponent<EnemyScript>().bleeding = true;
             }
 
             if (Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0)
             {
-                col.GetComponent<EnemyScript>().isStunned();
+
+                col.gameObject.GetComponent<EnemyScript>().isStunned();
             }
         }
     }

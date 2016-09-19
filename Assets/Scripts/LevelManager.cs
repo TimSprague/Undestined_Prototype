@@ -16,12 +16,20 @@ public class LevelManager : MonoBehaviour {
     {
         if (playerhealth.playerCurrentHealth <= 0)
         {
-            SceneManager.LoadScene("Prototype 2");
-        }
 
+            //SceneManager.LoadScene("Prototype 2");
+            restartCurrentScene();
+        }
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
+    }
+
+    public void restartCurrentScene()
+    {
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(scene, LoadSceneMode.Single);
     }
 }

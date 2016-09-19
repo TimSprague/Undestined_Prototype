@@ -94,13 +94,13 @@ public abstract class EnemyScript : MonoBehaviour
         //count = 0;
         SetCountText();
         planRoute = GameObject.Find("A $tar").GetComponent<Pathfinding>();
-        if(!planRoute.FindPath(transform.position, points[destPoint].position))
+        if (!planRoute.FindPath(transform.position, points[destPoint].position))
         {
             DestroyImmediate(transform.parent.gameObject);
         }
-       
+
         path = planRoute.grid.path;
-        
+
         pathCount = path.Count;
         pathDest = 0;
         Dtime = 0;
@@ -116,7 +116,7 @@ public abstract class EnemyScript : MonoBehaviour
     public virtual void Update()
     {
 
-        
+
 
         if (alive)
         {
@@ -309,7 +309,7 @@ public abstract class EnemyScript : MonoBehaviour
                 bleedRoutineRunning = false;
                 yield return null;
 
-        }
+            }
         }
         bleedtime = 0;
         Debug.Log(dmgCounter);

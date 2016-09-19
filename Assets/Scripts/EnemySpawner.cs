@@ -3,26 +3,26 @@ using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
 
-    public GameObject[] enemies;
+    public GameObject enemies;
     public GameObject terrain;
-
-    public int amount;
+    public int totalAmt;
+   public  int amount;
 
     public Vector3 spawnPoint;
 	// Use this for initialization
 	void Start ()
     {
-        terrain = GameObject.Find("Waypoints");
-        
+       
+        amount = 0;
     }
 
     void Update()
     {
 
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        amount = enemies.Length;
+        //enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        
 
-        if (amount != 35)
+        if (amount < totalAmt )
         {
             InvokeRepeating("Spawn", 5, 10f);
         }
@@ -38,7 +38,7 @@ public class EnemySpawner : MonoBehaviour {
 
         //GameObject temp = (GameObject)Instantiate(enemies[enemies.Length], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
 
-        GameObject temp = (GameObject)Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Length - 1)], spawnPoint, Quaternion.identity);
+        GameObject temp = (GameObject)Instantiate(enemies, spawnPoint, Quaternion.identity);
 
         Transform[] terr_transform = new Transform[18];
 
@@ -63,20 +63,27 @@ public class EnemySpawner : MonoBehaviour {
 
         int terr_point1 = Random.Range(0, 17);
         int terr_point2 = Random.Range(0, 17);
-
-        if(terr_point1 != terr_point2)
+        while (terr_point1 == terr_point2)
         {
-            temp.GetComponent<EnemyScript>().points[0] = terr_transform[terr_point1];
-            temp.GetComponent<EnemyScript>().points[1] = terr_transform[terr_point2];
+            terr_point2 = Random.Range(0, 17);
         }
-        else
-        {
-            while (terr_point1 == terr_point2)
-            {
-                terr_point2 = Random.Range(0, 17);
-            }
-        }
-
+        temp.GetComponent<EnemyScript>().points[0] = terr_transform[terr_point1];
+        temp.GetComponent<EnemyScript>().points[1] = terr_transform[terr_point2];
+        //if(terr_point1 != terr_point2)
+        //{
+        //    temp.GetComponent<EnemyScript>().points[0] = terr_transform[terr_point1];
+        //    temp.GetComponent<EnemyScript>().points[1] = terr_transform[terr_point2];
+        //}
+        //else
+        //{
+        //    while (terr_point1 == terr_point2)
+        //    {
+        //        terr_point2 = Random.Range(0, 17);
+        //    }
+        //    temp.GetComponent<EnemyScript>().points[0] = terr_transform[terr_point1];
+        //    temp.GetComponent<EnemyScript>().points[1] = terr_transform[terr_point2];
+        //}
+        amount += 1;
         CancelInvoke();
     }
 }

@@ -10,6 +10,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public int maxHealth;
     public bool alive;
     public int attack;
+    protected Quaternion lookRotation;
     public int defense;
     public float speed;
     public Rigidbody rigidBody;
@@ -160,7 +161,7 @@ public abstract class EnemyScript : MonoBehaviour {
             
                 Vector3 direction = playerTransform.transform.position - transform.position;
                 direction.Normalize();
-                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+                lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
                 moveToTarget(playerTransform.position);
                 playerTarget = true;
@@ -170,7 +171,7 @@ public abstract class EnemyScript : MonoBehaviour {
                 playerTarget = false;
                 Vector3 direction = path[pathDest].worldPosition - transform.position;
                 direction.Normalize();
-                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
                 transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
                
                 moveToTarget(points[destPoint].position);

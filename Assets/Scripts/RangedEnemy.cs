@@ -52,7 +52,9 @@ public class RangedEnemy : EnemyScript {
                 {
                     enemyAnim.Stop();
                     enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
+                    velocity = new Vector3(0, 0, 0);
+                    GameObject clone =  (GameObject)Instantiate(bullet, transform.position, lookRotation);
+                    clone.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward * 10);
                     canAttack = true;
                     attackTimer = 1.25f;
                     pause = true;

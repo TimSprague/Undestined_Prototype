@@ -20,9 +20,13 @@ public class PlayerHealth : MonoBehaviour {
     public AudioSource audioSource;
     public ParticleSystem PlayerBleed;
     private Animator playerAnimator;
+    public LevelManager reload;
+    GameObject instance;
     // Use this for initialization
     void Start () {
         playerAnimator = GetComponent<Animator>();
+        reload = GetComponent<LevelManager>();
+        
 	}
 	
 	// Update is called once per frame
@@ -97,8 +101,11 @@ public class PlayerHealth : MonoBehaviour {
     {
         isAlive = false;
         //if (playerAnimator)
-           // playerAnimator.Play("Unarmed-Death1");
-        GameObject.Destroy(gameObject);
+        // playerAnimator.Play("Unarmed-Death1");
+        
+        reload.restartCurrentScene();
+       
+        //GameObject.Destroy(gameObject);
     }
 
     public void HealthBarUpdate()

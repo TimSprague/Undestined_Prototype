@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour {
             //SceneManager.LoadScene("Prototype 2");
             restartCurrentScene();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -29,7 +29,6 @@ public class LevelManager : MonoBehaviour {
 
     public void restartCurrentScene()
     {
-        int scene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(scene, LoadSceneMode.Single);
+        SceneManager.LoadScene(0);
     }
 }

@@ -60,6 +60,8 @@ public abstract class EnemyScript : MonoBehaviour
     public CounterText countText;
     public float Dtime;
     public float dCheck;
+    public int Identify;
+    public float forceMod;
     //Status Effects
     public Transform statusLoc;
     public ParticleSystem bleedEffect;
@@ -92,8 +94,13 @@ public abstract class EnemyScript : MonoBehaviour
         //count = 0;
         SetCountText();
         planRoute = GameObject.Find("A $tar").GetComponent<Pathfinding>();
-        planRoute.FindPath(transform.position, points[destPoint].position);
+        if(!planRoute.FindPath(transform.position, points[destPoint].position))
+        {
+            DestroyImmediate(transform.parent.gameObject);
+        }
+       
         path = planRoute.grid.path;
+        
         pathCount = path.Count;
         pathDest = 0;
         Dtime = 0;
@@ -262,6 +269,7 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (stunned)
         {
+            Instantiate(stunEffect, statusLoc);
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
@@ -300,8 +308,8 @@ public abstract class EnemyScript : MonoBehaviour
                 bleeding = false;
                 bleedRoutineRunning = false;
                 yield return null;
-            }
 
+        }
         }
         bleedtime = 0;
         Debug.Log(dmgCounter);

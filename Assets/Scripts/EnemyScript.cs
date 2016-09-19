@@ -253,6 +253,7 @@ public abstract class EnemyScript : MonoBehaviour {
     {
         if (stunned)
         {
+            Instantiate(stunEffect, statusLoc);
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {

@@ -86,57 +86,27 @@ public class MeleeZone : MonoBehaviour {
     {
         hitSomething = true;
       
-        if((other.gameObject.tag == "RangedEnemy"))
-        {
-            enemScript = other.GetComponent<RangedEnemy>();
-            if (attacking)
-            {
-
-                if (lightAtk)
-                {
-                    if (EnemyBlood)
-                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
-                    Vector3 temp = playerTrans.forward;
-                    if (enemScript.knockedUp)
-                    {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
-
-                    }
-                    else
-                    {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
-
-                    }
-                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                    //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
-                    enemScript.pause = true;
-                    enemScript.hit = true;
-                    enemScript.pauseTimer = 1.25f;
-                    enemScript.TakeDmg(5);
-                    //comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
-
-                }
-                if (heavyAtk)
-                {
-                    Vector3 temp = playerTrans.forward;
-                    // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
-                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 5, 1200, temp.normalized.z * 100f));
-                    enemScript.knockedUp = true;
-                    enemScript.hit = true;
-                    enemScript.pause = true;
-                    enemScript.TakeDmg(10);
-                    if (EnemyBlood)
-                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
-
-                }
-
-            }
-        }
+       
         if ((other.gameObject.tag == "Enemy"))
         {
-            enemScript = other.GetComponent<MeleeEnemy>();
+            switch(other.GetComponent<EnemyScript>().Identify)
+            {
+                case 1:
+                    {
+                        enemScript = other.GetComponent<MeleeEnemy>();
+                        break;
+                    }
+                case 2:
+                    {
+                        enemScript = other.GetComponent<RangedEnemy>();
+                        break;
+                    }
+                case 3:
+                    {
+                        enemScript = other.GetComponent<HeavyEnemy>();
+                        break;
+                    }
+            }
             if (attacking)
             {
 
@@ -169,7 +139,6 @@ public class MeleeZone : MonoBehaviour {
                     Vector3 temp = playerTrans.forward;
                     // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-
                     enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
                     enemScript.knockedUp = true;
                     enemScript.hit = true;

@@ -58,6 +58,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public CounterText countText;
     public float Dtime;
     public float dCheck;
+    public int Identify;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();

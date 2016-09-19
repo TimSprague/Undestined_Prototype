@@ -118,13 +118,6 @@ public abstract class EnemyScript : MonoBehaviour {
                     groundpound.Stop();
                 }
 
-                if (bleeding)
-                {
-                    TakeDmg(bleedDmg);  //Use to calculate damage to health
-                    //health -= bleedDmg; // Obsolete
-                }
-              
-
                 if (pause)
                 {
                     pauseTimer -= Time.deltaTime;
@@ -142,11 +135,9 @@ public abstract class EnemyScript : MonoBehaviour {
                     enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
-                
 
             }
-            isBleeding();
-            isStunned();
+            
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
@@ -180,6 +171,13 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+
+        if (bleeding)
+        {
+            StartCoroutine(isBleeding(bleedTimer));
+            bleeding = false;
+        }
+        isStunned();
 
     }
     public void OnCollisionEnter(Collision other)
@@ -258,16 +256,20 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void isBleeding()
+    public IEnumerator isBleeding(float timer)
     {
-        if (bleeding)
+        int tempdmg = bleedDmg / (int)bleedTimer;
+        int dmgCounter = 0;
+        while (timer > 0)
         {
-            bleedTimer -= Time.deltaTime;
-            if (bleedTimer < 0)
-            {
-                bleeding = false;
-            }
+            timer -= Time.deltaTime;
+            health -= tempdmg;
+            DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
+            dmgCounter += tempdmg;
         }
+
+        Debug.Log(dmgCounter);
+        return null;
     }
     public virtual  void moveToTarget(Vector3 target)
     {
@@ -280,7 +282,6 @@ public abstract class EnemyScript : MonoBehaviour {
         health -= dmg;
         //if (EnemyBlood)
         //    EnemyBlood.Play();
-        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
 
     void SetCountText()

@@ -3,11 +3,17 @@ using System.Collections;
 
 public class RangedEnemy : EnemyScript {
     public GameObject bullet;
+    public ParticleSystem EnemyGround;
+  
     // Use this for initialization
     public override void Start () {
         base.Start();
 	}
-
+    public void PlayGroundParticle()
+    {
+        if (EnemyGround && !EnemyGround.isPlaying)
+            EnemyGround.Play(true);
+    }
     // Update is called once per frame
     public override void Update () {
         base.Update();

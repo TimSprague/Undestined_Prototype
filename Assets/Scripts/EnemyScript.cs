@@ -58,6 +58,14 @@ public abstract class EnemyScript : MonoBehaviour {
     public CounterText countText;
     public float Dtime;
     public float dCheck;
+    public int Identify;
+    public float forceMod;
+    //Status Effects
+    public Transform statusLoc;
+    public ParticleSystem bleedEffect;
+    public ParticleSystem stunEffect;
+    float bleedtime=0;
+    float stuntime = 0;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();
@@ -116,13 +124,6 @@ public abstract class EnemyScript : MonoBehaviour {
                     groundpound.Stop();
                 }
 
-                if (bleeding)
-                {
-                    TakeDmg(bleedDmg);  //Use to calculate damage to health
-                    //health -= bleedDmg; // Obsolete
-                }
-              
-
                 if (pause)
                 {
                     pauseTimer -= Time.deltaTime;
@@ -140,11 +141,9 @@ public abstract class EnemyScript : MonoBehaviour {
                     enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
-                
 
             }
-            isBleeding();
-            isStunned();
+            
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
@@ -178,6 +177,13 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+
+        if (bleeding)
+        {
+            StartCoroutine(isBleeding(bleedTimer));
+            bleeding = false;
+        }
+        isStunned();
 
     }
     public void OnCollisionEnter(Collision other)
@@ -256,16 +262,26 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void isBleeding()
+    public IEnumerator isBleeding(float timer)
     {
-        if (bleeding)
+        int tempdmg = bleedDmg / (int)bleedTimer;
+        int dmgCounter = 0;
+        while (timer > 0)
         {
-            bleedTimer -= Time.deltaTime;
-            if (bleedTimer < 0)
+            timer -= Time.deltaTime;
+            bleedtime += Time.deltaTime;
+            health -= tempdmg;
+            DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
+            dmgCounter += tempdmg;
+            if(bleedtime >= 2.0f)
             {
-                bleeding = false;
-            }
+                Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
+                bleedtime = 0;
         }
+        }
+        bleedtime = 0;
+        Debug.Log(dmgCounter);
+        return null;
     }
     public virtual  void moveToTarget(Vector3 target)
     {
@@ -278,7 +294,6 @@ public abstract class EnemyScript : MonoBehaviour {
         health -= dmg;
         //if (EnemyBlood)
         //    EnemyBlood.Play();
-        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
     }
 
     void SetCountText()

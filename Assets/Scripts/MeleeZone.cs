@@ -33,6 +33,8 @@ public class MeleeZone : MonoBehaviour {
             {
                 if (!attacking)
                 {
+
+                    
                     lightAtk = true;
                     attacking = true;
                     heavyAtk = false;
@@ -89,21 +91,25 @@ public class MeleeZone : MonoBehaviour {
        
         if ((other.gameObject.tag == "Enemy"))
         {
+            float forceMod =0;
             switch(other.GetComponent<EnemyScript>().Identify)
             {
                 case 1:
                     {
                         enemScript = other.GetComponent<MeleeEnemy>();
+                        forceMod = enemScript.forceMod;
                         break;
                     }
                 case 2:
                     {
                         enemScript = other.GetComponent<RangedEnemy>();
+                        forceMod = enemScript.forceMod;
                         break;
                     }
                 case 3:
                     {
                         enemScript = other.GetComponent<HeavyEnemy>();
+                        forceMod = enemScript.forceMod;
                         break;
                     }
             }
@@ -117,12 +123,12 @@ public class MeleeZone : MonoBehaviour {
                     Vector3 temp = playerTrans.forward;
                     if (enemScript.knockedUp)
                     {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+                        enemScript.rigidBody.AddForce(new Vector3((temp.normalized.x * 10)* forceMod, -5* forceMod, (temp.normalized.z * 10)* forceMod));
 
                     }
                     else
                     {
-                        enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
+                        enemScript.rigidBody.AddForce(new Vector3((temp.normalized.x * 750)* forceMod, 5* forceMod, (temp.normalized.z * 750)* forceMod));
 
                     }
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
@@ -139,7 +145,7 @@ public class MeleeZone : MonoBehaviour {
                     Vector3 temp = playerTrans.forward;
                     // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
                     enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
+                    enemScript.rigidBody.AddForce(new Vector3((temp.normalized.x*5)* forceMod, 1200*forceMod, (temp.normalized.z*100f)* forceMod));
                     enemScript.knockedUp = true;
                     enemScript.hit = true;
                     enemScript.pause = true;

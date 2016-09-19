@@ -59,6 +59,7 @@ public abstract class EnemyScript : MonoBehaviour {
     public float Dtime;
     public float dCheck;
     public int Identify;
+    public float forceMod;
     // Use this for initialization
     public virtual void Start () {
         rigidBody = GetComponent<Rigidbody>();

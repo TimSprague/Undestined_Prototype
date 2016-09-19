@@ -17,10 +17,11 @@ public class MeleeZone : MonoBehaviour {
     Transform playerTrans;
     public bool hitSomething;
     public ParticleSystem EnemyBlood;
+    private TestCamera testCamera;
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
-        
+        testCamera = GetComponentInParent<TestCamera>();
     }
 
     // Update is called once per frame
@@ -86,7 +87,10 @@ public class MeleeZone : MonoBehaviour {
     {
         hitSomething = true;
       
-        
+        if(other.name == "Terrain")
+        {
+            testCamera.PlayPlayerFall();
+        }
         if (other.gameObject.tag == "Enemy")
         {
             enemScript = other.GetComponent<MeleeEnemy>();

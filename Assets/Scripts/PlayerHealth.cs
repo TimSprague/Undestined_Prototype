@@ -96,6 +96,8 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isAlive = false;
+        //if (playerAnimator)
+           // playerAnimator.Play("Unarmed-Death1");
         GameObject.Destroy(gameObject);
     }
 

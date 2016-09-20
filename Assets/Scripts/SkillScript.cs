@@ -90,6 +90,7 @@ public class SkillScript : MonoBehaviour {
             // use number 2 skill
             Skill2.enabled = true;
             skill2Active = true;
+            StunArea();
         }
 
         if (Input.GetButtonDown("Skill3") && !skill3Active)
@@ -155,6 +156,23 @@ public class SkillScript : MonoBehaviour {
                hitCol.gameObject.GetComponent<EnemyScript>().bleedTimer = 6;
                hitCol.gameObject.GetComponent<EnemyScript>().bleedDmg = 20;
                hitCol.gameObject.GetComponent<EnemyScript>().bleeding = true;
+            }
+        }
+    }
+
+    void StunArea()
+    {
+        Vector3 playerPos = GameObject.Find("Player").transform.position;
+
+        hitCollider = Physics.OverlapSphere(playerPos, sphereHitRadius * 2);
+
+        foreach (Collider hitCol in hitCollider)
+        {
+            Debug.Log(hitCol.gameObject.name);
+            if (hitCol.tag == "Enemy")
+            {
+                hitCol.gameObject.GetComponent<EnemyScript>().stunTimer = 2;
+                hitCol.gameObject.GetComponent<EnemyScript>().stunned = true;
             }
         }
     }

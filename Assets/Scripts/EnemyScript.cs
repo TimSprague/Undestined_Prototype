@@ -2,10 +2,11 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-public abstract class EnemyScript : MonoBehaviour {
+public abstract class EnemyScript : MonoBehaviour
+{
 
-    
-   //Base Attributes
+
+    //Base Attributes
     public int health;
     public int maxHealth;
     public bool alive;
@@ -51,10 +52,11 @@ public abstract class EnemyScript : MonoBehaviour {
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
-    [SerializeField] EnemyUIController enemyUIcontrol;
+    [SerializeField]
+    EnemyUIController enemyUIcontrol;
     public Pathfinding planRoute;
     // Enemy Counter
-    public  int count=0;
+    public int count = 0;
     public CounterText countText;
     public float Dtime;
     public float dCheck;
@@ -64,10 +66,14 @@ public abstract class EnemyScript : MonoBehaviour {
     public Transform statusLoc;
     public ParticleSystem bleedEffect;
     public ParticleSystem stunEffect;
-    float bleedtime=0;
+    float bleedtime = 0;
     float stuntime = 0;
+    bool bleedRoutineRunning = false;
+    bool instOnceStun;
+    bool instOnceBleed;
     // Use this for initialization
-    public virtual void Start () {
+    public virtual void Start()
+    {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
@@ -75,11 +81,13 @@ public abstract class EnemyScript : MonoBehaviour {
         hit = false;
         canChange = false;
         stunned = false;
-        bleeding = false; 
+        bleeding = false;
         canChange = true;
         alive = true;
         knockedUp = false;
         smashedDown = false;
+        instOnceStun = true;
+        instOnceBleed = true;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -90,41 +98,34 @@ public abstract class EnemyScript : MonoBehaviour {
         //count = 0;
         SetCountText();
         planRoute = GameObject.Find("A $tar").GetComponent<Pathfinding>();
-        if(!planRoute.FindPath(transform.position, points[destPoint].position))
+        if (!planRoute.FindPath(transform.position, points[destPoint].position))
         {
             DestroyImmediate(transform.parent.gameObject);
         }
-       
+
         path = planRoute.grid.path;
-        
+
         pathCount = path.Count;
         pathDest = 0;
         Dtime = 0;
     }
     public void Awake()
     {
-    //    planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
-    //    planRoute.FindPath(transform.position, points[destPoint].position);
-    //    path = planRoute.grid.path;
-    //    pathDest = 0;
+        //    planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+        //    planRoute.FindPath(transform.position, points[destPoint].position);
+        //    path = planRoute.grid.path;
+        //    pathDest = 0;
     }
-	// Update is called once per frame
-	public virtual void Update () {
-
-        if(health <=0)
-        {
-            player.IncreaseHealth(10);
-            countText.AddOne();
-            alive = false;
-            DestroyImmediate(this.gameObject);
-        }
+    // Update is called once per frame
+    public virtual void Update()
+    {
 
         if (alive)
         {
             if (!smashedDown)
             {
                 smashTimer -= Time.deltaTime;
-                if(smashTimer<=0)
+                if (smashTimer <= 0)
                 {
                     groundpound.Stop();
                 }
@@ -135,60 +136,69 @@ public abstract class EnemyScript : MonoBehaviour {
                     if (pauseTimer < 0.0f)
                     {
 
-                       enemyAnim.Play("Walk",PlayMode.StopAll);
+                        enemyAnim.Play("Walk", PlayMode.StopAll);
                         pause = false;
 
                     }
-                   
+
                 }
-               if(hit &&pause)
+                if (hit && pause)
                 {
                     enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
 
             }
-            
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
         Dtime += Time.deltaTime;
+        Death();
     }
     public void FixedUpdate()
     {
-        if (!knockedUp&&!stunned)
+        if (alive)
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
-            {
-           
-            
-                Vector3 direction = playerTransform.transform.position - transform.position;
-                direction.Normalize();
-                lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
-                moveToTarget(playerTransform.position);
-                playerTarget = true;
-            }
-            else
-            {
-                playerTarget = false;
-                Vector3 direction = path[pathDest].worldPosition - transform.position;
-                direction.Normalize();
-                lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-                transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
-               
-                moveToTarget(points[destPoint].position);
-            }
-        }
-                   rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+            isStunned();
 
-        if (bleeding)
-        {
-            StartCoroutine(isBleeding(bleedTimer));
-            bleeding = false;
+            if (!knockedUp && !stunned)
+            {
+                if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
+                {
+
+
+                    Vector3 direction = playerTransform.transform.position - transform.position;
+                    direction.Normalize();
+                    lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+                    moveToTarget(playerTransform.position);
+                    playerTarget = true;
+                }
+                else
+                {
+                    playerTarget = false;
+                    Vector3 direction = path[pathDest].worldPosition - transform.position;
+                    direction.Normalize();
+                    lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                    transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+
+                    moveToTarget(points[destPoint].position);
+                }
+            }
+            rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y - fallingSpeed, rigidBody.velocity.z);
+
+            if (bleeding && !bleedRoutineRunning)
+            {
+                if (alive)
+                {
+                    StartCoroutine(isBleeding(bleedTimer));
+                    bleedRoutineRunning = true;
+                }
+            }
+
         }
-        isStunned();
+        Death();
 
     }
     public void OnCollisionEnter(Collision other)
@@ -209,12 +219,12 @@ public abstract class EnemyScript : MonoBehaviour {
             //}
             if (other.gameObject.tag == "Player")
             {
-               if (PlayerBleed)
-                   Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+                if (PlayerBleed)
+                    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             }
             if (other.gameObject.tag == "Terrain")
             {
-                if(groundpound)
+                if (groundpound)
                 {
                     if (smashedDown)
                     {
@@ -223,7 +233,7 @@ public abstract class EnemyScript : MonoBehaviour {
                         smashedDown = false;
                         //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
                     }
-                    
+
                 }
 
                 knockedUp = false;
@@ -252,54 +262,97 @@ public abstract class EnemyScript : MonoBehaviour {
         enemyAnim.Stop();
 
         knockedUp = true;
-       enemyAnim.CrossFade("idle");
-        
+        enemyAnim.CrossFade("idle");
+
     }
-   
+
     public void isStunned()
     {
         if (stunned)
         {
-            Instantiate(stunEffect, statusLoc);
+            if (instOnceStun)
+            {
+                Instantiate(stunEffect, statusLoc.position, Quaternion.identity);
+                instOnceStun = false;
+            }
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
                 stunned = false;
+                instOnceStun = true;
             }
         }
     }
     public IEnumerator isBleeding(float timer)
     {
+
         int tempdmg = bleedDmg / (int)bleedTimer;
         int dmgCounter = 0;
         while (timer > 0)
         {
-            timer -= Time.deltaTime;
+
+            timer -= 1;
             bleedtime += Time.deltaTime;
-            health -= tempdmg;
-            DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
-            dmgCounter += tempdmg;
-            if(bleedtime >= 2.0f)
+
+            if (alive)
             {
-                Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
-                bleedtime = 0;
-        }
+
+                DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
+                TakeDmg(tempdmg);
+
+                dmgCounter += tempdmg;
+                ParticleSystem bleedtemp = null;
+                if (instOnceBleed)
+                {
+                   bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
+                   instOnceBleed = false;
+                }
+                bleedtemp.transform.position = statusLoc.position;
+            }
+            else
+            {
+                instOnceBleed = true;
+                Debug.Log(dmgCounter);
+                bleeding = false;
+                bleedRoutineRunning = false;
+                yield return null;
+
+            }
+            yield return new WaitForSeconds(1f);
         }
         bleedtime = 0;
+        instOnceBleed = true;
         Debug.Log(dmgCounter);
-        return null;
+        bleeding = false;
+        bleedRoutineRunning = false;
+
+        yield return null;
     }
-    public virtual  void moveToTarget(Vector3 target)
+    public virtual void moveToTarget(Vector3 target)
     {
-        
+
     }
 
     // Use this function to update health
     public void TakeDmg(int dmg)
     {
         health -= dmg;
+        if (health <= 0)
+        {
+            player.IncreaseHealth(10);
+            countText.AddOne();
+            alive = false;
+        }
         //if (EnemyBlood)
         //    EnemyBlood.Play();
+    }
+
+    void Death()
+    {
+        if (!alive)
+        {
+            DestroyImmediate(this.gameObject);
+        }
     }
 
     void SetCountText()

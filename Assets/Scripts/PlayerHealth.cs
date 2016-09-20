@@ -7,6 +7,8 @@ public class PlayerHealth : MonoBehaviour {
     public float playerCurrentHealth;
     public float playerMaxHealth;
     public bool isAlive = true;
+    public float playerCurrentEnergy;
+    public float playerMaxEneregy;
     public Image HealthImage;
     public Image HealthBar;
     public AudioClip DamageClip;
@@ -49,6 +51,8 @@ public class PlayerHealth : MonoBehaviour {
                 HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
             healed = false;
         }
+        playerCurrentEnergy = playerMaxEneregy;
+        playerCurrentHealth = playerMaxHealth;
 
     }
 
@@ -94,7 +98,11 @@ public class PlayerHealth : MonoBehaviour {
 
     public void IncreasePower(int _value)
     {
-
+        playerCurrentEnergy += _value;
+    }
+    public void DecreasePower(int _value)
+    {
+        playerCurrentEnergy -= _value;
     }
 
 

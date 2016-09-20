@@ -18,7 +18,7 @@ public class MeleeAttack : MonoBehaviour {
     [SerializeField] ParticleSystem particle_groundPound;
     [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
-    private TestCamera testCamera;
+    //private TestCamera testCamera;
 	// Use this for initialization
 	void Start () {
         swordAnimation = GetComponent<Animator>();
@@ -27,7 +27,7 @@ public class MeleeAttack : MonoBehaviour {
             sfxSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/lightSword1"));
         soundLightSwordSwings.Add(Resources.Load<AudioClip>("Audio/heavySword1"));
-        testCamera = GetComponentInParent<TestCamera>();
+       // testCamera = GetComponentInParent<TestCamera>();
 	}
 	
 	// Update is called once per frame

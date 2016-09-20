@@ -61,7 +61,7 @@ public class ComboStates : MonoBehaviour {
                 {
                     //perform smash up
                     if (other != null) {
-                        Vector3 temp = player.TransformDirection(-player.transform.right);
+                        //Vector3 temp = player.TransformDirection(-player.transform.right);
                         Vector3 vel = other.rigidBody.velocity;
                         other.rigidBody.velocity = new Vector3(0,vel.y,vel.z*-.07f);
                         other.rigidBody.AddForce(new Vector3(0, 500, 80) );

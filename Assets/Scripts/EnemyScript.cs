@@ -67,7 +67,6 @@ public abstract class EnemyScript : MonoBehaviour
     public ParticleSystem bleedEffect;
     public ParticleSystem stunEffect;
     float bleedtime = 0;
-    float stuntime = 0;
     bool bleedRoutineRunning = false;
     bool instOnceStun;
     bool instOnceBleed;
@@ -307,7 +306,10 @@ public abstract class EnemyScript : MonoBehaviour
                    bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
                    instOnceBleed = false;
                 }
-                bleedtemp.transform.position = statusLoc.position;
+                if (bleedtemp != null)
+                {
+                    bleedtemp.transform.position = statusLoc.position;
+                }
             }
             else
             {
@@ -340,6 +342,7 @@ public abstract class EnemyScript : MonoBehaviour
         if (health <= 0)
         {
             player.IncreaseHealth(10);
+            player.IncreasePower(5);
             countText.AddOne();
             alive = false;
         }

@@ -57,6 +57,7 @@ public class HeavyEnemy : EnemyScript {
                 {
                     enemyAnim.Stop();
                     enemyAnim.Play("Attack", PlayMode.StopAll);
+                    
                     player.DecreaseHealth(5);
                     canAttack = true;
                     attackTimer = 1.25f;

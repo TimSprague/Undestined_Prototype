@@ -156,6 +156,7 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (alive)
         {
+            isStunned();
 
             if (!knockedUp && !stunned)
             {
@@ -191,7 +192,6 @@ public abstract class EnemyScript : MonoBehaviour
                     bleedRoutineRunning = true;
                 }
             }
-            isStunned();
 
         }
         Death();

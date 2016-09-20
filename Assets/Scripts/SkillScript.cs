@@ -90,6 +90,7 @@ public class SkillScript : MonoBehaviour {
             // use number 2 skill
             Skill2.enabled = true;
             skill2Active = true;
+            StunArea();
         }
 
         if (Input.GetButtonDown("Skill3") && !skill3Active)

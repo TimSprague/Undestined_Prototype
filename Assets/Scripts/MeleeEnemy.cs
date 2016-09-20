@@ -63,13 +63,16 @@ public class MeleeEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        enemyAnim.Stop();
+                        enemyAnim.Play("Attack", PlayMode.StopAll);
+                        player.DecreaseHealth(5);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

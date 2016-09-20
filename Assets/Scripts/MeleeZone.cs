@@ -41,6 +41,11 @@ public class MeleeZone : MonoBehaviour {
                     foreach (Collider hitCol in hitCollider)
                     {
                         Debug.Log(hitCol.gameObject.name);
+                    if(hitCol.tag == "Bullet")
+                    {
+                        hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                        hitCol.GetComponent<Bullet>().reflected = true;
+                    }
                         if (hitCol.tag == "Enemy")
                         {
                         hitSomething = true;

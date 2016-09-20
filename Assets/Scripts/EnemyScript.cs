@@ -307,7 +307,10 @@ public abstract class EnemyScript : MonoBehaviour
                    bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
                    instOnceBleed = false;
                 }
-                bleedtemp.transform.position = statusLoc.position;
+                if (bleedtemp != null)
+                {
+                    bleedtemp.transform.position = statusLoc.position;
+                }
             }
             else
             {

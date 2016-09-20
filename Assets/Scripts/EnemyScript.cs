@@ -282,7 +282,7 @@ public abstract class EnemyScript : MonoBehaviour
         while (timer > 0)
         {
 
-            timer -= Time.deltaTime;
+            timer -= 1;
             bleedtime += Time.deltaTime;
 
             if (alive)
@@ -307,6 +307,7 @@ public abstract class EnemyScript : MonoBehaviour
                 yield return null;
 
             }
+            yield return new WaitForSeconds(1f);
         }
         bleedtime = 0;
         Debug.Log(dmgCounter);

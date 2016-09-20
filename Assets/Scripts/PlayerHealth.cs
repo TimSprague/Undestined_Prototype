@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour {
     public bool isAlive = true;
     public Image HealthImage;
     public Image HealthBar;
+    public Text DEAD;
     public AudioClip DamageClip;
     public float DamageFlashSpeed = 5f;
     public Color DamageColor = new Color(1f,0f,0f,1f);
@@ -96,7 +97,9 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isAlive = false;
-        GameObject.Destroy(gameObject);
+        //GameObject.Destroy(gameObject);
+        if(DEAD)
+        DEAD.gameObject.SetActive(true);
     }
 
     public void HealthBarUpdate()

@@ -12,11 +12,13 @@ public class MeleeZone : MonoBehaviour {
     public bool lightAtk = false;
     public bool heavyAtk = false;
     public EnemyScript enemScript;
+    public MeleeAttack meleeAtk;
     public ComboStates comboStates;
     public float attackTimer;
     Transform playerTrans;
     public bool hitSomething;
     public ParticleSystem EnemyBlood;
+    COMBOSTATE currState;
     // Use this for initialization
     void Start () {
         playerTrans = GameObject.Find("Player").GetComponent<Transform>();
@@ -24,42 +26,56 @@ public class MeleeZone : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void Update ()
+    {
+        //updateAtkTimer();
+        //if (!attacking)
+        //{
+
+        //    if (Input.GetButtonDown("Fire1"))
+        //    {
+        //        //if (!attacking)
+        //        //{
+        //        //    lightAtk = true;
+        //        //    attacking = true;
+        //        //    heavyAtk = false;
+        //        //    attackTimer = 1f;
+        //        //}
+
+        //        // New code - LC
+        //        lightAtk = true;
+        //        currState = COMBOSTATE.lightAttack;
+        //        attacking = true;
+        //        heavyAtk = false;
+        //        meleeAtk.AnimateLightAtk();
+        //        attackTimer = meleeAtk.comboTime;
+        //        ComboUpdate();
+        //    }
+
+        //    if (Input.GetButtonDown("Fire2"))
+        //    {
+        //        //if (!attacking)
+        //        //{
+        //        //    attacking = true;
+        //        //    heavyAtk = true;
+        //        //    lightAtk = false;
+        //        //    attackTimer = 1.5f;
+
+        //        //}
+
+        //        lightAtk = false;
+        //        currState = COMBOSTATE.heavyAttack;
+        //        attacking = true;
+        //        heavyAtk = true;
+        //        meleeAtk.AnimateHeavyAtk();
+        //        attackTimer = meleeAtk.comboTime;
+        //        ComboUpdate();
+        //    }
+        //}
         
-        if (!attacking)
-        {
 
-            if (Input.GetButton("Fire1"))
-            {
-                //if (!attacking)
-                //{
-                //    lightAtk = true;
-                //    attacking = true;
-                //    heavyAtk = false;
-                //    attackTimer = 1f;
-                //}
+        
 
-                // New code - LC
-                lightAtk = true;
-                attacking = true;
-                heavyAtk = false;
-                attackTimer = 1f;
-            }
-
-            if (Input.GetButton("Fire2"))
-            {
-                if (!attacking)
-                {
-                    attacking = true;
-                    heavyAtk = true;
-                    lightAtk = false;
-                    attackTimer = 1f;
-
-                }
-            }
-       
-            
-        }
         //else
         //{
         //    if (hitSomething)
@@ -86,65 +102,96 @@ public class MeleeZone : MonoBehaviour {
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Enemy")
+        {
             Debug.Log("Enemy Detected");
-
-    }
-    public void OnTriggerStay(Collider other)
-    {
-        hitSomething = true;
-        if (other.gameObject.tag == "Enemy")
-        {
-            enemScript = other.GetComponent<MeleeEnemy>();
-            if (attacking)
-            {
-
-                if (lightAtk)
-                {
-                    //if (EnemyBlood)
-                    //    Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
-                    //Vector3 temp = playerTrans.forward;
-                    //if (enemScript.knockedUp)
-                    //{
-                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
-
-                    //}
-                    //else
-                    //{
-                    //    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
-
-                    //}
-                    //enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-                    ////   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
-                    //enemScript.pause = true;
-                    //enemScript.hit = true;
-                    //enemScript.pauseTimer = 1.25f;
-                    //enemScript.TakeDmg(5);
-                    comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
-
-                }
-                if (heavyAtk)
-                {
-                    Vector3 temp = playerTrans.forward;
-                    // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
-                    enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
-
-                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x*5, 1200, temp.normalized.z*100f));
-                    enemScript.knockedUp = true;
-                    enemScript.hit = true;
-                    enemScript.pause = true;
-                    enemScript.TakeDmg(10);
-                    if (EnemyBlood)
-                        Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
-
-                }
-
-            }
-        }else
-        {
-            lightAtk = heavyAtk = attacking = false;
+            enemScript = other.gameObject.GetComponent<EnemyScript>();
         }
-        lightAtk = heavyAtk = false;
-
 
     }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (enemScript)
+        {
+            Debug.Log("Enemy Lost");
+            enemScript = null;
+        }
+    }
+
+    public void ComboUpdate()
+    {
+        comboStates.UpdateState((int)currState, enemScript, playerTrans);
+    }
+
+    void updateAtkTimer()
+    {
+        if(attackTimer > 0)
+        {
+            attackTimer -= Time.deltaTime;
+            if (attackTimer < 0)
+            {
+                attackTimer = 0;
+                lightAtk = heavyAtk = attacking = false;
+            }
+        }
+    }
+    //public void OnTriggerStay(Collider other)
+    //{
+    //    hitSomething = true;
+    //    if (other.gameObject.tag == "Enemy")
+    //    {
+    //        enemScript = other.GetComponent<MeleeEnemy>();
+    //        if (attacking)
+    //        {
+
+    //            if (lightAtk)
+    //            {
+    //                if (EnemyBlood)
+    //                    Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
+    //                Vector3 temp = playerTrans.forward;
+    //                if (enemScript.knockedUp)
+    //                {
+    //                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 10, -5, temp.normalized.z * 10));
+
+    //                }
+    //                else
+    //                {
+    //                    enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 750, 5, temp.normalized.z * 750));
+
+    //                }
+    //                enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
+    //                //   enemScript.rigidBody.velocity = new Vector3(enemScript.rigidBody.velocity.x, enemScript.rigidBody.velocity.y, enemScript.rigidBody.velocity.z+75);
+    //                enemScript.pause = true;
+    //                enemScript.hit = true;
+    //                enemScript.pauseTimer = 1.25f;
+    //                enemScript.TakeDmg(5);
+    //                //comboStates.UpdateState((int)COMBOSTATE.lightAttack, enemScript, playerTrans);
+
+    //            }
+    //            if (heavyAtk)
+    //            {
+    //                Vector3 temp = playerTrans.forward;
+    //                // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
+    //                enemScript.rigidBody.velocity = new Vector3(0, 0, 0);
+
+    //                enemScript.rigidBody.AddForce(new Vector3(temp.normalized.x * 5, 1200, temp.normalized.z * 100f));
+    //                enemScript.knockedUp = true;
+    //                enemScript.hit = true;
+    //                enemScript.pause = true;
+    //                enemScript.TakeDmg(10);
+    //                if (EnemyBlood)
+    //                    Instantiate(EnemyBlood, enemScript.EnemyBloodLoc.position, GetComponent<Transform>().rotation);
+
+    //            }
+
+    //        }
+    //    }
+    //    else
+    //    {
+    //        lightAtk = heavyAtk = attacking = false;
+    //    }
+    //    lightAtk = heavyAtk = false;
+
+
+    //}
 }

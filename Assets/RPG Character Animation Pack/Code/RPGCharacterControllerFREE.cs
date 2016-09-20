@@ -77,6 +77,7 @@ public class RPGCharacterControllerFREE : MonoBehaviour
 	{
 		//set the animator component
 		animator = GetComponentInChildren<Animator>();
+        weapon = 0;
 		rb = GetComponent<Rigidbody>();
 	}
 

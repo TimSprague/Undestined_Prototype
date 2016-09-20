@@ -28,8 +28,9 @@ public class PlayerHealth : MonoBehaviour {
     void Start () {
         playerAnimator = GetComponent<Animator>();
         reload = GetComponent<LevelManager>();
-        
-	}
+        playerCurrentEnergy = playerMaxEneregy;
+        playerCurrentHealth = playerMaxHealth;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -55,8 +56,7 @@ public class PlayerHealth : MonoBehaviour {
                 HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
             healed = false;
         }
-        playerCurrentEnergy = playerMaxEneregy;
-        playerCurrentHealth = playerMaxHealth;
+        
 
     }
 

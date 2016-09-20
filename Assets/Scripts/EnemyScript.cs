@@ -69,6 +69,7 @@ public abstract class EnemyScript : MonoBehaviour
     float bleedtime = 0;
     float stuntime = 0;
     bool bleedRoutineRunning = false;
+    bool instOnce;
     // Use this for initialization
     public virtual void Start()
     {
@@ -84,6 +85,7 @@ public abstract class EnemyScript : MonoBehaviour
         alive = true;
         knockedUp = false;
         smashedDown = false;
+        instOnce = true;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -266,11 +268,17 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (stunned)
         {
-            Instantiate(stunEffect, statusLoc);
+            if (instOnce)
+            {
+                Instantiate(stunEffect, statusLoc.position, Quaternion.identity);
+                instOnce = false;
+            }
+            instOnce = false;
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
                 stunned = false;
+                instOnce = true;
             }
         }
     }

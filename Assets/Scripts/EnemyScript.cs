@@ -69,6 +69,8 @@ public abstract class EnemyScript : MonoBehaviour
     float bleedtime = 0;
     float stuntime = 0;
     bool bleedRoutineRunning = false;
+    bool instOnceStun;
+    bool instOnceBleed;
     // Use this for initialization
     public virtual void Start()
     {
@@ -84,6 +86,8 @@ public abstract class EnemyScript : MonoBehaviour
         alive = true;
         knockedUp = false;
         smashedDown = false;
+        instOnceStun = true;
+        instOnceBleed = true;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -116,8 +120,6 @@ public abstract class EnemyScript : MonoBehaviour
     public virtual void Update()
     {
 
-
-
         if (alive)
         {
             if (!smashedDown)
@@ -148,7 +150,6 @@ public abstract class EnemyScript : MonoBehaviour
 
             }
 
-
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
@@ -159,6 +160,7 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (alive)
         {
+            isStunned();
 
             if (!knockedUp && !stunned)
             {
@@ -194,7 +196,6 @@ public abstract class EnemyScript : MonoBehaviour
                     bleedRoutineRunning = true;
                 }
             }
-            isStunned();
 
         }
         Death();
@@ -269,11 +270,16 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (stunned)
         {
-            Instantiate(stunEffect, statusLoc);
+            if (instOnceStun)
+            {
+                Instantiate(stunEffect, statusLoc.position, Quaternion.identity);
+                instOnceStun = false;
+            }
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
                 stunned = false;
+                instOnceStun = true;
             }
         }
     }
@@ -285,7 +291,7 @@ public abstract class EnemyScript : MonoBehaviour
         while (timer > 0)
         {
 
-            timer -= Time.deltaTime;
+            timer -= 1;
             bleedtime += Time.deltaTime;
 
             if (alive)
@@ -295,23 +301,27 @@ public abstract class EnemyScript : MonoBehaviour
                 TakeDmg(tempdmg);
 
                 dmgCounter += tempdmg;
-                if (bleedtime >= 2.0f)
+                ParticleSystem bleedtemp = null;
+                if (instOnceBleed)
                 {
-                    Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
-                    bleedtime = 0;
+                   bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
+                   instOnceBleed = false;
                 }
+                bleedtemp.transform.position = statusLoc.position;
             }
             else
             {
-                bleedtime = 0;
+                instOnceBleed = true;
                 Debug.Log(dmgCounter);
                 bleeding = false;
                 bleedRoutineRunning = false;
                 yield return null;
 
             }
+            yield return new WaitForSeconds(1f);
         }
         bleedtime = 0;
+        instOnceBleed = true;
         Debug.Log(dmgCounter);
         bleeding = false;
         bleedRoutineRunning = false;

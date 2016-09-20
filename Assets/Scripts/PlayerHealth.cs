@@ -96,6 +96,11 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
+    public void IncreasePower(int _value)
+    {
+
+    }
+
 
     void Death()
     {

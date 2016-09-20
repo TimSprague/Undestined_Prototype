@@ -3,11 +3,13 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
     bool alive;
+   public  bool reflected;
     float aliveTimer;
     public ParticleSystem MageAttack;
 	// Use this for initialization
 	void Start () {
         aliveTimer = 2;
+        reflected = false;
         alive = true;
         if(MageAttack)
         {
@@ -29,6 +31,14 @@ public class Bullet : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        if(reflected)
+        {
+            if(other.gameObject.tag == "Enemy")
+            {
+                other.gameObject.GetComponent<EnemyScript>().TakeDmg(5);
+                Destroy(this.gameObject);
+            }
+        }
         if(other.gameObject.tag == "Player")
         {
             other.GetComponent<PlayerHealth>().DecreaseHealth(5);

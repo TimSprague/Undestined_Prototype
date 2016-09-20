@@ -69,7 +69,8 @@ public abstract class EnemyScript : MonoBehaviour
     float bleedtime = 0;
     float stuntime = 0;
     bool bleedRoutineRunning = false;
-    bool instOnce;
+    bool instOnceStun;
+    bool instOnceBleed;
     // Use this for initialization
     public virtual void Start()
     {
@@ -85,7 +86,8 @@ public abstract class EnemyScript : MonoBehaviour
         alive = true;
         knockedUp = false;
         smashedDown = false;
-        instOnce = true;
+        instOnceStun = true;
+        instOnceBleed = true;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -268,17 +270,16 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (stunned)
         {
-            if (instOnce)
+            if (instOnceStun)
             {
                 Instantiate(stunEffect, statusLoc.position, Quaternion.identity);
-                instOnce = false;
+                instOnceStun = false;
             }
-            instOnce = false;
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
                 stunned = false;
-                instOnce = true;
+                instOnceStun = true;
             }
         }
     }
@@ -300,15 +301,17 @@ public abstract class EnemyScript : MonoBehaviour
                 TakeDmg(tempdmg);
 
                 dmgCounter += tempdmg;
-                if (bleedtime >= 2.0f)
+                ParticleSystem bleedtemp = null;
+                if (instOnceBleed)
                 {
-                    Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
-                    bleedtime = 0;
+                   bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
+                   instOnceBleed = false;
                 }
+                bleedtemp.transform.position = statusLoc.position;
             }
             else
             {
-                bleedtime = 0;
+                instOnceBleed = true;
                 Debug.Log(dmgCounter);
                 bleeding = false;
                 bleedRoutineRunning = false;
@@ -318,6 +321,7 @@ public abstract class EnemyScript : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         bleedtime = 0;
+        instOnceBleed = true;
         Debug.Log(dmgCounter);
         bleeding = false;
         bleedRoutineRunning = false;

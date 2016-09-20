@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class CounterText : MonoBehaviour {
     private int count;
     private Text text;
+    private EnemyScript enemy;
+
 	// Use this for initialization
 	void Start () {
         count = 0;

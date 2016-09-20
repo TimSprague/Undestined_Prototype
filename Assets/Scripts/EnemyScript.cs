@@ -343,7 +343,7 @@ public abstract class EnemyScript : MonoBehaviour
         {
             player.IncreaseHealth(10);
             player.IncreasePower(5);
-            countText.AddOne();
+            //countText.AddOne();
             alive = false;
         }
         //if (EnemyBlood)

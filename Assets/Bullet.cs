@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class Bullet : MonoBehaviour {
+    public bool reflected;
     bool alive;
-   public  bool reflected;
     float aliveTimer;
     public ParticleSystem MageAttack;
 	// Use this for initialization
@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour {
     {
         if(reflected)
         {
-            if(other.gameObject.tag == "Enemy")
+            if(other.gameObject.tag =="Enemy")
             {
                 other.gameObject.GetComponent<EnemyScript>().TakeDmg(5);
                 Destroy(this.gameObject);

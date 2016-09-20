@@ -116,8 +116,6 @@ public abstract class EnemyScript : MonoBehaviour
     public virtual void Update()
     {
 
-
-
         if (alive)
         {
             if (!smashedDown)
@@ -147,7 +145,6 @@ public abstract class EnemyScript : MonoBehaviour
                 }
 
             }
-
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();

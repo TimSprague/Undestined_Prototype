@@ -7,14 +7,13 @@ public class MeleeAttack : MonoBehaviour {
     public float vSpeed = 2.0f;
     public float swordTurn = 2.0f;
     public float speed = 10.0f;
-    [SerializeField] float comboTime = 0.0f;
+    public float comboTime = 0.0f;
     [SerializeField] int currentCombo = 0;
     public Transform player;
     public Animator swordAnimation;
     public Animator playerAnimation;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] List<AudioClip> soundLightSwordSwings;
-
     [SerializeField] ParticleSystem particle_groundPound;
     [SerializeField] Transform transform_groundPound;
     Transform playerTrans;
@@ -31,102 +30,190 @@ public class MeleeAttack : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
-        if(comboTime > 0)
-        {
-            comboTime -= Time.deltaTime;
-            if (comboTime <= 0)
-            {
-                comboTime = 0;
-                currentCombo = 0;
-            }
-        }
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (currentCombo == 0 || comboTime == 0)
-            {
-                if (swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
-                {
-                    swordAnimation.Play("LightAttack");
-                    currentCombo++;
-                }
-
-            }
-            else if (currentCombo == 1 && comboTime > 0)
-            {
-                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
-                {
-                    swordAnimation.Play("LightAttack2");
-                    currentCombo++;
-
-                }
-
-                //        swordAnimation.Play("LightAttack2");
-                //        currentCombo++;
-
-                //}
-                //else if (currentCombo == 2 && comboTime > 0)
-                //{
-
-                //        currentCombo = 0;
-                //        swordAnimation.Play("LightAttack3");
-
-                //}
-                //comboTime = 1.0f;
-
-                swordAnimation.Play("LightAttack");
-                //playerAnimation.Play("Unarmed-Attack-R3");
-            }
-            else if (currentCombo == 2 && comboTime > 0)
-            {
-                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
-                {
-                    currentCombo = 0;
-                    swordAnimation.Play("LightAttack3");
-                }
-            }
-            comboTime = 1.0f;
-            /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
-            //swordAnimation.Play("LightAttack");
-            playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
-        }
-        if(Input.GetButtonDown("Fire2"))
-        {
-            if (currentCombo == 0 || comboTime == 0)
-            {
-                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("thirdAttack"))
-                {
-            swordAnimation.Play("HeavyAttack");
-                    currentCombo++;
-        }
-            }
-            else if (currentCombo == 1 && comboTime > 0)
-            {
-                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
-                {
-                    swordAnimation.Play("HeavyAttack2");
-                    currentCombo++;
-                }
-            }
-            else if (currentCombo == 2 && comboTime > 0)
-            {
-                if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
-                {
-                    currentCombo = 0;
-                    swordAnimation.Play("HeavyAttack3");
-                }
-            }
-            comboTime = 1.5f;
-            /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
-            //swordAnimation.Play("HeavyAttack");
-            playerAnimation.Play("Unarmed-Attack-Kick-L1"); // UNCOMMENT BACK
-        }
-    }
-    public void FixedUpdate()
+	void Update ()
     {
-        
+        transform.RotateAround(player.transform.position, Vector3.up, Time.deltaTime * speed);
 
+    //    if (comboTime > 0)
+    //    {
+    //        comboTime -= Time.deltaTime;
+    //        if (comboTime <= 0)
+    //        {
+    //            comboTime = 0;
+    //            currentCombo = 0;
+    //        }
+    //    }
+    //    if (Input.GetButtonDown("Fire1"))
+    //    {
+    //        if (currentCombo == 0 || comboTime == 0)
+    //        {
+    //            if (swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+    //            {
+    //                swordAnimation.Play("LightAttack");
+    //                currentCombo++;
+    //            }
+
+    //        }
+    //        else if (currentCombo == 1 && comboTime > 0)
+    //        {
+    //            if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+    //            {
+    //                swordAnimation.Play("LightAttack2");
+    //                currentCombo++;
+
+    //            }
+
+    //        }
+    //        else if (currentCombo == 2 && comboTime > 0)
+    //        {
+    //            if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
+    //            {
+    //                currentCombo = 0;
+    //                swordAnimation.Play("LightAttack3");
+    //            }
+    //        }
+    //        comboTime = 1.0f;
+    //        /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
+    //        //swordAnimation.Play("LightAttack");
+    //        //playerAnimation.Play("Unarmed-Attack-R3");  // UNCOMMENT BACK
+    //    }
+
+    //    if (Input.GetButtonDown("Fire2"))
+    //    {
+    //        if (currentCombo == 0 || comboTime == 0)
+    //        {
+    //            if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("thirdAttack"))
+    //            {
+    //                swordAnimation.Play("HeavyAttack");
+    //                currentCombo++;
+    //            }
+    //        }
+    //        else if (currentCombo == 1 && comboTime > 0)
+    //        {
+    //            if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+    //            {
+    //                swordAnimation.Play("HeavyAttack2");
+    //                currentCombo++;
+    //            }
+    //        }
+    //        else if (currentCombo == 2 && comboTime > 0)
+    //        {
+    //            if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
+    //            {
+    //                currentCombo = 0;
+    //                swordAnimation.Play("HeavyAttack3");
+    //            }
+    //        }
+    //        comboTime = 1.5f;
+    //        /// COMMENT THIS OUT IF USING CONDITION STATEMENTS ABOVE
+    //        //swordAnimation.Play("HeavyAttack");
+    //        //playerAnimation.Play("Unarmed-Attack-Kick-L1"); // UNCOMMENT BACK
+    //    }
+
+    }
+
+    //void LateUpdate()
+    //{
+    //    if (comboTime == 0.5f)
+    //    {
+    //        Debug.Log("late update commencing...");
+    //        comboTime = swordAnimation.GetCurrentAnimatorStateInfo(0).length;
+    //        Debug.Log(comboTime);
+    //    }
+    //}
+
+    //public void AnimateLightAtk()
+    //{
+    //    if (currentCombo == 0)
+    //    {
+    //        //if (swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+    //        //{
+    //        swordAnimation.Play("LightAttack");
+    //        currentCombo++;
+    //        //}
+
+    //    }
+    //    else if (currentCombo == 1)
+    //    {
+    //        //if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+    //        // {
+    //        swordAnimation.Play("LightAttack2");
+    //        currentCombo++;
+
+    //        //}
+
+    //    }
+    //    else if (currentCombo == 2)
+    //    {
+    //        //if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
+    //        //{
+    //        currentCombo = 0;
+    //        swordAnimation.Play("LightAttack3");
+    //        //}
+    //    }
+    //    comboTime = 0.5f;
+    //}
+    public void AnimateLightAtk(int currCombo)
+    {
+        currentCombo = currCombo;
+        if (currentCombo == 0)
+        {
+            //if (swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+            //{
+                swordAnimation.Play("LightAttack");
+                currentCombo++;
+            //}
+
+        }
+        else if (currentCombo == 1)
+        {
+            //if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+           // {
+                swordAnimation.Play("LightAttack2");
+                currentCombo++;
+
+            //}
+
+        }
+        else if (currentCombo == 2)
+        {
+            //if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
+            //{
+                currentCombo = 0;
+                swordAnimation.Play("LightAttack3");
+            //}
+        }
+        comboTime = 0.5f;
+    }
+
+    public void AnimateHeavyAtk(int currCombo)
+    {
+        currentCombo = currCombo;
+        if (currentCombo == 0 || comboTime == 0)
+        {
+           // if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("thirdAttack"))
+            //{
+                swordAnimation.Play("HeavyAttack");
+                currentCombo++;
+            //}
+        }
+        else if (currentCombo == 1 && comboTime > 0)
+        {
+           // if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("firstAttack"))
+            //{
+                swordAnimation.Play("HeavyAttack2");
+                currentCombo++;
+            //}
+        }
+        else if (currentCombo == 2 && comboTime > 0)
+        {
+            //if (!swordAnimation.GetCurrentAnimatorStateInfo(0).IsTag("secondAttack"))
+            //{
+                currentCombo = 0;
+                swordAnimation.Play("HeavyAttack3");
+            //}
+        }
+        comboTime = 1.0f;
     }
 
 

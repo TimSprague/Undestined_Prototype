@@ -19,7 +19,8 @@ public abstract class EnemyScript : MonoBehaviour
     public float rotationSpeed;
     public Transform playerTransform;
     public PlayerHealth player;
-    public Animation enemyAnim;
+    public Animator enemyAnim;
+    // public Animation enemyAnim;
     [SerializeField]
     public Transform[] points;
     public int destPoint = 0;
@@ -76,7 +77,8 @@ public abstract class EnemyScript : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        enemyAnim = GetComponentInChildren<Animation>();
+        enemyAnim = transform.GetChild(0).GetComponent<Animator>();
+        //enemyAnim = GetComponentInChildren<Animation>();
         hit = false;
         canChange = false;
         stunned = false;
@@ -134,8 +136,22 @@ public abstract class EnemyScript : MonoBehaviour
                     pauseTimer -= Time.deltaTime;
                     if (pauseTimer < 0.0f)
                     {
+                        falldown();
+                        if(Identify == 3)
+                        {
+                            enemyAnim.SetBool("Moving", true);
+                            enemyAnim.SetFloat("Velocity Z", .75f);
+                            enemyAnim.Play("Unarmed-Walk-Slow");
 
-                        enemyAnim.Play("Walk", PlayMode.StopAll);
+                        }
+                        else
+                        {
+                            enemyAnim.SetBool("Moving", true);
+                            enemyAnim.SetFloat("Velocity Z", .75f);
+                            enemyAnim.Play("Unarmed-Walk");
+
+                        }
+                        // enemyAnim.Play("Walk", PlayMode.StopAll);
                         pause = false;
 
                     }
@@ -143,7 +159,10 @@ public abstract class EnemyScript : MonoBehaviour
                 }
                 if (hit && pause)
                 {
-                    enemyAnim.Play("idle", PlayMode.StopAll);
+                    //enemyAnim.SetBool("Moving", false);
+                    //enemyAnim.SetFloat("Velocity Z", 0);
+                    //enemyAnim.Play("Unarmed-Idle");
+                    //enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
 
@@ -258,10 +277,10 @@ public abstract class EnemyScript : MonoBehaviour
 
     public void knockUp()
     {
-        enemyAnim.Stop();
 
         knockedUp = true;
-        enemyAnim.CrossFade("idle");
+        //  enemyAnim.CrossFade("idle");
+       
 
     }
 
@@ -343,11 +362,21 @@ public abstract class EnemyScript : MonoBehaviour
         {
             player.IncreaseHealth(10);
             player.IncreasePower(5);
+           
             //countText.AddOne();
             alive = false;
         }
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", 1);
+        enemyAnim.Play("Unarmed-GetHit-F1");
         //if (EnemyBlood)
         //    EnemyBlood.Play();
+    }
+
+    void falldown()
+    {
+        rigidBody.constraints &= ~RigidbodyConstraints.FreezePosition;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     void Death()

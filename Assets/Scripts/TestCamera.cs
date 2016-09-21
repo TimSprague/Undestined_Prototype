@@ -10,7 +10,8 @@ public class TestCamera : MonoBehaviour {
     private Animation anim; // the animation component
     private CharacterController character; // A reference to the ThirdPersonCharacter on the object
 
-    float gravity = 50; // how hard gravity pulls down
+    public float gravity = 50; // how hard gravity pulls down
+    public bool airAttacking = false;
 
 
     public float lookSpeed = 5; // mouse look sensitivity
@@ -26,6 +27,8 @@ public class TestCamera : MonoBehaviour {
     public Animator PlayerAnimator;
     private float runSpeed = 0;
     private float straifeSpeed = 0;
+
+    private float slowMove = 1.0f;
 	// Use this for initialization
 	void Start () {
 
@@ -51,9 +54,11 @@ public class TestCamera : MonoBehaviour {
            
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= moveSpeed;
+            moveDirection *= (moveSpeed * slowMove);
+            
             if (Input.GetButton("Jump"))
             {
+                
                 moveDirection.y = jumpSpeed;
                 //PlayerAnimator.SetTrigger("JumpTrigger");
 
@@ -61,7 +66,14 @@ public class TestCamera : MonoBehaviour {
         }
 
         // Apply gravity
-        moveDirection.y -= gravity * Time.deltaTime;
+        if(!airAttacking)
+            moveDirection.y -= gravity * Time.deltaTime;
+        else
+        {
+            moveDirection.x = 0;
+            moveDirection.y = 0;
+            moveDirection.z = 0;
+        }
         // Move the player
         character.Move(moveDirection * Time.deltaTime);
 
@@ -93,7 +105,7 @@ public class TestCamera : MonoBehaviour {
 
         float distance = 5;
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(new Vector3(target.position.x,target.position.y +5,target.position.z), transform.TransformDirection(Vector3.forward), out hit))
+        if (Physics.Raycast(new Vector3(transform.position.x,transform.position.y +5,transform.position.z), transform.TransformDirection(Vector3.forward), out hit))
         {
             distance = hit.distance;
         }
@@ -117,10 +129,32 @@ public class TestCamera : MonoBehaviour {
         {
             PlayerAnimator.SetBool("Moving", false);
             PlayerAnimator.SetBool("Strafing", false);
-
+            if(Input.GetAxis("Roll")>0)
+            {
+                if (Input.GetAxis("Vertical") != 0)
+                {
+                    if (Input.GetAxis("Vertical") > 0)
+                        PlayerAnimator.Play("Unarmed-Roll-Forward");
+                    else
+                        PlayerAnimator.Play("Unarmed-Roll-Backward");
+                    return;
+                }
+                if (Input.GetAxis("Horizontal") != 0)
+                {
+                    if (Input.GetAxis("Horizontal") > 0)
+                        PlayerAnimator.Play("Unarmed-Roll-Right");
+                    else
+                        PlayerAnimator.Play("Unarmed-Roll-Left");
+                    return;
+                }
+            }
             if (Input.GetAxis("Vertical") != 0)
             {
                 runSpeed += Input.GetAxis("Vertical") > 0 ? 0.04f : -0.04f;
+                if (runSpeed < 0)
+                    SlowMoveSpeed(0.5f);
+                else
+                    SlowMoveSpeed(1.0f);
                 PlayerAnimator.SetBool("Moving", true);
             }
             else
@@ -138,10 +172,22 @@ public class TestCamera : MonoBehaviour {
 
             if (Input.GetButtonDown("Jump"))
             {
-                PlayerAnimator.SetInteger("Jumping", 1);
-                PlayerAnimator.SetTrigger("JumpTrigger");
+                //PlayerAnimator.SetInteger("Jumping", 1);
+                //PlayerAnimator.SetTrigger("JumpTrigger");
             }
 
+        }
+    }
+    public void SlowMoveSpeed(float input)
+    {
+        slowMove = input;
+    }
+    public void PlayPlayerFall()
+    {
+        if (PlayerAnimator)
+        {
+            //PlayerAnimator.SetInteger("Jumping", 0);
+            //PlayerAnimator.SetTrigger("JumpTrigger");
         }
     }
 }

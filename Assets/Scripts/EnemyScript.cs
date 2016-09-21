@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+public abstract class EnemyScript : MonoBehaviour
+{
 
-public abstract class EnemyScript : MonoBehaviour {
 
-    
-   //Base Attributes
+    //Base Attributes
     public int health;
     public int maxHealth;
     public bool alive;
     public int attack;
+    protected Quaternion lookRotation;
     public int defense;
     public float speed;
     public Rigidbody rigidBody;
@@ -28,6 +30,8 @@ public abstract class EnemyScript : MonoBehaviour {
     public bool canChange;
     public float changeTimer;
     public float fallingSpeed;
+    public int pathDest;
+    public int pathCount;
     //Status effects
     public float bleedTimer;
     public float stunTimer;
@@ -42,17 +46,32 @@ public abstract class EnemyScript : MonoBehaviour {
     public float attackTimer;
     public bool canAttack;
     public bool hit;
+    public List<Node> path;
     public ParticleSystem groundpound;
     public ParticleSystem PlayerBleed;
     //public ParticleSystem EnemyBlood;
     public Transform EnemyBloodLoc;
     public Transform GroundPoundLoc;
-    [SerializeField] EnemyUIController enemyUIcontrol;
+    [SerializeField]
+    EnemyUIController enemyUIcontrol;
+    public Pathfinding planRoute;
     // Enemy Counter
-    private int count=0;
+    public int count = 0;
     public CounterText countText;
+    public float Dtime;
+    public float dCheck;
+    public int Identify;
+    public float forceMod;
+    //Status Effects
+    public Transform statusLoc;
+    public ParticleSystem bleedEffect;
+    public ParticleSystem stunEffect;
+    float bleedtime = 0;
+    float stuntime = 0;
+    bool bleedRoutineRunning = false;
     // Use this for initialization
-    public virtual void Start () {
+    public virtual void Start()
+    {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
@@ -60,7 +79,7 @@ public abstract class EnemyScript : MonoBehaviour {
         hit = false;
         canChange = false;
         stunned = false;
-        bleeding = false; 
+        bleeding = false;
         canChange = true;
         alive = true;
         knockedUp = false;
@@ -74,90 +93,108 @@ public abstract class EnemyScript : MonoBehaviour {
         DamagePopupController.Initialize();
         //count = 0;
         SetCountText();
-    }
-	
-	// Update is called once per frame
-	public virtual void Update () {
-
-        if(health <=0)
+        planRoute = GameObject.Find("A $tar").GetComponent<Pathfinding>();
+        if (!planRoute.FindPath(transform.position, points[destPoint].position))
         {
-            countText.AddOne();
-            alive = false;
-            DestroyImmediate(this.gameObject);
+            DestroyImmediate(transform.parent.gameObject);
         }
+
+        path = planRoute.grid.path;
+
+        pathCount = path.Count;
+        pathDest = 0;
+        Dtime = 0;
+    }
+    public void Awake()
+    {
+        //    planRoute = GameObject.Find("A*").GetComponent<Pathfinding>();
+        //    planRoute.FindPath(transform.position, points[destPoint].position);
+        //    path = planRoute.grid.path;
+        //    pathDest = 0;
+    }
+    // Update is called once per frame
+    public virtual void Update()
+    {
 
         if (alive)
         {
             if (!smashedDown)
             {
                 smashTimer -= Time.deltaTime;
-                if(smashTimer<=0)
+                if (smashTimer <= 0)
                 {
                     groundpound.Stop();
                 }
-
-                if (bleeding)
-                {
-                    TakeDmg(bleedDmg);  //Use to calculate damage to health
-                    //health -= bleedDmg; // Obsolete
-                }
-              
 
                 if (pause)
                 {
                     pauseTimer -= Time.deltaTime;
                     if (pauseTimer < 0.0f)
                     {
-
-                       enemyAnim.Play("Walk",PlayMode.StopAll);
+                        falldown();
+                        enemyAnim.Play("Walk", PlayMode.StopAll);
                         pause = false;
 
                     }
-                   
+
                 }
-               if(hit &&pause)
+                if (hit && pause)
                 {
                     enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
-                
 
             }
-            isBleeding();
-            isStunned();
 
             enemyUIcontrol.HealthUpdate(health, maxHealth);
             enemyUIcontrol.StatusUpdate();
         }
-       
+        Dtime += Time.deltaTime;
+        Death();
     }
     public void FixedUpdate()
     {
-        if (!knockedUp&&!stunned)
+        if (alive)
         {
-            if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
+            isStunned();
+
+            if (!knockedUp && !stunned)
             {
-           
-            
-                Vector3 direction = playerTransform.transform.position - transform.position;
-                direction.Normalize();
-                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
-                moveToTarget(playerTransform.position);
-                playerTarget = true;
+                if (Vector3.Distance(playerTransform.position, transform.position) < Distance)
+                {
+
+
+                    Vector3 direction = playerTransform.transform.position - transform.position;
+                    direction.Normalize();
+                    lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+                    moveToTarget(playerTransform.position);
+                    playerTarget = true;
+                }
+                else
+                {
+                    playerTarget = false;
+                    Vector3 direction = path[pathDest].worldPosition - transform.position;
+                    direction.Normalize();
+                    lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                    transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+
+                    moveToTarget(points[destPoint].position);
+                }
             }
-            else
+            rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y - fallingSpeed, rigidBody.velocity.z);
+
+            if (bleeding && !bleedRoutineRunning)
             {
-                playerTarget = false;
-                Vector3 direction = points[destPoint].position - transform.position;
-                direction.Normalize();
-                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-                transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
-               
-                moveToTarget(points[destPoint].position);
+                if (alive)
+                {
+                    StartCoroutine(isBleeding(bleedTimer));
+                    bleedRoutineRunning = true;
+                }
             }
+
         }
-                   rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y-fallingSpeed, rigidBody.velocity.z);
+        Death();
 
     }
     public void OnCollisionEnter(Collision other)
@@ -178,12 +215,12 @@ public abstract class EnemyScript : MonoBehaviour {
             //}
             if (other.gameObject.tag == "Player")
             {
-               if (PlayerBleed)
-                   Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
+                if (PlayerBleed)
+                    Instantiate(PlayerBleed, other.contacts[0].point, Quaternion.identity);
             }
             if (other.gameObject.tag == "Terrain")
             {
-                if(groundpound)
+                if (groundpound)
                 {
                     if (smashedDown)
                     {
@@ -192,7 +229,7 @@ public abstract class EnemyScript : MonoBehaviour {
                         smashedDown = false;
                         //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
                     }
-                    
+
                 }
 
                 knockedUp = false;
@@ -221,14 +258,15 @@ public abstract class EnemyScript : MonoBehaviour {
         enemyAnim.Stop();
 
         knockedUp = true;
-       enemyAnim.CrossFade("idle");
-        
+        enemyAnim.CrossFade("idle");
+
     }
-   
+
     public void isStunned()
     {
         if (stunned)
         {
+            Instantiate(stunEffect, statusLoc);
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
@@ -236,61 +274,78 @@ public abstract class EnemyScript : MonoBehaviour {
             }
         }
     }
-    public void isBleeding()
+    public IEnumerator isBleeding(float timer)
     {
-        if (bleeding)
+
+        int tempdmg = bleedDmg / (int)bleedTimer;
+        int dmgCounter = 0;
+        while (timer > 0)
         {
-            bleedTimer -= Time.deltaTime;
-            if (bleedTimer < 0)
+
+            timer -= Time.deltaTime;
+            bleedtime += Time.deltaTime;
+
+            if (alive)
             {
+
+                DamagePopupController.CreateDamagePopup(tempdmg.ToString(), transform);
+                TakeDmg(tempdmg);
+
+                dmgCounter += tempdmg;
+                if (bleedtime >= 2.0f)
+                {
+                    Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
+                    bleedtime = 0;
+                }
+            }
+            else
+            {
+                bleedtime = 0;
+                Debug.Log(dmgCounter);
                 bleeding = false;
+                bleedRoutineRunning = false;
+                yield return null;
+
             }
         }
+        bleedtime = 0;
+        Debug.Log(dmgCounter);
+        bleeding = false;
+        bleedRoutineRunning = false;
+
+        yield return null;
     }
-    public void moveToTarget(Vector3 target)
+    public virtual void moveToTarget(Vector3 target)
     {
-        Vector3 moveDirection = target - transform.position;
-        Vector3 velocity = rigidBody.velocity;
 
-        if(moveDirection.magnitude<1.5 &&!playerTarget)
-        {
-            destPoint = (destPoint + 1) % points.Length;
-        }
-        else
-        {
-            if (!pause)
-
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
-            {
-                velocity = new Vector3(moveDirection.normalized.x * speed, 0, moveDirection.normalized.z * speed);
-            }else
-            {
-                
-
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
-                   
-                   
-
-
-                
-            }
-        }
-        rigidBody.velocity = velocity;
     }
 
     // Use this function to update health
     public void TakeDmg(int dmg)
     {
         health -= dmg;
+        if (health <= 0)
+        {
+            player.IncreaseHealth(10);
+            countText.AddOne();
+            alive = false;
+        }
         //if (EnemyBlood)
         //    EnemyBlood.Play();
-        DamagePopupController.CreateDamagePopup(dmg.ToString(), transform);
+    }
+
+    void falldown()
+    {
+        rigidBody.constraints &= ~RigidbodyConstraints.FreezePosition;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    void Death()
+    {
+        if (!alive)
+        {
+            DestroyImmediate(this.gameObject);
+        }
     }
 
     void SetCountText()

@@ -40,7 +40,6 @@ public class MeleeZone : MonoBehaviour {
 
                     foreach (Collider hitCol in hitCollider)
                     {
-                        Debug.Log(hitCol.gameObject.name);
                     if(hitCol.tag == "Bullet")
                     {
                         hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
@@ -117,7 +116,6 @@ public class MeleeZone : MonoBehaviour {
 
                     foreach (Collider hitCol in hitCollider)
                     {
-                        Debug.Log(hitCol.gameObject.name);
                         if (hitCol.tag == "Enemy")
                         {
                             hitSomething = true;
@@ -175,7 +173,6 @@ public class MeleeZone : MonoBehaviour {
                 attackTimer -= Time.deltaTime;
                 if (attackTimer <= 0)
                 {
-                    Debug.Log("TEST");
                     attacking = false;
                     lightAtk = false;
                     heavyAtk = false;

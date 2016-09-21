@@ -7,6 +7,9 @@ public class HeavyEnemy : EnemyScript {
     // Use this for initialization
     public override void Start () {
         base.Start();
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", .75f);
+        enemyAnim.Play("Unarmed-Walk");
 	}
     public void PlayGroundParticle()
     {
@@ -57,9 +60,10 @@ public class HeavyEnemy : EnemyScript {
                 {
                     if (player.isAlive)
                     {
-                        enemyAnim.Stop();
-                        enemyAnim.Play("Attack", PlayMode.StopAll);
-
+                        // enemyAnim.Play("Attack", PlayMode.StopAll);
+                        enemyAnim.SetBool("Moving", false);
+                        enemyAnim.SetFloat("Velocity Z", 0);
+                        enemyAnim.Play("Unarmed-Attack-L3");
                         player.DecreaseHealth(5);
                         canAttack = true;
                         attackTimer = 1.25f;

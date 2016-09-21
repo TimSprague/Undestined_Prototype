@@ -114,7 +114,10 @@ public class PlayerHealth : MonoBehaviour {
         }
         //GameObject.Destroy(gameObject);
     }
+    public void DecreasePower(int _value)
+    {
 
+    }
     public void HealthBarUpdate()
     {
         if (HealthBar)

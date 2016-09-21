@@ -68,6 +68,7 @@ public class TestCamera : MonoBehaviour {
         moveDirection.y -= gravity * Time.deltaTime;
         // Move the player
         character.Move(moveDirection * Time.deltaTime);
+        
 
         //bool zoom = Input.GetAxis("Zoom") > 0;
         //if (zoom)

@@ -254,7 +254,6 @@ public class MeleeZone : MonoBehaviour {
                 attackTimer -= Time.deltaTime;
                 if (attackTimer <= 0)
                 {
-                    Debug.Log("TEST");
                     attacking = false;
                     lightAtk = false;
                     heavyAtk = false;

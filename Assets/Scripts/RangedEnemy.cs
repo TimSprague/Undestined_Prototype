@@ -8,7 +8,11 @@ public class RangedEnemy : EnemyScript {
     // Use this for initialization
     public override void Start () {
         base.Start();
-	}
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", 1.0f);
+        enemyAnim.Play("Unarmed-Walk");
+
+    }
     public void PlayGroundParticle()
     {
         if (EnemyGround && !EnemyGround.isPlaying)
@@ -56,15 +60,20 @@ public class RangedEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    velocity = new Vector3(0, 0, 0);
-                    GameObject clone =  (GameObject)Instantiate(bullet, transform.position, lookRotation);
-                    clone.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward * 10);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        //   enemyAnim.Play("Attack", PlayMode.StopAll);
+                        enemyAnim.SetBool("Moving", false);
+                        enemyAnim.SetFloat("Velocity Z", 0);
+                        enemyAnim.Play("Unarmed-Attack-Kick-R1");
+                        velocity = new Vector3(0, 0, 0);
+                        GameObject clone = (GameObject)Instantiate(bullet, transform.position, lookRotation);
+                        clone.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward * 10);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

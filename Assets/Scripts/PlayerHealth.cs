@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour {
 
@@ -21,9 +22,13 @@ public class PlayerHealth : MonoBehaviour {
     public AudioSource audioSource;
     public ParticleSystem PlayerBleed;
     private Animator playerAnimator;
+    public LevelManager reload;
+    GameObject instance;
     // Use this for initialization
     void Start () {
         playerAnimator = GetComponent<Animator>();
+        
+        
 	}
 	
 	// Update is called once per frame
@@ -93,21 +98,36 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
+    public void IncreasePower(int _value)
+    {
+
+    }
+
 
     void Death()
     {
         isAlive = false;
-        //GameObject.Destroy(gameObject);
-        if(DEAD)
-        DEAD.gameObject.SetActive(true);
-        //if (playerAnimator)
-           // playerAnimator.Play("Unarmed-Death1");
-        GameObject.Destroy(gameObject);
-    }
 
+        if (playerAnimator)
+        {
+            playerAnimator.Play("Unarmed-Death1");
+            StartCoroutine(RestartCurrentScene(3f));
+        }
+        //GameObject.Destroy(gameObject);
+    }
+    public void DecreasePower(int _value)
+    {
+
+    }
     public void HealthBarUpdate()
     {
         if (HealthBar)
             HealthBar.fillAmount = ((float)playerCurrentHealth / (float)playerMaxHealth);
+    }
+
+    IEnumerator RestartCurrentScene(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        SceneManager.LoadScene(0);
     }
 }

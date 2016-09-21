@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour {
 
         if (amount < totalAmt )
         {
-            InvokeRepeating("Spawn", 5, 10f);
+            InvokeRepeating("Spawn", 10, 10f);
         }
 
     }

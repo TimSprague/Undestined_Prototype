@@ -19,7 +19,8 @@ public abstract class EnemyScript : MonoBehaviour
     public float rotationSpeed;
     public Transform playerTransform;
     public PlayerHealth player;
-    public Animation enemyAnim;
+    public Animator enemyAnim;
+    // public Animation enemyAnim;
     [SerializeField]
     public Transform[] points;
     public int destPoint = 0;
@@ -67,15 +68,17 @@ public abstract class EnemyScript : MonoBehaviour
     public ParticleSystem bleedEffect;
     public ParticleSystem stunEffect;
     float bleedtime = 0;
-    float stuntime = 0;
     bool bleedRoutineRunning = false;
+    bool instOnceStun;
+    bool instOnceBleed;
     // Use this for initialization
     public virtual void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>().transform;
         player = GameObject.Find("Player").GetComponent<PlayerHealth>();
-        enemyAnim = GetComponentInChildren<Animation>();
+        enemyAnim = transform.GetChild(0).GetComponent<Animator>();
+        //enemyAnim = GetComponentInChildren<Animation>();
         hit = false;
         canChange = false;
         stunned = false;
@@ -84,6 +87,8 @@ public abstract class EnemyScript : MonoBehaviour
         alive = true;
         knockedUp = false;
         smashedDown = false;
+        instOnceStun = true;
+        instOnceBleed = true;
         pauseTimer = 0;
         //bleedTimer = 5; // Added for testing - LC
         //bleedDmg = 1; // Added for testing - LC
@@ -132,7 +137,21 @@ public abstract class EnemyScript : MonoBehaviour
                     if (pauseTimer < 0.0f)
                     {
                         falldown();
-                        enemyAnim.Play("Walk", PlayMode.StopAll);
+                        if(Identify == 3)
+                        {
+                            enemyAnim.SetBool("Moving", true);
+                            enemyAnim.SetFloat("Velocity Z", .75f);
+                            enemyAnim.Play("Unarmed-Walk-Slow");
+
+                        }
+                        else
+                        {
+                            enemyAnim.SetBool("Moving", true);
+                            enemyAnim.SetFloat("Velocity Z", .75f);
+                            enemyAnim.Play("Unarmed-Walk");
+
+                        }
+                        // enemyAnim.Play("Walk", PlayMode.StopAll);
                         pause = false;
 
                     }
@@ -140,7 +159,10 @@ public abstract class EnemyScript : MonoBehaviour
                 }
                 if (hit && pause)
                 {
-                    enemyAnim.Play("idle", PlayMode.StopAll);
+                    //enemyAnim.SetBool("Moving", false);
+                    //enemyAnim.SetFloat("Velocity Z", 0);
+                    //enemyAnim.Play("Unarmed-Idle");
+                    //enemyAnim.Play("idle", PlayMode.StopAll);
                     hit = false;
                 }
 
@@ -255,10 +277,10 @@ public abstract class EnemyScript : MonoBehaviour
 
     public void knockUp()
     {
-        enemyAnim.Stop();
 
         knockedUp = true;
-        enemyAnim.CrossFade("idle");
+        //  enemyAnim.CrossFade("idle");
+       
 
     }
 
@@ -266,11 +288,16 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (stunned)
         {
-            Instantiate(stunEffect, statusLoc);
+            if (instOnceStun)
+            {
+                Instantiate(stunEffect, statusLoc.position, Quaternion.identity);
+                instOnceStun = false;
+            }
             stunTimer -= Time.deltaTime;
             if (stunTimer < 0)
             {
                 stunned = false;
+                instOnceStun = true;
             }
         }
     }
@@ -282,7 +309,7 @@ public abstract class EnemyScript : MonoBehaviour
         while (timer > 0)
         {
 
-            timer -= Time.deltaTime;
+            timer -= 1;
             bleedtime += Time.deltaTime;
 
             if (alive)
@@ -292,23 +319,30 @@ public abstract class EnemyScript : MonoBehaviour
                 TakeDmg(tempdmg);
 
                 dmgCounter += tempdmg;
-                if (bleedtime >= 2.0f)
+                ParticleSystem bleedtemp = null;
+                if (instOnceBleed)
                 {
-                    Instantiate(bleedEffect, statusLoc.position, Quaternion.identity);
-                    bleedtime = 0;
+                   bleedtemp = Instantiate(bleedEffect, statusLoc.position, Quaternion.identity) as ParticleSystem;
+                   instOnceBleed = false;
+                }
+                if (bleedtemp != null)
+                {
+                    bleedtemp.transform.position = statusLoc.position;
                 }
             }
             else
             {
-                bleedtime = 0;
+                instOnceBleed = true;
                 Debug.Log(dmgCounter);
                 bleeding = false;
                 bleedRoutineRunning = false;
                 yield return null;
 
             }
+            yield return new WaitForSeconds(1f);
         }
         bleedtime = 0;
+        instOnceBleed = true;
         Debug.Log(dmgCounter);
         bleeding = false;
         bleedRoutineRunning = false;
@@ -327,9 +361,14 @@ public abstract class EnemyScript : MonoBehaviour
         if (health <= 0)
         {
             player.IncreaseHealth(10);
-            countText.AddOne();
+            player.IncreasePower(5);
+           
+            //countText.AddOne();
             alive = false;
         }
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", 1);
+        enemyAnim.Play("Unarmed-GetHit-F1");
         //if (EnemyBlood)
         //    EnemyBlood.Play();
     }

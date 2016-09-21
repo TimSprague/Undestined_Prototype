@@ -473,7 +473,7 @@ public class ComboStates : MonoBehaviour {
 
             case (int)COMBOSTATE.heavyHeavyHeavy:
                 {
-                    Debug.Log("heavyHeavy");
+                    Debug.Log("heavyHeavyHeavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
                         if (hitCol.tag == "Enemy")
@@ -503,6 +503,7 @@ public class ComboStates : MonoBehaviour {
                             // enemScript.rigidBody.velocity = new Vector3(temp.normalized.x*5, temp.normalized.y, temp.normalized.z*5);
                             enemy.rigidBody.velocity = new Vector3(0, 0, 0);
                             enemy.rigidBody.AddForce(new Vector3((temp.normalized.x * 5) * forceMod, 1200 * forceMod, (temp.normalized.z * 100f) * forceMod));
+                            StartCoroutine(knockupenemy(enemy));
                             enemy.knockedUp = true;
                             EnemyStatusUpdate(enemy, 10);
                         }

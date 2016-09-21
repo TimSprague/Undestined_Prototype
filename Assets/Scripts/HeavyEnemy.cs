@@ -7,6 +7,9 @@ public class HeavyEnemy : EnemyScript {
     // Use this for initialization
     public override void Start () {
         base.Start();
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", .75f);
+        enemyAnim.Play("Unarmed-Walk");
 	}
     public void PlayGroundParticle()
     {
@@ -35,7 +38,7 @@ public class HeavyEnemy : EnemyScript {
         {
             if (!pause)
             {
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
+                if (Vector3.Distance(playerTransform.position, transform.position) > 5)
                 {
                     if (!playerTarget)
                     {
@@ -55,13 +58,18 @@ public class HeavyEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        // enemyAnim.Play("Attack", PlayMode.StopAll);
+                        enemyAnim.SetBool("Moving", false);
+                        enemyAnim.SetFloat("Velocity Z", 0);
+                        enemyAnim.Play("Unarmed-Attack-L3");
+                        player.DecreaseHealth(5);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

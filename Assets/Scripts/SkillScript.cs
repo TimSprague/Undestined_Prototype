@@ -83,6 +83,7 @@ public class SkillScript : MonoBehaviour {
             Skill1.enabled = true;
             skill1Active = true;
             SkillArea();
+            playerHealth.DecreasePower(5);
         }
 
         if ((Input.GetButtonDown("Skill2") || Input.GetAxis("XBOX360_Skill2") != 0) && !skill2Active)
@@ -91,6 +92,8 @@ public class SkillScript : MonoBehaviour {
             Skill2.enabled = true;
             skill2Active = true;
             StunArea();
+            playerHealth.DecreasePower(5);
+
         }
 
         if (Input.GetButtonDown("Skill3") && !skill3Active)

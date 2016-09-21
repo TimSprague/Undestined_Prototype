@@ -9,10 +9,14 @@ public class MeleeEnemy : EnemyScript {
     public override void Start () {
         
         base.Start();
-	}
+        enemyAnim.SetBool("Moving", true);
+        enemyAnim.SetFloat("Velocity Z", 1.0f);
+        enemyAnim.Play("Unarmed-Walk");
+
+    }
 
     // Update is called once per frame
-   public override void Update() {
+    public override void Update() {
         base.Update();
 	}
     public void PlayBleedParticle()
@@ -63,13 +67,18 @@ public class MeleeEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        //enemyAnim.Play("Attack", PlayMode.StopAll);
+                        enemyAnim.SetBool("Moving", false);
+                        enemyAnim.SetFloat("Velocity Z", 0);
+                        enemyAnim.Play("Unarmed-Attack-L3");
+                        player.DecreaseHealth(5);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

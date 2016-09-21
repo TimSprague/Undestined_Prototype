@@ -56,15 +56,18 @@ public class RangedEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    velocity = new Vector3(0, 0, 0);
-                    GameObject clone =  (GameObject)Instantiate(bullet, transform.position, lookRotation);
-                    clone.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward * 10);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        enemyAnim.Stop();
+                        enemyAnim.Play("Attack", PlayMode.StopAll);
+                        velocity = new Vector3(0, 0, 0);
+                        GameObject clone = (GameObject)Instantiate(bullet, transform.position, lookRotation);
+                        clone.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward * 10);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

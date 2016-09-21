@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour {
 
     public float playerCurrentHealth;
     public float playerMaxHealth;
     public bool isAlive = true;
-    public float playerCurrentEnergy;
-    public float playerMaxEneregy;
     public Image HealthImage;
     public Image HealthBar;
     public AudioClip DamageClip;
@@ -27,10 +26,9 @@ public class PlayerHealth : MonoBehaviour {
     // Use this for initialization
     void Start () {
         playerAnimator = GetComponent<Animator>();
-        reload = GetComponent<LevelManager>();
-        playerCurrentEnergy = playerMaxEneregy;
-        playerCurrentHealth = playerMaxHealth;
-    }
+        
+        
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -56,7 +54,6 @@ public class PlayerHealth : MonoBehaviour {
                 HealthImage.color = Color.Lerp(HealthImage.color, Color.clear, HealFlashSpeed * Time.deltaTime);
             healed = false;
         }
-        
 
     }
 
@@ -102,22 +99,19 @@ public class PlayerHealth : MonoBehaviour {
 
     public void IncreasePower(int _value)
     {
-        playerCurrentEnergy += _value;
-    }
-    public void DecreasePower(int _value)
-    {
-        playerCurrentEnergy -= _value;
+
     }
 
 
     void Death()
     {
         isAlive = false;
-        //if (playerAnimator)
-        // playerAnimator.Play("Unarmed-Death1");
-        
-        reload.restartCurrentScene();
-       
+
+        if (playerAnimator)
+        {
+            playerAnimator.Play("Unarmed-Death1");
+            StartCoroutine(RestartCurrentScene(3f));
+        }
         //GameObject.Destroy(gameObject);
     }
 
@@ -125,5 +119,11 @@ public class PlayerHealth : MonoBehaviour {
     {
         if (HealthBar)
             HealthBar.fillAmount = ((float)playerCurrentHealth / (float)playerMaxHealth);
+    }
+
+    IEnumerator RestartCurrentScene(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        SceneManager.LoadScene(0);
     }
 }

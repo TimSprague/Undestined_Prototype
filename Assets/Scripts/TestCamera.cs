@@ -86,12 +86,12 @@ public class TestCamera : MonoBehaviour {
         yRot += lookSpeed * Input.GetAxis("Mouse X");
         xRot += (lookSpeed / 4) * Input.GetAxis("Mouse Y");
         xRot = Mathf.Clamp(xRot + Input.GetAxis("Mouse Y"), -tiltUpRange, tiltDownRange); // limit the camera rotation up/down
-       // transform.rotation = Quaternion.Euler(0, yRot, 0); // rotate the player when moving the camera Y-axis
+        transform.rotation = Quaternion.Euler(0, yRot, 0); // rotate the player when moving the camera Y-axis
 
-        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-        {
-            transform.rotation = Quaternion.Euler(0, yRot, 0); // rotate the player when moving the camera Y-axis
-        }
+        //if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        //{
+        //    transform.rotation = Quaternion.Euler(0, yRot, 0); // rotate the player when moving the camera Y-axis
+        //}
 
         //limit the camera look up/down rotation
         Camera.main.transform.rotation = Quaternion.Euler(-xRot, yRot, 0); // rotate the camera when moving the camera
@@ -110,8 +110,8 @@ public class TestCamera : MonoBehaviour {
 
         Vector3 dir = new Vector3(0.0f, 0.0f, -distance);
 
-        Camera.main.transform.position = transform.position + Camera.main.transform.rotation * dir;
-        Camera.main.transform.LookAt(target.position);
+        //Camera.main.transform.position = transform.position + Camera.main.transform.rotation * dir;
+        //Camera.main.transform.LookAt(target.position);
 
 
     }

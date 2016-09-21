@@ -35,7 +35,7 @@ public class HeavyEnemy : EnemyScript {
         {
             if (!pause)
             {
-                if (Vector3.Distance(playerTransform.position, transform.position) > 3)
+                if (Vector3.Distance(playerTransform.position, transform.position) > 5)
                 {
                     if (!playerTarget)
                     {
@@ -55,14 +55,17 @@ public class HeavyEnemy : EnemyScript {
                 }
                 else
                 {
-                    enemyAnim.Stop();
-                    enemyAnim.Play("Attack", PlayMode.StopAll);
-                    
-                    player.DecreaseHealth(5);
-                    canAttack = true;
-                    attackTimer = 1.25f;
-                    pause = true;
-                    pauseTimer = 1.25f;
+                    if (player.isAlive)
+                    {
+                        enemyAnim.Stop();
+                        enemyAnim.Play("Attack", PlayMode.StopAll);
+
+                        player.DecreaseHealth(5);
+                        canAttack = true;
+                        attackTimer = 1.25f;
+                        pause = true;
+                        pauseTimer = 1.25f;
+                    }
                 }
             }
         }

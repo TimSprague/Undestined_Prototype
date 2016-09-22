@@ -10,7 +10,8 @@ public class TestCamera : MonoBehaviour {
     private Animation anim; // the animation component
     private CharacterController character; // A reference to the ThirdPersonCharacter on the object
 
-    float gravity = 50; // how hard gravity pulls down
+    public float gravity = 50; // how hard gravity pulls down
+    public bool airAttacking = false;
 
 
     public float lookSpeed = 5; // mouse look sensitivity
@@ -65,9 +66,17 @@ public class TestCamera : MonoBehaviour {
         }
 
         // Apply gravity
-        moveDirection.y -= gravity * Time.deltaTime;
+        if(!airAttacking)
+            moveDirection.y -= gravity * Time.deltaTime;
+        else
+        {
+            moveDirection.x = 0;
+            moveDirection.y = 0;
+            moveDirection.z = 0;
+        }
         // Move the player
         character.Move(moveDirection * Time.deltaTime);
+        
 
         //bool zoom = Input.GetAxis("Zoom") > 0;
         //if (zoom)

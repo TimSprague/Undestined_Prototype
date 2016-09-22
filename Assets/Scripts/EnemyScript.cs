@@ -136,6 +136,7 @@ public abstract class EnemyScript : MonoBehaviour
                     pauseTimer -= Time.deltaTime;
                     if (pauseTimer < 0.0f)
                     {
+                        falldown();
                         if(Identify == 3)
                         {
                             enemyAnim.SetBool("Moving", true);
@@ -370,6 +371,12 @@ public abstract class EnemyScript : MonoBehaviour
         enemyAnim.Play("Unarmed-GetHit-F1");
         //if (EnemyBlood)
         //    EnemyBlood.Play();
+    }
+
+    void falldown()
+    {
+        rigidBody.constraints &= ~RigidbodyConstraints.FreezePosition;
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     void Death()

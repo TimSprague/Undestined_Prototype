@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour {
     bool alive;
     float aliveTimer;
     public ParticleSystem MageAttack;
+    public ParticleSystem explosion;
 	// Use this for initialization
 	void Start () {
         aliveTimer = 2;
@@ -36,12 +37,16 @@ public class Bullet : MonoBehaviour {
             if(other.gameObject.tag =="Enemy")
             {
                 other.gameObject.GetComponent<EnemyScript>().TakeDmg(5);
+                Instantiate(explosion, new Vector3(this.transform.position.x,this.transform.position.y + 1.5f,this.transform.position.z), Quaternion.identity);
+
                 Destroy(this.gameObject);
             }
         }
         if(other.gameObject.tag == "Player")
         {
             other.GetComponent<PlayerHealth>().DecreaseHealth(5);
+            Instantiate(explosion, new Vector3(this.transform.position.x, this.transform.position.y + 1.5f, this.transform.position.z), Quaternion.identity);
+
 
             Destroy(this.gameObject);
         }

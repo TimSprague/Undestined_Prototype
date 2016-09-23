@@ -4,7 +4,6 @@ using System.Collections;
 public class RangedEnemy : EnemyScript {
     public GameObject bullet;
     public ParticleSystem EnemyGround;
-  
     // Use this for initialization
     public override void Start () {
         base.Start();
@@ -73,6 +72,7 @@ public class RangedEnemy : EnemyScript {
                         attackTimer = 1.25f;
                         pause = true;
                         pauseTimer = 1.25f;
+
                     }
                 }
             }

@@ -39,6 +39,14 @@ public class PlayerAttack : MonoBehaviour {
             Debug.Log("updatingEnemy");
             Vector3 playerPos = GameObject.Find("MeleeZone").transform.position;
             Collider[] hitCollider = Physics.OverlapSphere(playerPos, sphereHitRadius);
+            foreach(Collider n in hitCollider)
+            {
+                if (n.tag == "Bullet")
+                {
+                    n.GetComponent<Rigidbody>().AddForce(-n.transform.forward * 700);
+                    n.GetComponent<Bullet>().reflected = true;
+                }
+            }
             combos.UpdateState(attackType, hitCollider);
             updatingPhysics = false;
         }

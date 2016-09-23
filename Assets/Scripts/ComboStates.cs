@@ -282,6 +282,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("light");
                     foreach(Collider hitCol in enemiesHit)
                     {
+                        if(hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if(hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -345,6 +350,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("lightLightLight");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -393,6 +403,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("heavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -423,6 +438,7 @@ public class ComboStates : MonoBehaviour {
                             {
                                 enemy.rigidBody.AddForce(new Vector3((temp.normalized.x * 5) * forceMod, -1200 * forceMod, (temp.normalized.z * 100f) * forceMod));
                                 enemy.knockedUp = false;
+                                enemy.smashedDown = true;
                                 knockdownenemy(enemy);
                             }
                             //else
@@ -444,6 +460,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("heavyHeavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -476,6 +497,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("heavyHeavyHeavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -516,6 +542,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("lightHeavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -546,6 +577,7 @@ public class ComboStates : MonoBehaviour {
                             {
                                 enemy.rigidBody.AddForce(new Vector3((temp.normalized.x * 5) * forceMod, -1200 * forceMod, (temp.normalized.z * 100f) * forceMod));
                                 enemy.knockedUp = false;
+                                enemy.smashedDown = true;
                                 knockdownenemy(enemy);
 
                             }
@@ -569,6 +601,11 @@ public class ComboStates : MonoBehaviour {
                     Debug.Log("lightLightHeavy");
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -599,6 +636,7 @@ public class ComboStates : MonoBehaviour {
                             {
                                 enemy.rigidBody.AddForce(new Vector3((temp.normalized.x * 5) * forceMod, -1200 * forceMod, (temp.normalized.z * 100f) * forceMod));
                                 enemy.knockedUp = false;
+                                enemy.smashedDown = true;
                                 knockdownenemy(enemy);
 
                             }
@@ -629,6 +667,11 @@ public class ComboStates : MonoBehaviour {
                     //playerTrans.gameObject.GetComponent<CharacterController>().Move(Vector3.zero);
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;
@@ -673,6 +716,11 @@ public class ComboStates : MonoBehaviour {
                     //playerTrans.gameObject.GetComponent<CharacterController>().Move(Vector3.zero);
                     foreach (Collider hitCol in enemiesHit)
                     {
+                        if (hitCol.tag == "Bullet")
+                        {
+                            hitCol.GetComponent<Rigidbody>().AddForce(-hitCol.transform.forward * 200);
+                            hitCol.GetComponent<Bullet>().reflected = true;
+                        }
                         if (hitCol.tag == "Enemy")
                         {
                             EnemyScript enemy = null;

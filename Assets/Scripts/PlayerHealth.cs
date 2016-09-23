@@ -27,7 +27,8 @@ public class PlayerHealth : MonoBehaviour {
     // Use this for initialization
     void Start () {
         playerAnimator = GetComponent<Animator>();
-        
+        audioSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
+        DamageClip = Resources.Load<AudioClip>("Audio/Player_Pain");
         
 	}
 	
@@ -123,6 +124,12 @@ public class PlayerHealth : MonoBehaviour {
     {
         if (HealthBar)
             HealthBar.fillAmount = ((float)playerCurrentHealth / (float)playerMaxHealth);
+        if (DamageClip && audioSource)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.0f);
+            audioSource.PlayOneShot(DamageClip);
+        }
+
     }
 
     IEnumerator RestartCurrentScene(float wait)

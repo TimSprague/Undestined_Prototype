@@ -71,6 +71,8 @@ public abstract class EnemyScript : MonoBehaviour
     bool bleedRoutineRunning = false;
     bool instOnceStun;
     bool instOnceBleed;
+    AudioSource soundSource;
+    AudioClip gndPnd;
     // Use this for initialization
     public virtual void Start()
     {
@@ -109,6 +111,9 @@ public abstract class EnemyScript : MonoBehaviour
         pathCount = path.Count;
         pathDest = 0;
         Dtime = 0;
+
+        soundSource = GameObject.Find("Sound Source").GetComponent<AudioSource>();
+        gndPnd = Resources.Load<AudioClip>("Audio/Agni - Slam 2");
     }
     public void Awake()
     {
@@ -246,7 +251,10 @@ public abstract class EnemyScript : MonoBehaviour
                 {
                     if (smashedDown)
                     {
+                        groundpound.gameObject.SetActive(true);
                         groundpound.Play();
+                        if(soundSource && gndPnd)
+                            soundSource.PlayOneShot(gndPnd);
                         smashTimer = 1.0f;
                         smashedDown = false;
                         //Instantiate(groundpound, GroundPoundLoc.position,Quaternion.identity);
